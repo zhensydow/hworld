@@ -14,6 +14,10 @@
 #include <GL/gl.h>
 
 //------------------------------------------------------------------------------
+/** Load a GLSL program composed of a vertex shader and a fragment shader.
+    @param name common file name of vertex/fragment shaders.
+    @returns identifier of program.
+ */
 GLuint loadProgram( const std::string &name );
 
 //------------------------------------------------------------------------------

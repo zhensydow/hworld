@@ -14,6 +14,9 @@
 #include "shader.hpp"
 
 //------------------------------------------------------------------------------
+/** Main program function.
+   @returns the exit code of program.
+ */
 int main(){
 	sf::ContextSettings desired;
 	desired.majorVersion = 3;
