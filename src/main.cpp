@@ -1,10 +1,9 @@
-/*
- * main.cpp
- *
- *  Created on: 24/07/2013
- *      Author: cabellos
- */
-
+/** @file main.cpp
+    @brief Info
+    @author Luis Cabellos
+    @date 2013-07-24
+*/
+//------------------------------------------------------------------------------
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #define GL_GLEXT_PROTOTYPES 1
@@ -12,9 +11,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
-
 #include "shader.hpp"
 
+//------------------------------------------------------------------------------
 int main(){
 	sf::ContextSettings desired;
 	desired.majorVersion = 3;
@@ -114,3 +113,5 @@ int main(){
 
     return 0;
 }
+
+//------------------------------------------------------------------------------

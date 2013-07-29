@@ -1,10 +1,9 @@
-/*
- * shader.hpp
- *
- *  Created on: 28/07/2013
- *      Author: cabellos
- */
-
+/** @file shader.hpp
+    @brief Shader util functions
+    @author Luis Cabellos
+    @date 2013-07-28
+*/
+//------------------------------------------------------------------------------
 #ifndef SHADER_HPP_
 #define SHADER_HPP_
 
@@ -18,4 +17,4 @@
 GLuint loadProgram( const std::string &name );
 
 //------------------------------------------------------------------------------
-#endif /* SHADER_HPP_ */
+#endif//SHADER_HPP_

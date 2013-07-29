@@ -1,12 +1,10 @@
-/*
- * shader.cpp
- *
- *  Created on: 28/07/2013
- *      Author: cabellos
- */
-
+/** @file shader.cpp
+    @brief Shader utility functions.
+    @author Luis Cabellos
+    @date 2013-07-29
+*/
+//------------------------------------------------------------------------------
 #include "shader.hpp"
-
 #include <string>
 #include <list>
 #include <iostream>
@@ -32,70 +30,71 @@ void readFileData( const std::string &str, std::string &data ){
 
 //------------------------------------------------------------------------------
 GLuint createShader(GLenum shaderType, const std::string &filename ){
-  GLuint shader = glCreateShader( shaderType );
-  std::string filedata;
-  readFileData( filename, filedata );
-  const char *strFileData = filedata.c_str();
-  glShaderSource( shader, 1, &strFileData, 0 );
+    auto shader = glCreateShader( shaderType );
+    std::string filedata;
+    readFileData( filename, filedata );
+    auto strFileData = filedata.c_str();
+    glShaderSource( shader, 1, &strFileData, 0 );
 
-  glCompileShader( shader );
+    glCompileShader( shader );
 
-  GLint status;
-  glGetShaderiv( shader, GL_COMPILE_STATUS, &status );
-  if (status == GL_FALSE){
-    GLint infoLogLength;
-    glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &infoLogLength );
+    GLint status;
+    glGetShaderiv( shader, GL_COMPILE_STATUS, &status );
+    if (status == GL_FALSE){
+        GLint infoLogLength;
+        glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &infoLogLength );
 
-    GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-    glGetShaderInfoLog(shader, infoLogLength, 0, strInfoLog);
+        auto strInfoLog = new GLchar[infoLogLength + 1];
+        glGetShaderInfoLog(shader, infoLogLength, 0, strInfoLog);
 
-    const char *strShaderType = 0;
-    switch( shaderType ){
-    case GL_VERTEX_SHADER:
-      strShaderType = "vertex";
-      break;
-    case GL_GEOMETRY_SHADER:
-      strShaderType = "geometry";
-      break;
-    case GL_FRAGMENT_SHADER:
-      strShaderType = "fragment";
-      break;
+        const char *strShaderType = 0;
+        switch( shaderType ){
+        case GL_VERTEX_SHADER:
+            strShaderType = "vertex";
+            break;
+        case GL_GEOMETRY_SHADER:
+            strShaderType = "geometry";
+            break;
+        case GL_FRAGMENT_SHADER:
+            strShaderType = "fragment";
+            break;
+        }
+
+        std::cerr << "Compile failure in " << strShaderType << " shader: \n" 
+                  << strInfoLog << std::endl;
+        delete[] strInfoLog;
     }
 
-    std::cerr << "Compile failure in " << strShaderType << " shader: \n" << strInfoLog << std::endl;
-    delete[] strInfoLog;
-  }
-
-  return shader;
+    return shader;
 }
 
 //------------------------------------------------------------------------------
 GLuint createProgram( const std::vector<GLuint> &shaders ){
-  GLuint program = glCreateProgram();
+    auto program = glCreateProgram();
 
-  for( size_t i = 0; i < shaders.size(); i++ ){
-    glAttachShader( program, shaders[i] );
-  }
+    for( size_t i = 0; i < shaders.size(); i++ ){
+        glAttachShader( program, shaders[i] );
+    }
 
-  glLinkProgram( program );
+    glLinkProgram( program );
 
-  GLint status;
-  glGetProgramiv( program, GL_LINK_STATUS, &status );
-  if( status == GL_FALSE ){
-    GLint infoLogLength;
-    glGetProgramiv( program, GL_INFO_LOG_LENGTH, &infoLogLength );
+    GLint status;
+    glGetProgramiv( program, GL_LINK_STATUS, &status );
+    if( status == GL_FALSE ){
+        GLint infoLogLength;
+        glGetProgramiv( program, GL_INFO_LOG_LENGTH, &infoLogLength );
 
-    GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-    glGetProgramInfoLog( program, infoLogLength, 0, strInfoLog );
-    std::cerr << "Linker failure: " << strInfoLog << std::endl;
-    delete[] strInfoLog;
-  }
+        auto strInfoLog = new GLchar[infoLogLength + 1];
+        glGetProgramInfoLog( program, infoLogLength, 0, strInfoLog );
+        std::cerr << "Linker failure: " << strInfoLog << std::endl;
+        delete[] strInfoLog;
+    }
 
-  for( size_t i = 0; i < shaders.size(); i++ ){
-    glDetachShader( program, shaders[i] );
-  }
+    for( size_t i = 0; i < shaders.size(); i++ ){
+        glDetachShader( program, shaders[i] );
+    }
 
-  return program;
+    return program;
 }
 
 //------------------------------------------------------------------------------
@@ -107,8 +106,8 @@ GLuint loadProgram( const std::string &name ){
 
     std::string glslv;
 
-    const GLubyte * glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
-    std::string sv(reinterpret_cast<const char*>(glslVersion));
+    const auto glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
+    std::string sv( reinterpret_cast<const char*>(glslVersion) );
 
     for( auto i = available.begin(); i != available.end() ; ++i ){
         if( 0 == sv.find(*i) ){
