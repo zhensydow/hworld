@@ -21,17 +21,17 @@
    @returns the exit code of program.
  */
 int main(){
-	sf::ContextSettings desired;
-	desired.majorVersion = 3;
-	desired.minorVersion = 3;
+    sf::ContextSettings desired;
+    desired.majorVersion = 3;
+    desired.minorVersion = 3;
 
     GLuint vertexArrayID;
     glGenVertexArrays( 1, &vertexArrayID );
     glBindVertexArray( vertexArrayID );
 
     sf::RenderWindow window{
-    	sf::VideoMode(800, 600),
-    	"HexWorld", sf::Style::Default, desired };
+        sf::VideoMode(800, 600),
+        "HexWorld", sf::Style::Default, desired };
     window.setVerticalSyncEnabled( true );
 
     auto settings = window.getSettings();
@@ -43,8 +43,8 @@ int main(){
 
     sf::Font font;
     if( !font.loadFromFile( "GentiumPlus-R.ttf") ){
-    	std::cout << "Error loading Font\n";
-    	std::terminate();
+        std::cout << "Error loading Font\n";
+        std::terminate();
     }
 
     sf::Text text;
@@ -59,6 +59,12 @@ int main(){
        -1.0f, -1.0f, 0.0f,
        1.0f, -1.0f, 0.0f,
        0.0f,  1.0f, 0.0f,
+       -1.0f, -1.0f, -1.0f,
+       1.0f, -1.0f, -1.0f,
+       0.0f,  1.0f, -1.0f,
+       -1.0f, -1.0f, -3.0f,
+       1.0f, -1.0f, -3.0f,
+       0.0f,  1.0f, -3.0f,
     };
 
     // This will identify our vertex buffer
@@ -74,19 +80,15 @@ int main(){
 
     GLuint programID = loadProgram( "test01" );
 
-    // Projection matrix : 45° FOV, 4:3, display range : 0.1 unit <-> 100 units
-    auto proj = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    float fov = 45.0;
+    float px = 4;
+    float py = 3;
+    float pz = 3;
+
     // Camera matrix
-    auto view = glm::lookAt(
-                            glm::vec3(4,3,3), // origing
-                            glm::vec3(0,0,0), // looks to
-                            glm::vec3(0,1,0)  // up
-                            );
-    // Model matrix : an identity matrix (model will be at the origin)
-    auto model = glm::mat4(1.0f);  // Changes for each model !
-    // Our ModelViewProjection : multiplication of our 3 matrices
-    auto mvp = proj * view * model;
+
     auto matrix_id = glGetUniformLocation( programID , "MVP");
+    glm::mat4 mvp, proj, view, model;
 
     bool running = true;
     while( running ){
@@ -100,14 +102,47 @@ int main(){
             }
         }
 
-        //window.clear();
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::U ) ){
+            fov += 1;
+            if( fov > 80.0 ){
+                fov = 80.0;
+            }
+        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::I ) ){
+            fov -= 1;
+            if( fov < 10.0 ){
+                fov = 10.0;
+            }
+        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
+            px += 0.25;
+        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ){
+            px -= 0.25;
+        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ){
+            if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ){
+                pz += 0.25;
+            }else{
+                py += 0.25;
+            }
+        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ){
+            if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ){
+                pz -= 0.25;
+            }else{
+                py -= 0.25;
+            }
+        }
+
+        view = glm::lookAt(
+                           glm::vec3( px, py, pz ), // origing
+                           glm::vec3(0,0,0), // looks to
+                           glm::vec3(0,1,0)  // up
+                           );
+        proj = glm::perspective( fov, 4.0f / 3.0f, 0.1f, 100.0f );
+
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         glUseProgram( programID );
-        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
 
         // 1rst attribute buffer : vertices
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
         glVertexAttribPointer(
            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
            3,                  // size
@@ -117,8 +152,23 @@ int main(){
            (void*)0            // array buffer offset
         );
 
-        // Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+        // Draw the triangles
+        model = glm::mat4(1.0f);
+        mvp = proj * view * model;
+        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
+        glDrawArrays( GL_TRIANGLES, 0, 9 );
+
+        model = glm::translate( 3.0f, 1.0f, 0.0f );
+        mvp = proj * view * model;
+        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
+        glDrawArrays( GL_TRIANGLES, 0, 9 );
+
+        model = glm::translate(-3.0f, 0.0f, 0.0f) *
+            glm::rotate( 45.0f, glm::vec3{1.0f, 0.0f, 0.0f} );
+        mvp = proj * view * model;
+        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
+        glDrawArrays( GL_TRIANGLES, 0, 9 );
+
         glDisableVertexAttribArray(0);
         glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
