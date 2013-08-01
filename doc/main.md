@@ -15,6 +15,7 @@ Libraries
 
  * SFML 2.0 [->](http://www.sfml-dev.org/index.php)
  * GLM 0.9.4 [->](http://glm.g-truc.net/api-0.9.4/index.html)
+ * SOIL (Simple OpenGL Image Library) [->](http://lonesock.net/soil.html)
 
 Other Resources
 ---------------
