@@ -16,6 +16,7 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "SOIL.h"
+#include "terminal.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -37,6 +38,9 @@ int main(){
 
     auto settings = window.getSettings();
 
+    Terminal terminal{ &window };
+    terminal.initialize();
+
     std::cout << "depth bits: " << settings.depthBits << std::endl;
     std::cout << "stencil bits: " << settings.stencilBits << std::endl;
     std::cout << "antialiasing level: " << settings.antialiasingLevel << std::endl;
@@ -44,19 +48,6 @@ int main(){
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
-    sf::Font font;
-    if( !font.loadFromFile( "GentiumPlus-R.ttf") ){
-        std::cout << "Error loading Font\n";
-        std::terminate();
-    }
-
-    sf::Text text;
-    text.setFont( font );
-    text.setString( "Hex World" );
-    text.setCharacterSize( 18 );
-    text.setColor( sf::Color::White );
-    text.setStyle( sf::Text::Bold );
 
     // An array of 3 vectors which represents 3 vertices
     static const GLfloat g_vertex_buffer_data[] = {
@@ -125,8 +116,8 @@ int main(){
             if( event.type == sf::Event::Closed ){
                 running = false;
             }else if(event.type == sf::Event::Resized){
-                // adjust the viewport when the window is resized
                 glViewport(0, 0, event.size.width, event.size.height);
+                terminal.resize();
             }
         }
 
@@ -209,7 +200,7 @@ int main(){
         window.pushGLStates();
         //window.resetGLStates();
 
-        window.draw( text );
+        terminal.draw();
 
         window.popGLStates();
 
