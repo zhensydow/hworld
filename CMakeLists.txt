@@ -12,6 +12,7 @@ find_package( SFML 2.0 REQUIRED system window graphics )
 
 add_subdirectory( soil )
 add_subdirectory( src )
+add_subdirectory( test )
 
 
 # documentation
