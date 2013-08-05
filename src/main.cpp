@@ -46,8 +46,9 @@ int main(){
     std::cout << "antialiasing level: " << settings.antialiasingLevel << std::endl;
     std::cout << "version: " << settings.majorVersion << "." << settings.minorVersion << std::endl;
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glEnable( GL_DEPTH_TEST );
+    glDepthFunc( GL_LESS );
+    glEnable( GL_CULL_FACE );
 
     // An array of 3 vectors which represents 3 vertices
     static const GLfloat g_vertex_buffer_data[] = {
