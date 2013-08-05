@@ -74,12 +74,15 @@ int main(){
         1.0f,  1.0f,
     };
 
-    // This will identify our vertex buffer
-    GLuint vertexbuffer, uvbuffer;
+    static const GLushort g_index_data[] = {
+        0, 1, 2, 3, 4, 5, 6, 7, 8,
+    };
 
     // Generate buffers
+    GLuint vertexbuffer, uvbuffer, elemBuffer;
     glGenBuffers( 1, &vertexbuffer );
     glGenBuffers( 1, &uvbuffer );
+    glGenBuffers( 1, &elemBuffer );
 
     // load texture
     GLuint tex_2d = SOIL_load_OGL_texture( "data/img_cheryl.jpg",
@@ -96,7 +99,11 @@ int main(){
     glBindBuffer( GL_ARRAY_BUFFER, uvbuffer );
     glBufferData( GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data),
                   g_uv_buffer_data, GL_STATIC_DRAW );
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elemBuffer );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof(g_index_data),
+                  g_index_data, GL_STATIC_DRAW );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
     GLuint programID = loadProgram( "test01" );
 
@@ -174,31 +181,34 @@ int main(){
 
         glEnableVertexAttribArray( 1 );
         glBindBuffer( GL_ARRAY_BUFFER, uvbuffer );
-        glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0 );
+        glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elemBuffer );
 
         // Draw the triangles
         model = glm::mat4(1.0f);
         mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        glDrawArrays( GL_TRIANGLES, 0, 9 );
+        glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr );
 
         model = glm::translate( 3.0f, 1.0f, 0.0f );
         mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        glDrawArrays( GL_TRIANGLES, 0, 9 );
+        glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr );
 
         model = glm::translate(-3.0f, 0.0f, 0.0f) *
             glm::rotate( 45.0f, glm::vec3{1.0f, 0.0f, 0.0f} );
         mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        glDrawArrays( GL_TRIANGLES, 0, 9 );
+        glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr);
 
         glDisableVertexAttribArray( 0 );
         glDisableVertexAttribArray( 1 );
         glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+        glBindTexture( GL_TEXTURE_2D, 0 );
 
         window.pushGLStates();
-        //window.resetGLStates();
 
         terminal.draw();
 
