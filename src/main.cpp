@@ -1,4 +1,3 @@
-
 /** @file main.cpp
     @brief Info
     @author Luis Cabellos
@@ -6,12 +5,7 @@
 */
 //------------------------------------------------------------------------------
 #include <iostream>
-#include <SFML/Graphics.hpp>
-#define GL_GLEXT_PROTOTYPES 1
-#define GL3_PROTOTYPES 1
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
+#include "gfxinc.hpp"
 #include "shader.hpp"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
