@@ -11,6 +11,8 @@
 #include "glm/ext.hpp"
 #include "SOIL.h"
 #include "terminal.hpp"
+#include "chunk.hpp"
+#include "util.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -38,7 +40,8 @@ int main(){
     std::cout << "depth bits: " << settings.depthBits << std::endl;
     std::cout << "stencil bits: " << settings.stencilBits << std::endl;
     std::cout << "antialiasing level: " << settings.antialiasingLevel << std::endl;
-    std::cout << "version: " << settings.majorVersion << "." << settings.minorVersion << std::endl;
+    std::cout << "version: " << settings.majorVersion << "."
+              << settings.minorVersion << std::endl;
 
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LESS );
@@ -99,6 +102,9 @@ int main(){
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof(g_index_data),
                   g_index_data, GL_STATIC_DRAW );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+
+    auto chunk = createRandomChunk( -2.0, 2.0 );
+    auto cprop = chunk.createProp();
 
     GLuint programID = loadProgram( "test01" );
 
@@ -184,7 +190,7 @@ int main(){
         model = glm::mat4(1.0f);
         mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr );
+        //glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr );
 
         model = glm::translate( 3.0f, 1.0f, 0.0f );
         mvp = proj * view * model;
@@ -201,6 +207,17 @@ int main(){
         glDisableVertexAttribArray( 1 );
         glBindBuffer( GL_ARRAY_BUFFER, 0 );
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+        glBindTexture( GL_TEXTURE_2D, 0 );
+
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( GL_TEXTURE_2D, tex_2d );
+        glUniform1i( texture_id, 0 );
+
+        model = glm::mat4(1.0f);
+        mvp = proj * view * model;
+        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
+        cprop.draw();
+
         glBindTexture( GL_TEXTURE_2D, 0 );
 
         window.pushGLStates();
