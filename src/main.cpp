@@ -83,7 +83,7 @@ int main(){
     glGenBuffers( 1, &elemBuffer );
 
     // load texture
-    GLuint tex_2d = SOIL_load_OGL_texture( "data/img_cheryl.jpg",
+    GLuint tex_2d = SOIL_load_OGL_texture( "data/tile01.png",
                                            SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == tex_2d ){
         std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
