@@ -90,6 +90,12 @@ int main(){
         std::terminate();
     }
 
+    glBindTexture( GL_TEXTURE_2D, tex_2d );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT );
+    glBindTexture( GL_TEXTURE_2D, 0 );
+
     //put buffer data on OpenGL
     glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
     glBufferData( GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
