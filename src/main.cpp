@@ -7,9 +7,6 @@
 #include <iostream>
 #include "gfxinc.hpp"
 #include "shader.hpp"
-#include "glm/glm.hpp"
-#include "glm/ext.hpp"
-#include "SOIL.h"
 #include "terminal.hpp"
 #include "chunk.hpp"
 #include "util.hpp"

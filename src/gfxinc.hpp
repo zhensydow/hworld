@@ -14,6 +14,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
+#include "SOIL.h"
 
 //------------------------------------------------------------------------------
 #endif//GFXINC_HPP_
