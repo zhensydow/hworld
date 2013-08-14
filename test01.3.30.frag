@@ -6,6 +6,5 @@ uniform sampler2D texSampler;
 
 void main(){
     vec3 texCol = texture( texSampler, UV ).rgb;
-    color = texCol * UV.r * UV.g;
-    //color = texCol;
+    color = texCol;
 }
