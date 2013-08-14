@@ -19,8 +19,16 @@ public:
     void draw();
 
 private:
-    constexpr static int m_numVertex = 6*7;
-    constexpr static int m_numTris = 4*7;
+    constexpr static int VERTS_TILE = 6;
+    constexpr static int TRIS_TILE = 4;
+    constexpr static int FACES_TILE = 6;
+    constexpr static int VERTS_FACE = 4;
+    constexpr static int TRIS_FACE = 2;
+
+    constexpr static int m_numVertex = Chunk::NTILES*VERTS_TILE
+        + Chunk::NTILES*FACES_TILE*VERTS_FACE;
+    constexpr static int m_numTris = Chunk::NTILES*TRIS_TILE
+        + Chunk::NTILES*FACES_TILE*TRIS_FACE;
 
     std::array< GLuint, 3 > m_buffers;
     std::array< GLfloat, m_numVertex*3 > m_vertexData;
