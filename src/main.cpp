@@ -170,39 +170,39 @@ int main(){
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         glUseProgram( programID );
 
-        glActiveTexture( GL_TEXTURE0 );
-        glBindTexture( GL_TEXTURE_2D, tex_2d );
-        glUniform1i( texture_id, 0 );
-
         // Draw the triangles
-        glEnableVertexAttribArray( 0 );
-        glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
-        glVertexAttribPointer(
-           0,                  // attribute 0 in the shader.
-           3, GL_FLOAT, GL_FALSE,  // size, type, normalized?
-           0,                  // stride
-           (void*)0            // array buffer offset
-        );
+        // glActiveTexture( GL_TEXTURE0 );
+        // glBindTexture( GL_TEXTURE_2D, tex_2d );
+        // glUniform1i( texture_id, 0 );
 
-        glEnableVertexAttribArray( 1 );
-        glBindBuffer( GL_ARRAY_BUFFER, uvbuffer );
-        glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
+        // glEnableVertexAttribArray( 0 );
+        // glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
+        // glVertexAttribPointer(
+        //    0,                  // attribute 0 in the shader.
+        //    3, GL_FLOAT, GL_FALSE,  // size, type, normalized?
+        //    0,                  // stride
+        //    (void*)0            // array buffer offset
+        // );
 
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elemBuffer );
+        // glEnableVertexAttribArray( 1 );
+        // glBindBuffer( GL_ARRAY_BUFFER, uvbuffer );
+        // glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
-        model = glm::translate(-3.0f, 0.0f, 0.0f) *
-            glm::rotate( 45.0f, glm::vec3{1.0f, 0.0f, 0.0f} );
-        mvp = proj * view * model;
-        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr);
+        // glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elemBuffer );
 
-        glDisableVertexAttribArray( 0 );
-        glDisableVertexAttribArray( 1 );
-        glBindBuffer( GL_ARRAY_BUFFER, 0 );
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-        glBindTexture( GL_TEXTURE_2D, 0 );
+        // model = glm::translate(-3.0f, 0.0f, 0.0f) *
+        //     glm::rotate( 45.0f, glm::vec3{1.0f, 0.0f, 0.0f} );
+        // mvp = proj * view * model;
+        // glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
+        // glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr);
 
-        // Draw the triangles
+        // glDisableVertexAttribArray( 0 );
+        // glDisableVertexAttribArray( 1 );
+        // glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        // glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+        // glBindTexture( GL_TEXTURE_2D, 0 );
+
+        // Draw the chunk
         glActiveTexture( GL_TEXTURE0 );
         glBindTexture( GL_TEXTURE_2D, tex_2d );
         glUniform1i( texture_id, 0 );
