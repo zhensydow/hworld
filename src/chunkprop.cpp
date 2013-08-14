@@ -12,26 +12,49 @@ ChunkProp::ChunkProp( const std::array<int,7> & heigths ){
     glGenBuffers( 3, &m_buffers[0] );
 
     // fillup the data
-    for( size_t i = 0 ; i < m_elemData.size() ; ++i ){
-        m_elemData[ i ] = i;
+    constexpr GLfloat sqrt3 = sqrt( 3 );
+    constexpr GLfloat cz = 0.5 * sqrt3;
+    constexpr GLfloat cx = 0.5;
+
+    constexpr std::array< GLfloat,12 > vpos{ {
+            -cx, -cz, cx, -cz, 1.0f, 0.0f,
+                cx, cz, -cx, cz, -1.0f, 0.0f } };
+
+    glm::vec2 offset;
+    GLfloat h;
+    for( auto tile = 0 ; tile < 7 ; ++tile ){
+        if( tile == 0 ){
+            offset = glm::vec2( 0, 0 );
+        }else{
+            offset = glm::rotate( glm::vec2( 0, -sqrt3 ),
+                                  60.0f * (tile - 1) );
+        }
+
+        h = heigths[tile] * 0.1f;
+
+        for( int i = 0 ; i < 6 ; ++i ){
+            auto p = 6*3 * tile;
+
+            m_vertexData[ p + i*3 ] = vpos[ i*2 ] + offset.x;
+            m_vertexData[ p + i*3 + 1 ] = h;
+            m_vertexData[ p + i*3 + 2 ] = vpos[ i*2 + 1 ] + offset.y;
+        }
     }
 
-    m_vertexData[ 0 ] = -1.0f;
-    m_vertexData[ 1 ] = -1.0f;
-    m_vertexData[ 2 ] = 0.0f;
-    m_vertexData[ 3 ] = 1.0f;
-    m_vertexData[ 4 ] = -1.0f;
-    m_vertexData[ 5 ] = 0.0f;
-    m_vertexData[ 6 ] = 0.0f;
-    m_vertexData[ 7 ] = 1.0f;
-    m_vertexData[ 8 ] = 0.0f;
+    for( int i = 0 ; i < m_numVertex ; ++i ){
+        m_uvData[ i*2 ] = m_vertexData[ i*3 ];
+        m_uvData[ i*2 + 1 ] = m_vertexData[ i*3 + 2 ];
+    }
 
-    m_uvData[ 0 ] = 0.0f;
-    m_uvData[ 1 ] = 0.0f;
-    m_uvData[ 2 ] = 0.0f;
-    m_uvData[ 3 ] = 1.0f;
-    m_uvData[ 4 ] = 1.0f;
-    m_uvData[ 5 ] = 1.0f;
+    for( auto tile = 0 ; tile < 7 ; ++tile ){
+        for( int i = 0 ; i < 4 ; ++i ){
+            auto p = 4*3*tile;
+
+            m_elemData[ p + i*3 ] = 6*tile;
+            m_elemData[ p + i*3 + 1 ] = 6*tile + i + 2;
+            m_elemData[ p + i*3 + 2 ] = 6*tile + i + 1;
+        }
+    }
 
     // send buffers to openGL
     glBindBuffer( GL_ARRAY_BUFFER, m_buffers[0] );

@@ -18,10 +18,13 @@ public:
     void draw();
 
 private:
+    constexpr static int m_numVertex = 6*7;
+    constexpr static int m_numTris = 4*7;
+
     std::array< GLuint, 3 > m_buffers;
-    std::array< GLfloat, 3*3 > m_vertexData;
-    std::array< GLfloat, 3*2 > m_uvData;
-    std::array< GLushort, 3 > m_elemData;
+    std::array< GLfloat, m_numVertex*3 > m_vertexData;
+    std::array< GLfloat, m_numVertex*2 > m_uvData;
+    std::array< GLushort, m_numTris*3 > m_elemData;
 };
 
 //------------------------------------------------------------------------------
