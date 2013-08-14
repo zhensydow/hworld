@@ -11,7 +11,7 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
-ChunkProp::ChunkProp( const array<int,7> & heigths ){
+ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
     // Generate buffers
     glGenBuffers( 3, &m_buffers[0] );
 
@@ -20,7 +20,7 @@ ChunkProp::ChunkProp( const array<int,7> & heigths ){
     constexpr GLfloat cz = 0.5 * sqrt3;
     constexpr GLfloat cx = 0.5;
 
-    constexpr array< GLfloat,12 > vpos{ {
+    constexpr array< GLfloat, VERTS_TILE*2 > vpos{ {
             -cx, -cz, cx, -cz, 1.0f, 0.0f,
                 cx, cz, -cx, cz, -1.0f, 0.0f } };
 
@@ -36,8 +36,8 @@ ChunkProp::ChunkProp( const array<int,7> & heigths ){
 
         h = heigths[tile] * 0.1f;
 
-        for( int i = 0 ; i < 6 ; ++i ){
-            auto p = 6*3 * tile;
+        for( unsigned int i = 0 ; i < VERTS_TILE ; ++i ){
+            auto p = tile*VERTS_TILE*3;
 
             m_vertexData[ p + i*3 ] = vpos[ i*2 ] + offset.x;
             m_vertexData[ p + i*3 + 1 ] = h;
@@ -45,23 +45,23 @@ ChunkProp::ChunkProp( const array<int,7> & heigths ){
         }
     }
 
-    for( unsigned int i = 0 ; i < Chunk::NTILES*6 ; ++i ){
+    for( unsigned int i = 0 ; i < Chunk::NTILES*VERTS_TILE ; ++i ){
         m_uvData[ i*2 ] = m_vertexData[ i*3 ];
         m_uvData[ i*2 + 1 ] = m_vertexData[ i*3 + 2 ];
     }
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
-        for( int i = 0 ; i < 4 ; ++i ){
-            auto p = 4*3*tile;
+        for( unsigned int i = 0 ; i < TRIS_TILE ; ++i ){
+            auto p = tile*TRIS_TILE*3;
 
-            m_elemData[ p + i*3 ] = 6*tile;
-            m_elemData[ p + i*3 + 1 ] = 6*tile + i + 2;
-            m_elemData[ p + i*3 + 2 ] = 6*tile + i + 1;
+            m_elemData[ p + i*3 ] = tile*VERTS_TILE;
+            m_elemData[ p + i*3 + 1 ] = tile*VERTS_TILE + i + 2;
+            m_elemData[ p + i*3 + 2 ] = tile*VERTS_TILE + i + 1;
         }
     }
 
     auto minimun = heigths[0];
-    for( auto i = 1 ; i < 7 ; ++i ){
+    for( unsigned int i = 1 ; i < Chunk::NTILES ; ++i ){
         minimun = min( minimun, heigths[i] );
     }
     GLfloat minh = minimun * 0.1f - 0.1f;;
@@ -70,55 +70,44 @@ ChunkProp::ChunkProp( const array<int,7> & heigths ){
         h = abs( heigths[tile] * 0.1f - minh );
 
         for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
-            auto src0 = face + tile*6;
-            auto src1 = (face+1) % 6 + tile*6;
-
-            auto dst = 7*6*3 + tile*6*4*3 + face*4*3;
+            auto pface = tile*FACES_TILE + face;
+            auto src0 = face + tile*VERTS_TILE;
+            auto src1 = (face+1) % VERTS_TILE + tile*FACES_TILE;
+            auto dst = Chunk::NTILES*VERTS_TILE*3 + pface*VERTS_FACE*3;
 
             m_vertexData[ dst + 0 ] = m_vertexData[ src0*3 + 0 ];
             m_vertexData[ dst + 1 ] = m_vertexData[ src0*3 + 1 ];
             m_vertexData[ dst + 2 ] = m_vertexData[ src0*3 + 2 ];
-
             m_vertexData[ dst + 3 ] = m_vertexData[ src1*3 + 0 ];
             m_vertexData[ dst + 4 ] = m_vertexData[ src1*3 + 1 ];
             m_vertexData[ dst + 5 ] = m_vertexData[ src1*3 + 2 ];
-
             m_vertexData[ dst + 6 ] = m_vertexData[ src0*3 + 0 ];
             m_vertexData[ dst + 7 ] = minh;
             m_vertexData[ dst + 8 ] = m_vertexData[ src0*3 + 2 ];
-
             m_vertexData[ dst + 9 ] = m_vertexData[ src1*3 + 0 ];
             m_vertexData[ dst + 10 ] = minh;
             m_vertexData[ dst + 11 ] = m_vertexData[ src1*3 + 2 ];
-        }
 
-        for( int face = 0 ; face < 6 ; ++face ){
-            auto p = 7*6*2 + tile*6*4*2 + face*4*2;
+            dst = Chunk::NTILES*VERTS_TILE*2 + pface*VERTS_FACE*2;
 
-            m_uvData[ p + 0 ] = 0.0f;
-            m_uvData[ p + 1 ] = 0.0f;
+            m_uvData[ dst + 0 ] = 0.0f;
+            m_uvData[ dst + 1 ] = 0.0f;
+            m_uvData[ dst + 2 ] = 1.0f;
+            m_uvData[ dst + 3 ] = 0.0;
+            m_uvData[ dst + 4 ] = 0.0f;
+            m_uvData[ dst + 5 ] = h;
+            m_uvData[ dst + 6 ] = 1.0f;
+            m_uvData[ dst + 7 ] = h;
 
-            m_uvData[ p + 2 ] = 1.0f;
-            m_uvData[ p + 3 ] = 0.0;
+            auto src = Chunk::NTILES*VERTS_TILE + pface*VERTS_FACE;
+            dst = Chunk::NTILES*TRIS_TILE*3 + pface*TRIS_FACE*3;
 
-            m_uvData[ p + 4 ] = 0.0f;
-            m_uvData[ p + 5 ] = h;
-
-            m_uvData[ p + 6 ] = 1.0f;
-            m_uvData[ p + 7 ] = h;
-        }
-
-        for( int face = 0 ; face < 6 ; ++face ){
-            auto src = 7*6 + tile*6*4 + face*4;
-            auto p = 7*4*3 + tile*6*2*3 + face*2*3;
-
-            m_elemData[ p + 0 ] = src;
-            m_elemData[ p + 1 ] = src + 1;
-            m_elemData[ p + 2 ] = src + 3;
-
-            m_elemData[ p + 3 ] = src;
-            m_elemData[ p + 4 ] = src + 3;
-            m_elemData[ p + 5 ] = src + 2;
+            m_elemData[ dst + 0 ] = src;
+            m_elemData[ dst + 1 ] = src + 1;
+            m_elemData[ dst + 2 ] = src + 3;
+            m_elemData[ dst + 3 ] = src;
+            m_elemData[ dst + 4 ] = src + 3;
+            m_elemData[ dst + 5 ] = src + 2;
         }
     }
 

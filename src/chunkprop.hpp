@@ -15,19 +15,19 @@
 //------------------------------------------------------------------------------
 class ChunkProp{
 public:
-    ChunkProp( const std::array<int,7> & heigths );
+    ChunkProp( const std::array< int, Chunk::NTILES> & heigths );
     void draw();
 
 private:
-    constexpr static int VERTS_TILE = 6;
-    constexpr static int TRIS_TILE = 4;
-    constexpr static int FACES_TILE = 6;
-    constexpr static int VERTS_FACE = 4;
-    constexpr static int TRIS_FACE = 2;
+    constexpr static unsigned int VERTS_TILE = 6;
+    constexpr static unsigned int TRIS_TILE = 4;
+    constexpr static unsigned int FACES_TILE = 6;
+    constexpr static unsigned int VERTS_FACE = 4;
+    constexpr static unsigned int TRIS_FACE = 2;
 
-    constexpr static int m_numVertex = Chunk::NTILES*VERTS_TILE
+    constexpr static unsigned int m_numVertex = Chunk::NTILES*VERTS_TILE
         + Chunk::NTILES*FACES_TILE*VERTS_FACE;
-    constexpr static int m_numTris = Chunk::NTILES*TRIS_TILE
+    constexpr static unsigned int m_numTris = Chunk::NTILES*TRIS_TILE
         + Chunk::NTILES*FACES_TILE*TRIS_FACE;
 
     std::array< GLuint, 3 > m_buffers;
