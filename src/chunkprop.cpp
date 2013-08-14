@@ -15,7 +15,7 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
     // Generate buffers
     glGenBuffers( 3, &m_buffers[0] );
 
-    // fillup the data
+    // template tile
     constexpr GLfloat sqrt3 = sqrt( 3 );
     constexpr GLfloat cz = 0.5 * sqrt3;
     constexpr GLfloat cx = 0.5;
@@ -24,6 +24,7 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
             -cx, -cz, cx, -cz, 1.0f, 0.0f,
                 cx, cz, -cx, cz, -1.0f, 0.0f } };
 
+    // generate tiles
     glm::vec2 offset;
     GLfloat h;
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
@@ -36,30 +37,29 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
 
         h = heigths[tile] * 0.1f;
 
-        for( unsigned int i = 0 ; i < VERTS_TILE ; ++i ){
-            auto p = tile*VERTS_TILE*3;
+        for( unsigned int vert = 0 ; vert < VERTS_TILE ; ++vert ){
+            auto pvert = tile*VERTS_TILE + vert;
+            auto dst0 = pvert*3;
+            auto dst1 = pvert*2;
 
-            m_vertexData[ p + i*3 ] = vpos[ i*2 ] + offset.x;
-            m_vertexData[ p + i*3 + 1 ] = h;
-            m_vertexData[ p + i*3 + 2 ] = vpos[ i*2 + 1 ] + offset.y;
+            m_vertexData[ dst0 ] = vpos[ vert*2 ] + offset.x;
+            m_vertexData[ dst0 + 1 ] = h;
+            m_vertexData[ dst0 + 2 ] = vpos[ vert*2 + 1 ] + offset.y;
+
+            m_uvData[ dst1 ] = m_vertexData[ dst0 ];
+            m_uvData[ dst1 + 1 ] = m_vertexData[ dst0 + 2 ];
+        }
+
+        for( unsigned int tri = 0 ; tri < TRIS_TILE ; ++tri ){
+            auto p = (tile*TRIS_TILE + tri)*3;
+
+            m_elemData[ p ] = tile*VERTS_TILE;
+            m_elemData[ p + 1 ] = tile*VERTS_TILE + tri + 2;
+            m_elemData[ p + 2 ] = tile*VERTS_TILE + tri + 1;
         }
     }
 
-    for( unsigned int i = 0 ; i < Chunk::NTILES*VERTS_TILE ; ++i ){
-        m_uvData[ i*2 ] = m_vertexData[ i*3 ];
-        m_uvData[ i*2 + 1 ] = m_vertexData[ i*3 + 2 ];
-    }
-
-    for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
-        for( unsigned int i = 0 ; i < TRIS_TILE ; ++i ){
-            auto p = tile*TRIS_TILE*3;
-
-            m_elemData[ p + i*3 ] = tile*VERTS_TILE;
-            m_elemData[ p + i*3 + 1 ] = tile*VERTS_TILE + i + 2;
-            m_elemData[ p + i*3 + 2 ] = tile*VERTS_TILE + i + 1;
-        }
-    }
-
+    // generate lateral faces
     auto minimun = heigths[0];
     for( unsigned int i = 1 ; i < Chunk::NTILES ; ++i ){
         minimun = min( minimun, heigths[i] );
