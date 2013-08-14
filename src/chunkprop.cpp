@@ -63,7 +63,7 @@ void ChunkProp::draw(){
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_buffers[2] );
 
-    glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements( GL_TRIANGLES, m_elemData.size(), GL_UNSIGNED_SHORT, nullptr);
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
