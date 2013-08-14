@@ -1,4 +1,3 @@
-
 /** @file util.hpp
     @brief Util functions.
     @author Luis Cabellos

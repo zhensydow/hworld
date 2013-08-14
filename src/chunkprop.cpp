@@ -5,9 +5,13 @@
 */
 //------------------------------------------------------------------------------
 #include "chunkprop.hpp"
+#include <algorithm>
 
 //------------------------------------------------------------------------------
-ChunkProp::ChunkProp( const std::array<int,7> & heigths ){
+using namespace std;
+
+//------------------------------------------------------------------------------
+ChunkProp::ChunkProp( const array<int,7> & heigths ){
     // Generate buffers
     glGenBuffers( 3, &m_buffers[0] );
 
@@ -16,13 +20,13 @@ ChunkProp::ChunkProp( const std::array<int,7> & heigths ){
     constexpr GLfloat cz = 0.5 * sqrt3;
     constexpr GLfloat cx = 0.5;
 
-    constexpr std::array< GLfloat,12 > vpos{ {
+    constexpr array< GLfloat,12 > vpos{ {
             -cx, -cz, cx, -cz, 1.0f, 0.0f,
                 cx, cz, -cx, cz, -1.0f, 0.0f } };
 
     glm::vec2 offset;
     GLfloat h;
-    for( auto tile = 0 ; tile < 7 ; ++tile ){
+    for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
         if( tile == 0 ){
             offset = glm::vec2( 0, 0 );
         }else{
