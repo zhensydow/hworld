@@ -107,7 +107,7 @@ int main(){
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
     auto chunk = createRandomChunk( -10, 10 );
-    auto cprop = chunk.createProp();
+    auto cprop = createChunkProp( chunk );
 
     GLuint programID = loadProgram( "test01" );
 
