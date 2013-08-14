@@ -41,12 +41,12 @@ ChunkProp::ChunkProp( const std::array<int,7> & heigths ){
         }
     }
 
-    for( int i = 0 ; i < m_numVertex ; ++i ){
+    for( unsigned int i = 0 ; i < Chunk::NTILES*6 ; ++i ){
         m_uvData[ i*2 ] = m_vertexData[ i*3 ];
         m_uvData[ i*2 + 1 ] = m_vertexData[ i*3 + 2 ];
     }
 
-    for( auto tile = 0 ; tile < 7 ; ++tile ){
+    for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
         for( int i = 0 ; i < 4 ; ++i ){
             auto p = 4*3*tile;
 

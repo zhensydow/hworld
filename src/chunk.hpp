@@ -9,23 +9,23 @@
 
 //------------------------------------------------------------------------------
 #include <array>
-#include "chunkprop.hpp"
 
 //------------------------------------------------------------------------------
 class Chunk{
 public:
-    ChunkProp createProp();
+    constexpr static unsigned int NTILES = 7;
 
     void setHeight( unsigned int i, const int val );
 
-private:
-    std::array<int,7> m_heights;
+    std::array< int, NTILES > m_heights;
 };
 
 //------------------------------------------------------------------------------
 inline
 void Chunk::setHeight( unsigned int i, const int val ){
-    m_heights[ i ] = val;
+    if( i < NTILES ){
+        m_heights[ i ] = val;
+    }
 }
 
 //------------------------------------------------------------------------------
