@@ -109,7 +109,7 @@ int main(){
                   g_index_data, GL_STATIC_DRAW );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
-    auto chunk = createRandomChunk( -2.0, 2.0 );
+    auto chunk = createRandomChunk( -10, 10 );
     auto cprop = chunk.createProp();
 
     GLuint programID = loadProgram( "test01" );

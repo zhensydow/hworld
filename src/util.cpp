@@ -8,15 +8,15 @@
 #include <random>
 
 //------------------------------------------------------------------------------
-Chunk createRandomChunk( float min, float max ){
+Chunk createRandomChunk( int min, int max ){
     Chunk chunk;
 
     std::random_device rd;
     std::mt19937 gen( rd() );
-    std::uniform_real_distribution<> dis( min, max );
+    std::uniform_int_distribution<> dis( min, max );
 
     for( int i = 0 ; i < 7 ; ++i ){
-        chunk.setHeight( 0, dis( gen ) );
+        chunk.setHeight( i, dis( gen ) );
     }
 
     return chunk;

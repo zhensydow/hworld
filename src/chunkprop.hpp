@@ -14,7 +14,7 @@
 //------------------------------------------------------------------------------
 class ChunkProp{
 public:
-    ChunkProp( const std::array<float,7> & heigths );
+    ChunkProp( const std::array<int,7> & heigths );
     void draw();
 
 private:

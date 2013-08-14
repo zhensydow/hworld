@@ -16,15 +16,15 @@ class Chunk{
 public:
     ChunkProp createProp();
 
-    void setHeight( unsigned int i, const float val );
+    void setHeight( unsigned int i, const int val );
 
 private:
-    std::array<float,7> m_heights;
+    std::array<int,7> m_heights;
 };
 
 //------------------------------------------------------------------------------
 inline
-void Chunk::setHeight( unsigned int i, const float val ){
+void Chunk::setHeight( unsigned int i, const int val ){
     m_heights[ i ] = val;
 }
 

@@ -7,7 +7,7 @@
 #include "chunkprop.hpp"
 
 //------------------------------------------------------------------------------
-ChunkProp::ChunkProp( const std::array<float,7> & heigths ){
+ChunkProp::ChunkProp( const std::array<int,7> & heigths ){
     // Generate buffers
     glGenBuffers( 3, &m_buffers[0] );
 

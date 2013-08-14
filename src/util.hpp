@@ -1,3 +1,4 @@
+
 /** @file util.hpp
     @brief Util functions.
     @author Luis Cabellos
@@ -11,7 +12,7 @@
 #include "chunk.hpp"
 
 //------------------------------------------------------------------------------
-Chunk createRandomChunk( float min, float max );
+Chunk createRandomChunk( int min, int max );
 
 //------------------------------------------------------------------------------
 #endif//UTIL_HPP_
