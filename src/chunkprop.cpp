@@ -67,7 +67,9 @@ ChunkProp::ChunkProp( const array<int,7> & heigths ){
     GLfloat minh = minimun * 0.1f - 0.1f;;
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
-        for( int face = 0 ; face < 6 ; ++face ){
+        h = abs( heigths[tile] * 0.1f - minh );
+
+        for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
             auto src0 = face + tile*6;
             auto src1 = (face+1) % 6 + tile*6;
 
@@ -96,14 +98,14 @@ ChunkProp::ChunkProp( const array<int,7> & heigths ){
             m_uvData[ p + 0 ] = 0.0f;
             m_uvData[ p + 1 ] = 0.0f;
 
-            m_uvData[ p + 2 ] = 0.0f;
-            m_uvData[ p + 3 ] = 1.0f;
+            m_uvData[ p + 2 ] = 1.0f;
+            m_uvData[ p + 3 ] = 0.0;
 
-            m_uvData[ p + 4 ] = 1.0f;
-            m_uvData[ p + 5 ] = 1.0f;
+            m_uvData[ p + 4 ] = 0.0f;
+            m_uvData[ p + 5 ] = h;
 
             m_uvData[ p + 6 ] = 1.0f;
-            m_uvData[ p + 7 ] = 0.0f;
+            m_uvData[ p + 7 ] = h;
         }
 
         for( int face = 0 ; face < 6 ; ++face ){
