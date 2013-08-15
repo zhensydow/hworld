@@ -103,7 +103,10 @@ int main(){
     glBindTexture( GL_TEXTURE_2D, tex_2d0 );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT );
+    glBindTexture( GL_TEXTURE_2D, 0 );
+
+    glBindTexture( GL_TEXTURE_2D, tex_2d1 );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
     //put buffer data on OpenGL
@@ -131,6 +134,7 @@ int main(){
 
     auto matrix_id = glGetUniformLocation( programID , "MVP");
     auto texture_id = glGetUniformLocation( programID , "texSampler");
+
     glm::mat4 mvp, proj, view, model;
 
     bool running = true;
