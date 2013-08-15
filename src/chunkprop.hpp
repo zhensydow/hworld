@@ -25,15 +25,22 @@ private:
     constexpr static unsigned int VERTS_FACE = 4;
     constexpr static unsigned int TRIS_FACE = 2;
 
-    constexpr static unsigned int m_numVertex = Chunk::NTILES*VERTS_TILE
-        + Chunk::NTILES*FACES_TILE*VERTS_FACE;
-    constexpr static unsigned int m_numTris = Chunk::NTILES*TRIS_TILE
-        + Chunk::NTILES*FACES_TILE*TRIS_FACE;
+    constexpr static unsigned int m_numVertex = Chunk::NTILES*VERTS_TILE;
+    constexpr static unsigned int m_numTris = Chunk::NTILES*TRIS_TILE;
+    constexpr static unsigned int m_numFaceVerts =
+        Chunk::NTILES*FACES_TILE*VERTS_FACE;
+    constexpr static unsigned int m_numFaceTris =
+        Chunk::NTILES*FACES_TILE*TRIS_FACE;
 
     std::array< GLuint, 3 > m_buffers;
     std::array< GLfloat, m_numVertex*3 > m_vertexData;
     std::array< GLfloat, m_numVertex*2 > m_uvData;
     std::array< GLushort, m_numTris*3 > m_elemData;
+
+    std::array< GLuint, 3 > m_faceBuffers;
+    std::array< GLfloat, m_numFaceVerts*3 > m_faceVerts;
+    std::array< GLfloat, m_numFaceVerts*2 > m_faceUVs;
+    std::array< GLushort, m_numFaceTris*3 > m_faceTris;
 };
 
 //------------------------------------------------------------------------------

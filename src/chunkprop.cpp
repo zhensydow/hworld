@@ -66,6 +66,9 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
     }
     GLfloat minh = minimun * 0.1f - 0.1f;;
 
+    // Generate buffers
+    glGenBuffers( 3, &m_faceBuffers[0] );
+
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
         h = abs( heigths[tile] * 0.1f - minh );
 
@@ -73,41 +76,41 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
             auto pface = tile*FACES_TILE + face;
             auto src0 = face + tile*VERTS_TILE;
             auto src1 = (face+1) % VERTS_TILE + tile*FACES_TILE;
-            auto dst = Chunk::NTILES*VERTS_TILE*3 + pface*VERTS_FACE*3;
+            auto dst = pface*VERTS_FACE*3;
 
-            m_vertexData[ dst + 0 ] = m_vertexData[ src0*3 + 0 ];
-            m_vertexData[ dst + 1 ] = m_vertexData[ src0*3 + 1 ];
-            m_vertexData[ dst + 2 ] = m_vertexData[ src0*3 + 2 ];
-            m_vertexData[ dst + 3 ] = m_vertexData[ src1*3 + 0 ];
-            m_vertexData[ dst + 4 ] = m_vertexData[ src1*3 + 1 ];
-            m_vertexData[ dst + 5 ] = m_vertexData[ src1*3 + 2 ];
-            m_vertexData[ dst + 6 ] = m_vertexData[ src0*3 + 0 ];
-            m_vertexData[ dst + 7 ] = minh;
-            m_vertexData[ dst + 8 ] = m_vertexData[ src0*3 + 2 ];
-            m_vertexData[ dst + 9 ] = m_vertexData[ src1*3 + 0 ];
-            m_vertexData[ dst + 10 ] = minh;
-            m_vertexData[ dst + 11 ] = m_vertexData[ src1*3 + 2 ];
+            m_faceVerts[ dst + 0 ] = m_vertexData[ src0*3 + 0 ];
+            m_faceVerts[ dst + 1 ] = m_vertexData[ src0*3 + 1 ];
+            m_faceVerts[ dst + 2 ] = m_vertexData[ src0*3 + 2 ];
+            m_faceVerts[ dst + 3 ] = m_vertexData[ src1*3 + 0 ];
+            m_faceVerts[ dst + 4 ] = m_vertexData[ src1*3 + 1 ];
+            m_faceVerts[ dst + 5 ] = m_vertexData[ src1*3 + 2 ];
+            m_faceVerts[ dst + 6 ] = m_vertexData[ src0*3 + 0 ];
+            m_faceVerts[ dst + 7 ] = minh;
+            m_faceVerts[ dst + 8 ] = m_vertexData[ src0*3 + 2 ];
+            m_faceVerts[ dst + 9 ] = m_vertexData[ src1*3 + 0 ];
+            m_faceVerts[ dst + 10 ] = minh;
+            m_faceVerts[ dst + 11 ] = m_vertexData[ src1*3 + 2 ];
 
-            dst = Chunk::NTILES*VERTS_TILE*2 + pface*VERTS_FACE*2;
+            dst = pface*VERTS_FACE*2;
 
-            m_uvData[ dst + 0 ] = 0.0f;
-            m_uvData[ dst + 1 ] = 0.0f;
-            m_uvData[ dst + 2 ] = 1.0f;
-            m_uvData[ dst + 3 ] = 0.0;
-            m_uvData[ dst + 4 ] = 0.0f;
-            m_uvData[ dst + 5 ] = h;
-            m_uvData[ dst + 6 ] = 1.0f;
-            m_uvData[ dst + 7 ] = h;
+            m_faceUVs[ dst + 0 ] = 0.0f;
+            m_faceUVs[ dst + 1 ] = 0.0f;
+            m_faceUVs[ dst + 2 ] = 1.0f;
+            m_faceUVs[ dst + 3 ] = 0.0;
+            m_faceUVs[ dst + 4 ] = 0.0f;
+            m_faceUVs[ dst + 5 ] = h;
+            m_faceUVs[ dst + 6 ] = 1.0f;
+            m_faceUVs[ dst + 7 ] = h;
 
-            auto src = Chunk::NTILES*VERTS_TILE + pface*VERTS_FACE;
-            dst = Chunk::NTILES*TRIS_TILE*3 + pface*TRIS_FACE*3;
+            auto src = pface*VERTS_FACE;
+            dst = pface*TRIS_FACE*3;
 
-            m_elemData[ dst + 0 ] = src;
-            m_elemData[ dst + 1 ] = src + 1;
-            m_elemData[ dst + 2 ] = src + 3;
-            m_elemData[ dst + 3 ] = src;
-            m_elemData[ dst + 4 ] = src + 3;
-            m_elemData[ dst + 5 ] = src + 2;
+            m_faceTris[ dst + 0 ] = src;
+            m_faceTris[ dst + 1 ] = src + 1;
+            m_faceTris[ dst + 2 ] = src + 3;
+            m_faceTris[ dst + 3 ] = src;
+            m_faceTris[ dst + 4 ] = src + 3;
+            m_faceTris[ dst + 5 ] = src + 2;
         }
     }
 
@@ -120,11 +123,23 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
     glBufferData( GL_ARRAY_BUFFER, m_uvData.size()*sizeof(GLfloat),
                   &m_uvData[0], GL_STATIC_DRAW );
 
+    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[0] );
+    glBufferData( GL_ARRAY_BUFFER, m_faceVerts.size()*sizeof(GLfloat),
+                  &m_faceVerts[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[1] );
+    glBufferData( GL_ARRAY_BUFFER, m_faceUVs.size()*sizeof(GLfloat),
+                  &m_faceUVs[0], GL_STATIC_DRAW );
+
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_buffers[2] );
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_elemData.size()*sizeof(GLushort),
                   &m_elemData[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_faceBuffers[2] );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_faceTris.size()*sizeof(GLushort),
+                  &m_faceTris[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 }
@@ -142,6 +157,20 @@ void ChunkProp::draw(){
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_buffers[2] );
 
     glDrawElements( GL_TRIANGLES, m_elemData.size(), GL_UNSIGNED_SHORT, nullptr);
+
+    glEnableVertexAttribArray( 0 );
+    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[0] );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+    glEnableVertexAttribArray( 1 );
+    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[1] );
+    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_faceBuffers[2] );
+
+    glUniform1i( 1, 1 );
+
+    glDrawElements( GL_TRIANGLES, m_faceTris.size(), GL_UNSIGNED_SHORT, nullptr);
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
