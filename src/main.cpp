@@ -80,14 +80,27 @@ int main(){
     glGenBuffers( 1, &elemBuffer );
 
     // load texture
-    GLuint tex_2d = SOIL_load_OGL_texture( "data/tile01.png",
-                                           SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT );
-    if( 0 == tex_2d ){
+    GLuint tex_2d0 = SOIL_load_OGL_texture( "data/tile01.png",
+                                            SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                            SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                            | SOIL_FLAG_NTSC_SAFE_RGB
+                                            | SOIL_FLAG_COMPRESS_TO_DXT );
+    if( 0 == tex_2d0 ){
         std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
         std::terminate();
     }
 
-    glBindTexture( GL_TEXTURE_2D, tex_2d );
+    GLuint tex_2d1 = SOIL_load_OGL_texture( "data/tile03.png",
+                                            SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                            SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                            | SOIL_FLAG_NTSC_SAFE_RGB
+                                            | SOIL_FLAG_COMPRESS_TO_DXT );
+    if( 0 == tex_2d1 ){
+        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
+        std::terminate();
+    }
+
+    glBindTexture( GL_TEXTURE_2D, tex_2d0 );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT );
@@ -204,7 +217,11 @@ int main(){
 
         // Draw the chunk
         glActiveTexture( GL_TEXTURE0 );
-        glBindTexture( GL_TEXTURE_2D, tex_2d );
+        glBindTexture( GL_TEXTURE_2D, tex_2d0 );
+
+        glActiveTexture( GL_TEXTURE1 );
+        glBindTexture( GL_TEXTURE_2D, tex_2d1 );
+
         glUniform1i( texture_id, 0 );
 
         model = glm::mat4(1.0f);
