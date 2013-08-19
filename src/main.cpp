@@ -45,41 +45,6 @@ int main(){
     glDepthFunc( GL_LESS );
     glEnable( GL_CULL_FACE );
 
-    // An array of 3 vectors which represents 3 vertices
-    static const GLfloat g_vertex_buffer_data[] = {
-       -1.0f, -1.0f, 0.0f,
-       1.0f, -1.0f, 0.0f,
-       0.0f,  1.0f, 0.0f,
-       -1.0f, -1.0f, -1.0f,
-       1.0f, -1.0f, -1.0f,
-       0.0f,  1.0f, -1.0f,
-       -1.0f, -1.0f, -3.0f,
-       1.0f, -1.0f, -3.0f,
-       0.0f,  1.0f, -3.0f,
-    };
-
-    static const GLfloat g_uv_buffer_data[] = {
-        0.0f,  0.0f,
-        0.0f,  1.0f,
-        1.0f,  1.0f,
-        0.0f,  0.0f,
-        0.0f,  1.0f,
-        1.0f,  1.0f,
-        0.0f,  0.0f,
-        0.0f,  1.0f,
-        1.0f,  1.0f,
-    };
-
-    static const GLushort g_index_data[] = {
-        0, 1, 2, 3, 4, 5, 6, 7, 8,
-    };
-
-    // Generate buffers
-    GLuint vertexbuffer, uvbuffer, elemBuffer;
-    glGenBuffers( 1, &vertexbuffer );
-    glGenBuffers( 1, &uvbuffer );
-    glGenBuffers( 1, &elemBuffer );
-
     // load texture
     GLuint tex_2d0 = SOIL_load_OGL_texture( "data/tile01.png",
                                             SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
@@ -109,19 +74,6 @@ int main(){
     glBindTexture( GL_TEXTURE_2D, tex_2d1 );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glBindTexture( GL_TEXTURE_2D, 0 );
-
-    //put buffer data on OpenGL
-    glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
-                  g_vertex_buffer_data, GL_STATIC_DRAW );
-    glBindBuffer( GL_ARRAY_BUFFER, uvbuffer );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data),
-                  g_uv_buffer_data, GL_STATIC_DRAW );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elemBuffer );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof(g_index_data),
-                  g_index_data, GL_STATIC_DRAW );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
     auto chunk = createRandomChunk( -10, 10 );
     auto cprop = createChunkProp( chunk );
@@ -189,38 +141,6 @@ int main(){
 
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         glUseProgram( programID );
-
-        // Draw the triangles
-        // glActiveTexture( GL_TEXTURE0 );
-        // glBindTexture( GL_TEXTURE_2D, tex_2d );
-        // glUniform1i( texture_id, 0 );
-
-        // glEnableVertexAttribArray( 0 );
-        // glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
-        // glVertexAttribPointer(
-        //    0,                  // attribute 0 in the shader.
-        //    3, GL_FLOAT, GL_FALSE,  // size, type, normalized?
-        //    0,                  // stride
-        //    (void*)0            // array buffer offset
-        // );
-
-        // glEnableVertexAttribArray( 1 );
-        // glBindBuffer( GL_ARRAY_BUFFER, uvbuffer );
-        // glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-        // glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elemBuffer );
-
-        // model = glm::translate(-3.0f, 0.0f, 0.0f) *
-        //     glm::rotate( 45.0f, glm::vec3{1.0f, 0.0f, 0.0f} );
-        // mvp = proj * view * model;
-        // glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        // glDrawElements( GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr);
-
-        // glDisableVertexAttribArray( 0 );
-        // glDisableVertexAttribArray( 1 );
-        // glBindBuffer( GL_ARRAY_BUFFER, 0 );
-        // glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-        // glBindTexture( GL_TEXTURE_2D, 0 );
 
         // Draw the chunk
         glActiveTexture( GL_TEXTURE0 );
