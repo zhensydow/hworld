@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "chunkprop.hpp"
 #include <algorithm>
+#include "renderer.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -145,35 +146,8 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
 }
 
 //------------------------------------------------------------------------------
-void ChunkProp::draw(){
-    glEnableVertexAttribArray( 0 );
-    glBindBuffer( GL_ARRAY_BUFFER, m_buffers[0] );
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-    glEnableVertexAttribArray( 1 );
-    glBindBuffer( GL_ARRAY_BUFFER, m_buffers[1] );
-    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_buffers[2] );
-
-    glDrawElements( GL_TRIANGLES, m_elemData.size(), GL_UNSIGNED_SHORT, nullptr);
-
-    glEnableVertexAttribArray( 0 );
-    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[0] );
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-    glEnableVertexAttribArray( 1 );
-    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[1] );
-    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_faceBuffers[2] );
-
-    glUniform1i( 1, 1 );
-
-    glDrawElements( GL_TRIANGLES, m_faceTris.size(), GL_UNSIGNED_SHORT, nullptr);
-
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+void ChunkProp::draw( Renderer & renderer ){
+    renderer.render( *this );
 }
 
 //------------------------------------------------------------------------------

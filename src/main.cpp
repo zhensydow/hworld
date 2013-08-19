@@ -4,9 +4,7 @@
     @date 2013-07-24
 */
 //------------------------------------------------------------------------------
-#include <iostream>
 #include "gfxinc.hpp"
-#include "shader.hpp"
 #include "terminal.hpp"
 #include "chunk.hpp"
 #include "renderer.hpp"
@@ -17,85 +15,29 @@
    @returns the exit code of program.
  */
 int main(){
-    sf::ContextSettings desired;
-    desired.majorVersion = 3;
-    desired.minorVersion = 3;
+    Renderer renderer;
 
-    GLuint vertexArrayID;
-    glGenVertexArrays( 1, &vertexArrayID );
-    glBindVertexArray( vertexArrayID );
+    renderer.setup();
 
-    sf::RenderWindow window{
-        sf::VideoMode(800, 600),
-        "HexWorld", sf::Style::Default, desired };
-    window.setVerticalSyncEnabled( true );
+    auto window = renderer.getWindow();
 
-    auto settings = window.getSettings();
-
-    Terminal terminal{ &window };
+    Terminal terminal{ window };
     terminal.initialize();
-
-    std::cout << "depth bits: " << settings.depthBits << std::endl;
-    std::cout << "stencil bits: " << settings.stencilBits << std::endl;
-    std::cout << "antialiasing level: " << settings.antialiasingLevel << std::endl;
-    std::cout << "version: " << settings.majorVersion << "."
-              << settings.minorVersion << std::endl;
-
-    glEnable( GL_DEPTH_TEST );
-    glDepthFunc( GL_LESS );
-    glEnable( GL_CULL_FACE );
-
-    // load texture
-    GLuint tex_2d0 = SOIL_load_OGL_texture( "data/tile01.png",
-                                            SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                            SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                            | SOIL_FLAG_NTSC_SAFE_RGB
-                                            | SOIL_FLAG_COMPRESS_TO_DXT );
-    if( 0 == tex_2d0 ){
-        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
-        std::terminate();
-    }
-
-    GLuint tex_2d1 = SOIL_load_OGL_texture( "data/tile03.png",
-                                            SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                            SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                            | SOIL_FLAG_NTSC_SAFE_RGB
-                                            | SOIL_FLAG_COMPRESS_TO_DXT );
-    if( 0 == tex_2d1 ){
-        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
-        std::terminate();
-    }
-
-    glBindTexture( GL_TEXTURE_2D, tex_2d0 );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    glBindTexture( GL_TEXTURE_2D, 0 );
-
-    glBindTexture( GL_TEXTURE_2D, tex_2d1 );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-    glBindTexture( GL_TEXTURE_2D, 0 );
 
     auto chunk = createRandomChunk( -10, 10 );
     auto cprop = createChunkProp( chunk );
-
-    GLuint programID = loadProgram( "test01" );
 
     float fov = 45.0;
     float px = 4;
     float py = 3;
     float pz = 3;
 
-    auto matrix_id = glGetUniformLocation( programID , "MVP");
-    auto texture_id = glGetUniformLocation( programID , "texSampler");
-
-    glm::mat4 mvp, proj, view, model;
-
-    Renderer renderer;
+    glm::mat4 proj, view, model;
 
     bool running = true;
     while( running ){
         sf::Event event;
-        while( window.pollEvent(event) ){
+        while( window->pollEvent(event) ){
             if( event.type == sf::Event::Closed ){
                 running = false;
             }else if(event.type == sf::Event::Resized){
@@ -132,39 +74,24 @@ int main(){
             }
         }
 
-        view = glm::lookAt(
-                           glm::vec3( px, py, pz ), // origing
-                           glm::vec3(0,0,0), // looks to
-                           glm::vec3(0,1,0)  // up
-                           );
-        proj = glm::perspective( fov, 4.0f / 3.0f, 0.1f, 100.0f );
+        renderer.view = glm::lookAt(
+                                    glm::vec3( px, py, pz ), // origing
+                                    glm::vec3(0,0,0), // looks to
+                                    glm::vec3(0,1,0)  // up
+                                    );
+        renderer.proj = glm::perspective( fov, 4.0f / 3.0f, 0.1f, 100.0f );
 
-        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-        glUseProgram( programID );
+        renderer.startFrame();
 
-        // Draw the chunk
-        glActiveTexture( GL_TEXTURE0 );
-        glBindTexture( GL_TEXTURE_2D, tex_2d0 );
+        cprop.draw( renderer );
 
-        glActiveTexture( GL_TEXTURE1 );
-        glBindTexture( GL_TEXTURE_2D, tex_2d1 );
-
-        glUniform1i( texture_id, 0 );
-
-        model = glm::mat4(1.0f);
-        mvp = proj * view * model;
-        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &mvp[0][0] );
-        cprop.draw();
-
-        glBindTexture( GL_TEXTURE_2D, 0 );
-
-        window.pushGLStates();
+        window->pushGLStates();
 
         terminal.draw();
 
-        window.popGLStates();
+        window->popGLStates();
 
-        window.display();
+        window->display();
     }
 
     return 0;

@@ -13,12 +13,14 @@
 #include "chunk.hpp"
 
 //------------------------------------------------------------------------------
+class Renderer;
+
+//------------------------------------------------------------------------------
 class ChunkProp{
 public:
     ChunkProp( const std::array< int, Chunk::NTILES> & heigths );
-    void draw();
+    void draw( Renderer & renderer );
 
-private:
     constexpr static unsigned int VERTS_TILE = 6;
     constexpr static unsigned int TRIS_TILE = 4;
     constexpr static unsigned int FACES_TILE = 6;
