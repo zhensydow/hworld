@@ -62,6 +62,7 @@ void Renderer::setup(){
     glBindTexture( GL_TEXTURE_2D, 0 );
 
     m_chunkprogram = loadProgram( "test01" );
+    m_chk_floor_prg = loadProgram( "chunk_floor" );
 }
 
 //------------------------------------------------------------------------------
@@ -111,11 +112,27 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
                     GL_UNSIGNED_SHORT, nullptr);
 
+    glActiveTexture( 0 );
+    glBindTexture( GL_TEXTURE_2D, 0 );
+
+    matrix_id = glGetUniformLocation( m_chk_floor_prg, "MVP");
+
+    glUseProgram( m_chk_floor_prg );
+
+    glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+
+    glEnableVertexAttribArray( 0 );
+    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.floorVertsBuff() );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.floorTrisBuff() );
+
+    glDrawElements( GL_TRIANGLES, chunkprop.floorTrisSize(),
+                    GL_UNSIGNED_SHORT, nullptr);
+
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
-    glActiveTexture( 0 );
-    glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
 //------------------------------------------------------------------------------

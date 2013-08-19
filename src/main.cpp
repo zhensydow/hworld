@@ -24,6 +24,8 @@ int main(){
     Terminal terminal{ window };
     terminal.initialize();
 
+    ChunkProp::setup();
+
     auto chunk = createRandomChunk( -5, 5 );
     auto cprop = createChunkProp( chunk );
 

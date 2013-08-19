@@ -12,16 +12,74 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
+std::array< GLuint, 2 > ChunkProp::s_floorBuffers;
+std::array< GLfloat, ChunkProp::m_numFloorVerts*3 > ChunkProp::s_floorVerts;
+std::array< GLushort, ChunkProp::m_numFloorTris*3 > ChunkProp::s_floorTris;
+
+//------------------------------------------------------------------------------
+void ChunkProp::setup(){
+    // generate floor
+    glGenBuffers( s_floorBuffers.size(), &s_floorBuffers[0] );
+
+    glm::vec2 offset;
+    for( unsigned int tile = 0 ; tile < Chunk::NTILES - 1 ; ++tile ){
+        offset = glm::rotate( glm::vec2( 0, -sqrt3 ), 60.0f * tile );
+
+        for( unsigned int i = 0 ; i < 3 ; ++i ){
+            auto dst = (tile*3 + i)*3;
+            auto src0 = ((tile + i + (Chunk::VERTS_TILE-1))
+                         % Chunk::VERTS_TILE)*2;
+
+            s_floorVerts[ dst + 0 ] = TilePos[ src0 ] + offset.x;
+            s_floorVerts[ dst + 1 ] = 0.0f;
+            s_floorVerts[ dst + 2 ] = TilePos[ src0 + 1 ] + offset.y;
+        }
+
+        auto dst = tile * 2 * 3;
+        auto src0 = tile * 3;
+        auto srcN = (src0 + 3) % (Chunk::VERTS_TILE*3);
+
+        s_floorTris[ dst + 0 ] = src0;
+        s_floorTris[ dst + 1 ] = src0 + 1;
+        s_floorTris[ dst + 2 ] = src0 + 2;
+        s_floorTris[ dst + 3 ] = src0;
+        s_floorTris[ dst + 4 ] = src0 + 2;
+        s_floorTris[ dst + 5 ] = srcN;
+    }
+
+    auto dst = 2 * (Chunk::NTILES - 1) * 3;
+    s_floorTris[ dst + 0 ] = 0;
+    s_floorTris[ dst + 1 ] = 3;
+    s_floorTris[ dst + 2 ] = 6;
+
+    s_floorTris[ dst + 3 ] = 0;
+    s_floorTris[ dst + 4 ] = 6;
+    s_floorTris[ dst + 5 ] = 9;
+
+    s_floorTris[ dst + 6 ] = 0;
+    s_floorTris[ dst + 7 ] = 9;
+    s_floorTris[ dst + 8 ] = 12;
+
+    s_floorTris[ dst + 9 ] = 0;
+    s_floorTris[ dst + 10 ] = 12;
+    s_floorTris[ dst + 11 ] = 15;
+
+    // send buffers to openGL
+    glBindBuffer( GL_ARRAY_BUFFER, s_floorBuffers[0] );
+    glBufferData( GL_ARRAY_BUFFER, s_floorVerts.size()*sizeof(GLfloat),
+                  &s_floorVerts[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, s_floorBuffers[1] );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, s_floorTris.size()*sizeof(GLushort),
+                  &s_floorTris[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+}
+
+//------------------------------------------------------------------------------
 ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
-    // template tile
-    constexpr GLfloat sqrt3 = sqrt( 3 );
-    constexpr GLfloat cz = 0.5 * sqrt3;
-    constexpr GLfloat cx = 0.5;
-
-    constexpr array< GLfloat, VERTS_TILE*2 > vpos{ {
-            -cx, -cz, cx, -cz, 1.0f, 0.0f,
-                cx, cz, -cx, cz, -1.0f, 0.0f } };
-
     // generate tiles
     glGenBuffers( 3, &m_buffers[0] );
     glm::vec2 offset;
@@ -36,14 +94,14 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
 
         h = heigths[tile] * Chunk::STEP_SIZE;
 
-        for( unsigned int vert = 0 ; vert < VERTS_TILE ; ++vert ){
-            auto pvert = tile*VERTS_TILE + vert;
+        for( unsigned int vert = 0 ; vert < Chunk::VERTS_TILE ; ++vert ){
+            auto pvert = tile*Chunk::VERTS_TILE + vert;
             auto dst0 = pvert*3;
             auto dst1 = pvert*2;
 
-            m_vertexData[ dst0 ] = vpos[ vert*2 ] + offset.x;
+            m_vertexData[ dst0 ] = TilePos[ vert*2 ] + offset.x;
             m_vertexData[ dst0 + 1 ] = h;
-            m_vertexData[ dst0 + 2 ] = vpos[ vert*2 + 1 ] + offset.y;
+            m_vertexData[ dst0 + 2 ] = TilePos[ vert*2 + 1 ] + offset.y;
 
             m_uvData[ dst1 ] = m_vertexData[ dst0 ];
             m_uvData[ dst1 + 1 ] = m_vertexData[ dst0 + 2 ];
@@ -52,9 +110,9 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
         for( unsigned int tri = 0 ; tri < TRIS_TILE ; ++tri ){
             auto p = (tile*TRIS_TILE + tri)*3;
 
-            m_elemData[ p ] = tile*VERTS_TILE;
-            m_elemData[ p + 1 ] = tile*VERTS_TILE + tri + 2;
-            m_elemData[ p + 2 ] = tile*VERTS_TILE + tri + 1;
+            m_elemData[ p ] = tile*Chunk::VERTS_TILE;
+            m_elemData[ p + 1 ] = tile*Chunk::VERTS_TILE + tri + 2;
+            m_elemData[ p + 2 ] = tile*Chunk::VERTS_TILE + tri + 1;
         }
     }
 
@@ -81,21 +139,21 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
         for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
             auto pface = tile*FACES_TILE + face;
             auto src0 = face*2;
-            auto src1 = ((face+1) % VERTS_TILE)*2;
+            auto src1 = ((face+1) % Chunk::VERTS_TILE)*2;
             auto dst = pface*VERTS_FACE*3;
 
-            m_faceVerts[ dst + 0 ] = vpos[ src0 ] + offset.x;
+            m_faceVerts[ dst + 0 ] = TilePos[ src0 ] + offset.x;
             m_faceVerts[ dst + 1 ] = h;
-            m_faceVerts[ dst + 2 ] = vpos[ src0 + 1 ] + offset.y;
-            m_faceVerts[ dst + 3 ] = vpos[ src1 ] + offset.x;
+            m_faceVerts[ dst + 2 ] = TilePos[ src0 + 1 ] + offset.y;
+            m_faceVerts[ dst + 3 ] = TilePos[ src1 ] + offset.x;
             m_faceVerts[ dst + 4 ] = h;
-            m_faceVerts[ dst + 5 ] = vpos[ src1 + 1 ] + offset.y;
-            m_faceVerts[ dst + 6 ] = vpos[ src0 ] + offset.x;
+            m_faceVerts[ dst + 5 ] = TilePos[ src1 + 1 ] + offset.y;
+            m_faceVerts[ dst + 6 ] = TilePos[ src0 ] + offset.x;
             m_faceVerts[ dst + 7 ] = minh;
-            m_faceVerts[ dst + 8 ] = vpos[ src0 + 1 ] + offset.y;
-            m_faceVerts[ dst + 9 ] = vpos[ src1 ] + offset.x;
+            m_faceVerts[ dst + 8 ] = TilePos[ src0 + 1 ] + offset.y;
+            m_faceVerts[ dst + 9 ] = TilePos[ src1 ] + offset.x;
             m_faceVerts[ dst + 10 ] = minh;
-            m_faceVerts[ dst + 11 ] = vpos[ src1 + 1 ] + offset.y;
+            m_faceVerts[ dst + 11 ] = TilePos[ src1 + 1 ] + offset.y;
 
             dst = pface*VERTS_FACE*2;
 
