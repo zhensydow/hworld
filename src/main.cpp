@@ -9,6 +9,7 @@
 #include "shader.hpp"
 #include "terminal.hpp"
 #include "chunk.hpp"
+#include "renderer.hpp"
 #include "util.hpp"
 
 //------------------------------------------------------------------------------
@@ -136,6 +137,8 @@ int main(){
     auto texture_id = glGetUniformLocation( programID , "texSampler");
 
     glm::mat4 mvp, proj, view, model;
+
+    Renderer renderer;
 
     bool running = true;
     while( running ){
