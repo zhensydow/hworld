@@ -81,16 +81,17 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glUniform1i( texture_id, 0 );
 
     glEnableVertexAttribArray( 0 );
-    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.m_buffers[0] );
+    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.tileVertsBuff() );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 
     glEnableVertexAttribArray( 1 );
-    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.m_buffers[1] );
+    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.tileUVBuff() );
     glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.m_buffers[2] );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.tileTrisBuff() );
 
-    glDrawElements( GL_TRIANGLES, chunkprop.m_elemData.size(), GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements( GL_TRIANGLES, chunkprop.tileTrisSize(),
+                    GL_UNSIGNED_SHORT, nullptr);
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d1 );
@@ -98,16 +99,17 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glUniform1i( texture_id, 0 );
 
     glEnableVertexAttribArray( 0 );
-    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.m_faceBuffers[0] );
+    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.faceVertsBuff() );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 
     glEnableVertexAttribArray( 1 );
-    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.m_faceBuffers[1] );
+    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.faceUVBuff() );
     glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.m_faceBuffers[2] );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.faceTrisBuff() );
 
-    glDrawElements( GL_TRIANGLES, chunkprop.m_faceTris.size(), GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
+                    GL_UNSIGNED_SHORT, nullptr);
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
