@@ -13,9 +13,6 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
-    // Generate buffers
-    glGenBuffers( 3, &m_buffers[0] );
-
     // template tile
     constexpr GLfloat sqrt3 = sqrt( 3 );
     constexpr GLfloat cz = 0.5 * sqrt3;
@@ -26,6 +23,7 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
                 cx, cz, -cx, cz, -1.0f, 0.0f } };
 
     // generate tiles
+    glGenBuffers( 3, &m_buffers[0] );
     glm::vec2 offset;
     GLfloat h;
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
@@ -67,30 +65,37 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
     }
     GLfloat minh = (minimun - 1) * Chunk::STEP_SIZE;
 
-    // Generate buffers
     glGenBuffers( 3, &m_faceBuffers[0] );
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
-        h = abs( heigths[tile] * Chunk::STEP_SIZE - minh );
+        if( tile == 0 ){
+            offset = glm::vec2( 0, 0 );
+        }else{
+            offset = glm::rotate( glm::vec2( 0, -sqrt3 ),
+                                  60.0f * (tile - 1) );
+        }
+
+        h = heigths[tile] * Chunk::STEP_SIZE;
+        auto uvh = abs( heigths[tile] * Chunk::STEP_SIZE - minh );
 
         for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
             auto pface = tile*FACES_TILE + face;
-            auto src0 = face + tile*VERTS_TILE;
-            auto src1 = (face+1) % VERTS_TILE + tile*FACES_TILE;
+            auto src0 = face*2;
+            auto src1 = ((face+1) % VERTS_TILE)*2;
             auto dst = pface*VERTS_FACE*3;
 
-            m_faceVerts[ dst + 0 ] = m_vertexData[ src0*3 + 0 ];
-            m_faceVerts[ dst + 1 ] = m_vertexData[ src0*3 + 1 ];
-            m_faceVerts[ dst + 2 ] = m_vertexData[ src0*3 + 2 ];
-            m_faceVerts[ dst + 3 ] = m_vertexData[ src1*3 + 0 ];
-            m_faceVerts[ dst + 4 ] = m_vertexData[ src1*3 + 1 ];
-            m_faceVerts[ dst + 5 ] = m_vertexData[ src1*3 + 2 ];
-            m_faceVerts[ dst + 6 ] = m_vertexData[ src0*3 + 0 ];
+            m_faceVerts[ dst + 0 ] = vpos[ src0 ] + offset.x;
+            m_faceVerts[ dst + 1 ] = h;
+            m_faceVerts[ dst + 2 ] = vpos[ src0 + 1 ] + offset.y;
+            m_faceVerts[ dst + 3 ] = vpos[ src1 ] + offset.x;
+            m_faceVerts[ dst + 4 ] = h;
+            m_faceVerts[ dst + 5 ] = vpos[ src1 + 1 ] + offset.y;
+            m_faceVerts[ dst + 6 ] = vpos[ src0 ] + offset.x;
             m_faceVerts[ dst + 7 ] = minh;
-            m_faceVerts[ dst + 8 ] = m_vertexData[ src0*3 + 2 ];
-            m_faceVerts[ dst + 9 ] = m_vertexData[ src1*3 + 0 ];
+            m_faceVerts[ dst + 8 ] = vpos[ src0 + 1 ] + offset.y;
+            m_faceVerts[ dst + 9 ] = vpos[ src1 ] + offset.x;
             m_faceVerts[ dst + 10 ] = minh;
-            m_faceVerts[ dst + 11 ] = m_vertexData[ src1*3 + 2 ];
+            m_faceVerts[ dst + 11 ] = vpos[ src1 + 1 ] + offset.y;
 
             dst = pface*VERTS_FACE*2;
 
@@ -99,9 +104,9 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
             m_faceUVs[ dst + 2 ] = 1.0f;
             m_faceUVs[ dst + 3 ] = 0.0;
             m_faceUVs[ dst + 4 ] = 0.0f;
-            m_faceUVs[ dst + 5 ] = h;
+            m_faceUVs[ dst + 5 ] = uvh;
             m_faceUVs[ dst + 6 ] = 1.0f;
-            m_faceUVs[ dst + 7 ] = h;
+            m_faceUVs[ dst + 7 ] = uvh;
 
             auto src = pface*VERTS_FACE;
             dst = pface*TRIS_FACE*3;
