@@ -36,6 +36,7 @@ public:
     GLuint floorVertsBuff() const;
     GLuint floorTrisBuff() const;
     unsigned int floorTrisSize() const;
+    const glm::vec3 & floorPos() const;
 
 private:
     constexpr static unsigned int TRIS_TILE = 4;
@@ -68,6 +69,7 @@ private:
     std::array< GLfloat, m_numFaceVerts*2 > m_faceUVs;
     std::array< GLushort, m_numFaceTris*3 > m_faceTris;
 
+    glm::vec3 m_floorPos;
 };
 
 //------------------------------------------------------------------------------
@@ -134,6 +136,12 @@ GLuint ChunkProp::floorTrisBuff() const{
 inline
 unsigned int ChunkProp::floorTrisSize() const{
     return s_floorTris.size();
+}
+
+//------------------------------------------------------------------------------
+inline
+const glm::vec3 & ChunkProp::floorPos() const{
+    return m_floorPos;
 }
 
 //------------------------------------------------------------------------------

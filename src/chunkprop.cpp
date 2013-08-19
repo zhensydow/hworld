@@ -206,6 +206,9 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
                   &m_faceTris[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+
+    // setup positions
+    m_floorPos = glm::vec3( 0.0f, minh, 0.0f);
 }
 
 //------------------------------------------------------------------------------

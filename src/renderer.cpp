@@ -119,6 +119,8 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glUseProgram( m_chk_floor_prg );
 
+    model = glm::translate( chunkprop.floorPos() );
+    m_mvp = proj * view * model;
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
 
     glEnableVertexAttribArray( 0 );
