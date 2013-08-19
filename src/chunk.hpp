@@ -14,6 +14,7 @@
 class Chunk{
 public:
     constexpr static unsigned int NTILES = 7;
+    constexpr static float STEP_SIZE = 0.2f;
 
     void setHeight( unsigned int i, const int val );
 

@@ -24,7 +24,7 @@ int main(){
     Terminal terminal{ window };
     terminal.initialize();
 
-    auto chunk = createRandomChunk( -10, 10 );
+    auto chunk = createRandomChunk( -5, 5 );
     auto cprop = createChunkProp( chunk );
 
     float fov = 45.0;

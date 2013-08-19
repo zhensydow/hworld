@@ -36,7 +36,7 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
                                   60.0f * (tile - 1) );
         }
 
-        h = heigths[tile] * 0.1f;
+        h = heigths[tile] * Chunk::STEP_SIZE;
 
         for( unsigned int vert = 0 ; vert < VERTS_TILE ; ++vert ){
             auto pvert = tile*VERTS_TILE + vert;
@@ -65,13 +65,13 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
     for( unsigned int i = 1 ; i < Chunk::NTILES ; ++i ){
         minimun = min( minimun, heigths[i] );
     }
-    GLfloat minh = minimun * 0.1f - 0.1f;;
+    GLfloat minh = (minimun - 1) * Chunk::STEP_SIZE;
 
     // Generate buffers
     glGenBuffers( 3, &m_faceBuffers[0] );
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
-        h = abs( heigths[tile] * 0.1f - minh );
+        h = abs( heigths[tile] * Chunk::STEP_SIZE - minh );
 
         for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
             auto pface = tile*FACES_TILE + face;
