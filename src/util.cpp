@@ -24,7 +24,7 @@ Chunk createRandomChunk( int min, int max ){
 
 //------------------------------------------------------------------------------
 ChunkProp createChunkProp( const Chunk & chunk ){
-    ChunkProp cprop( chunk.m_heights );
+    ChunkProp cprop( chunk );
 
     return cprop;
 }

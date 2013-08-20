@@ -18,9 +18,12 @@ class Renderer;
 //------------------------------------------------------------------------------
 class ChunkProp{
 public:
-    static void setup();
+    static void setupCommon();
 
-    ChunkProp( const std::array< int, Chunk::NTILES> & heigths );
+    ChunkProp();
+    ChunkProp( const Chunk & chunk );
+    void setup( const Chunk & chunk );
+
     void draw( Renderer & renderer );
 
     GLuint tileVertsBuff() const;

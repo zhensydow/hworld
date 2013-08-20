@@ -17,7 +17,7 @@ std::array< GLfloat, ChunkProp::m_numFloorVerts*3 > ChunkProp::s_floorVerts;
 std::array< GLushort, ChunkProp::m_numFloorTris*3 > ChunkProp::s_floorTris;
 
 //------------------------------------------------------------------------------
-void ChunkProp::setup(){
+void ChunkProp::setupCommon(){
     // generate floor
     glGenBuffers( s_floorBuffers.size(), &s_floorBuffers[0] );
 
@@ -79,7 +79,20 @@ void ChunkProp::setup(){
 }
 
 //------------------------------------------------------------------------------
-ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
+ChunkProp::ChunkProp(){
+    Chunk chunk;
+    setup( chunk );
+}
+
+//------------------------------------------------------------------------------
+ChunkProp::ChunkProp( const Chunk & chunk ){
+    setup( chunk );
+}
+
+//------------------------------------------------------------------------------
+void ChunkProp::setup( const Chunk & chunk ){
+    auto heigths = chunk.m_heights;
+
     // generate tiles
     glGenBuffers( 3, &m_buffers[0] );
     glm::vec2 offset;
