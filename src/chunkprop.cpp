@@ -158,13 +158,13 @@ ChunkProp::ChunkProp( const array< int,Chunk::NTILES > & heigths ){
             dst = pface*VERTS_FACE*2;
 
             m_faceUVs[ dst + 0 ] = 0.0f;
-            m_faceUVs[ dst + 1 ] = 0.0f;
+            m_faceUVs[ dst + 1 ] = uvh;
             m_faceUVs[ dst + 2 ] = 1.0f;
-            m_faceUVs[ dst + 3 ] = 0.0;
+            m_faceUVs[ dst + 3 ] = uvh;
             m_faceUVs[ dst + 4 ] = 0.0f;
-            m_faceUVs[ dst + 5 ] = uvh;
+            m_faceUVs[ dst + 5 ] = 0.0f;
             m_faceUVs[ dst + 6 ] = 1.0f;
-            m_faceUVs[ dst + 7 ] = uvh;
+            m_faceUVs[ dst + 7 ] = 0.0f;
 
             auto src = pface*VERTS_FACE;
             dst = pface*TRIS_FACE*3;
