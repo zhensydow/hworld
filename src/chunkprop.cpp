@@ -76,22 +76,12 @@ void ChunkProp::setupCommon(){
         s_floorTris[ dst + 5 ] = srcN;
     }
 
-    auto dst = 2 * (Chunk::NTILES - 1) * 3;
-    s_floorTris[ dst + 0 ] = 0;
-    s_floorTris[ dst + 1 ] = 3;
-    s_floorTris[ dst + 2 ] = 6;
-
-    s_floorTris[ dst + 3 ] = 0;
-    s_floorTris[ dst + 4 ] = 6;
-    s_floorTris[ dst + 5 ] = 9;
-
-    s_floorTris[ dst + 6 ] = 0;
-    s_floorTris[ dst + 7 ] = 9;
-    s_floorTris[ dst + 8 ] = 12;
-
-    s_floorTris[ dst + 9 ] = 0;
-    s_floorTris[ dst + 10 ] = 12;
-    s_floorTris[ dst + 11 ] = 15;
+    for( auto i = 0 ; i < 4; ++i ){
+        auto dst = (2 * (Chunk::NTILES - 1) + i) * 3;
+        s_floorTris[ dst + 0 ] = 0;
+        s_floorTris[ dst + 1 ] = ( i + 1 )*3;
+        s_floorTris[ dst + 2 ] = ( i + 2 )*3;
+    }
 
     // send buffers to openGL
     glBindBuffer( GL_ARRAY_BUFFER, s_floorBuffers[0] );
