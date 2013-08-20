@@ -72,11 +72,6 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glUseProgram( m_chunkprogram );
 
-    auto model = glm::mat4(1.0f);
-    //model = glm::translate( -3.0f, 0.0f, 0.0f );
-    m_mvp = proj * view * model;
-    glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
-
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d0 );
     glUniform1i( texture_id, 0 );
@@ -91,8 +86,15 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.tileTrisBuff() );
 
-    glDrawElements( GL_TRIANGLES, chunkprop.tileTrisSize(),
-                    GL_UNSIGNED_SHORT, nullptr);
+    auto model = glm::mat4(1.0f);
+
+    for( unsigned i = 0 ; i < Chunk::NTILES ; ++i ){
+        model = glm::translate( chunkprop.tilePos( i ) );
+        m_mvp = proj * view * model;
+        glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+        glDrawElements( GL_TRIANGLES, chunkprop.tileTrisSize(),
+                        GL_UNSIGNED_SHORT, nullptr);
+    }
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d1 );
@@ -109,6 +111,9 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.faceTrisBuff() );
 
+    model = glm::mat4(1.0f);
+    m_mvp = proj * view * model;
+    glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
     glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
                     GL_UNSIGNED_SHORT, nullptr);
 

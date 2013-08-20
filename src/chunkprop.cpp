@@ -16,12 +16,41 @@ std::array< GLuint, 2 > ChunkProp::s_floorBuffers;
 std::array< GLfloat, ChunkProp::m_numFloorVerts*3 > ChunkProp::s_floorVerts;
 std::array< GLushort, ChunkProp::m_numFloorTris*3 > ChunkProp::s_floorTris;
 
+std::array< GLuint, 3 > ChunkProp::s_tileBuffers;
+std::array< GLfloat, Chunk::VERTS_TILE*3 > ChunkProp::s_tileVerts;
+std::array< GLfloat, Chunk::VERTS_TILE*2 > ChunkProp::s_tileUVs;
+std::array< GLushort, ChunkProp::TRIS_TILE*3 > ChunkProp::s_tileTris;
+
 //------------------------------------------------------------------------------
 void ChunkProp::setupCommon(){
+    // generate base tile
+    glGenBuffers( s_tileBuffers.size(), &s_tileBuffers[0] );
+
+    for( unsigned int vert = 0 ; vert < Chunk::VERTS_TILE ; ++vert ){
+        auto dst0 = vert*3;
+        auto dst1 = vert*2;
+
+        s_tileVerts[ dst0 ] = TilePos[ vert*2 ];
+        s_tileVerts[ dst0 + 1 ] = 0.0f;
+        s_tileVerts[ dst0 + 2 ] = TilePos[ vert*2 + 1 ];
+
+        s_tileUVs[ dst1 ] = s_tileVerts[ dst0 ];
+        s_tileUVs[ dst1 + 1 ] = s_tileVerts[ dst0 + 2 ];
+    }
+
+    for( unsigned int tri = 0 ; tri < TRIS_TILE ; ++tri ){
+        auto p = tri*3;
+
+        s_tileTris[ p ] = 0;
+        s_tileTris[ p + 1 ] = tri + 2;
+        s_tileTris[ p + 2 ] = tri + 1;
+    }
+
     // generate floor
+    glm::vec2 offset;
+
     glGenBuffers( s_floorBuffers.size(), &s_floorBuffers[0] );
 
-    glm::vec2 offset;
     for( unsigned int tile = 0 ; tile < Chunk::NTILES - 1 ; ++tile ){
         offset = glm::rotate( glm::vec2( 0, -sqrt3 ), 60.0f * tile );
 
@@ -69,11 +98,23 @@ void ChunkProp::setupCommon(){
     glBufferData( GL_ARRAY_BUFFER, s_floorVerts.size()*sizeof(GLfloat),
                   &s_floorVerts[0], GL_STATIC_DRAW );
 
+    glBindBuffer( GL_ARRAY_BUFFER, s_tileBuffers[0] );
+    glBufferData( GL_ARRAY_BUFFER, s_tileVerts.size()*sizeof(GLfloat),
+                  &s_tileVerts[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, s_tileBuffers[1] );
+    glBufferData( GL_ARRAY_BUFFER, s_tileUVs.size()*sizeof(GLfloat),
+                  &s_tileUVs[0], GL_STATIC_DRAW );
+
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, s_floorBuffers[1] );
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, s_floorTris.size()*sizeof(GLushort),
                   &s_floorTris[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, s_tileBuffers[2] );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, s_tileTris.size()*sizeof(GLushort),
+                  &s_tileTris[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 }
@@ -93,10 +134,9 @@ ChunkProp::ChunkProp( const Chunk & chunk ){
 void ChunkProp::setup( const Chunk & chunk ){
     auto heigths = chunk.m_heights;
 
-    // generate tiles
-    glGenBuffers( 3, &m_buffers[0] );
-    glm::vec2 offset;
+    // generate tile positions
     GLfloat h;
+    glm::vec2 offset;
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
         if( tile == 0 ){
             offset = glm::vec2( 0, 0 );
@@ -107,26 +147,8 @@ void ChunkProp::setup( const Chunk & chunk ){
 
         h = heigths[tile] * Chunk::STEP_SIZE;
 
-        for( unsigned int vert = 0 ; vert < Chunk::VERTS_TILE ; ++vert ){
-            auto pvert = tile*Chunk::VERTS_TILE + vert;
-            auto dst0 = pvert*3;
-            auto dst1 = pvert*2;
 
-            m_vertexData[ dst0 ] = TilePos[ vert*2 ] + offset.x;
-            m_vertexData[ dst0 + 1 ] = h;
-            m_vertexData[ dst0 + 2 ] = TilePos[ vert*2 + 1 ] + offset.y;
-
-            m_uvData[ dst1 ] = m_vertexData[ dst0 ];
-            m_uvData[ dst1 + 1 ] = m_vertexData[ dst0 + 2 ];
-        }
-
-        for( unsigned int tri = 0 ; tri < TRIS_TILE ; ++tri ){
-            auto p = (tile*TRIS_TILE + tri)*3;
-
-            m_elemData[ p ] = tile*Chunk::VERTS_TILE;
-            m_elemData[ p + 1 ] = tile*Chunk::VERTS_TILE + tri + 2;
-            m_elemData[ p + 2 ] = tile*Chunk::VERTS_TILE + tri + 1;
-        }
+        m_tilePos[ tile ] = glm::vec3( offset.x, h, offset.y );
     }
 
     // generate lateral faces
@@ -192,14 +214,6 @@ void ChunkProp::setup( const Chunk & chunk ){
     }
 
     // send buffers to openGL
-    glBindBuffer( GL_ARRAY_BUFFER, m_buffers[0] );
-    glBufferData( GL_ARRAY_BUFFER, m_vertexData.size()*sizeof(GLfloat),
-                  &m_vertexData[0], GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ARRAY_BUFFER, m_buffers[1] );
-    glBufferData( GL_ARRAY_BUFFER, m_uvData.size()*sizeof(GLfloat),
-                  &m_uvData[0], GL_STATIC_DRAW );
-
     glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[0] );
     glBufferData( GL_ARRAY_BUFFER, m_faceVerts.size()*sizeof(GLfloat),
                   &m_faceVerts[0], GL_STATIC_DRAW );
@@ -209,10 +223,6 @@ void ChunkProp::setup( const Chunk & chunk ){
                   &m_faceUVs[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_buffers[2] );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_elemData.size()*sizeof(GLushort),
-                  &m_elemData[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_faceBuffers[2] );
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_faceTris.size()*sizeof(GLushort),
