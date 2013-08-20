@@ -36,6 +36,7 @@ private:
     GLuint m_tex_2d1;
 
     GLuint m_chunkprogram;
+    GLuint m_chk_tile_prg;
     GLuint m_chk_floor_prg;
 };
 

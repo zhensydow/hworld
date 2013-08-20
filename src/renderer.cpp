@@ -62,15 +62,17 @@ void Renderer::setup(){
     glBindTexture( GL_TEXTURE_2D, 0 );
 
     m_chunkprogram = loadProgram( "test01" );
+    m_chk_tile_prg = loadProgram( "chunk_tile" );
     m_chk_floor_prg = loadProgram( "chunk_floor" );
 }
 
 //------------------------------------------------------------------------------
 void Renderer::render( const ChunkProp & chunkprop ){
-    auto matrix_id = glGetUniformLocation( m_chunkprogram , "MVP");
-    auto texture_id = glGetUniformLocation( m_chunkprogram , "texSampler");
+    auto matrix_id = glGetUniformLocation( m_chk_tile_prg , "MVP");
+    auto offset_id = glGetUniformLocation( m_chk_tile_prg , "offset");
+    auto texture_id = glGetUniformLocation( m_chk_tile_prg , "texSampler");
 
-    glUseProgram( m_chunkprogram );
+    glUseProgram( m_chk_tile_prg );
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d0 );
@@ -89,12 +91,18 @@ void Renderer::render( const ChunkProp & chunkprop ){
     auto model = glm::mat4(1.0f);
 
     for( unsigned i = 0 ; i < Chunk::NTILES ; ++i ){
-        model = glm::translate( chunkprop.tilePos( i ) );
+        auto pos = chunkprop.tilePos( i );
+        model = glm::translate( pos );
         m_mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+        glUniform2f( offset_id, pos.x, pos.z );
         glDrawElements( GL_TRIANGLES, chunkprop.tileTrisSize(),
                         GL_UNSIGNED_SHORT, nullptr);
     }
+
+    matrix_id = glGetUniformLocation( m_chunkprogram , "MVP");
+    texture_id = glGetUniformLocation( m_chunkprogram , "texSampler");
+    glUseProgram( m_chunkprogram );
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d1 );
