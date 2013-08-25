@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 void Renderer::setup(){
     sf::ContextSettings desired;
+    desired.depthBits = 24;
     desired.majorVersion = 3;
     desired.minorVersion = 3;
 
