@@ -28,3 +28,4 @@ Links
  * [opengl tutorial](http://www.opengl-tutorial.org/)
  * [SFML 2.0 Documentation](http://www.sfml-dev.org/documentation/2.0/)
  * [Using OpenGL with SFML](http://www.sfml-dev.org/tutorials/2.0/window-opengl.php)
+ * [Hexagonal Grids](http://www.redblobgames.com/grids/hexagons/)
