@@ -6,11 +6,7 @@
 //------------------------------------------------------------------------------
 #include "terminal.hpp"
 #include <iostream>
-
-//------------------------------------------------------------------------------
-Terminal::Terminal( sf::RenderWindow * window ) : m_window{ window } {
-    // empty
-}
+#include "renderer.hpp"
 
 //------------------------------------------------------------------------------
 void Terminal::initialize(){
@@ -26,17 +22,14 @@ void Terminal::initialize(){
 }
 
 //------------------------------------------------------------------------------
-void Terminal::resize(){
-    auto windowsize = m_window->getSize();
-    m_view.reset( sf::FloatRect( 0, 0, windowsize.x, windowsize.y ) );
-    m_text.setPosition( 24, windowsize.y - 24 );
+void Terminal::resize( const int x, const int y ){
+    m_view.reset( sf::FloatRect( 0, 0, x, y ) );
+    m_text.setPosition( 24, y - 24 );
 }
 
 //------------------------------------------------------------------------------
-void Terminal::draw(){
-    m_window->setView( m_view );
-    m_window->draw( m_text );
-    m_window->setView( m_window->getDefaultView() );
+void Terminal::draw( Renderer & renderer ){
+    renderer.render( *this );
 }
 
 //------------------------------------------------------------------------------

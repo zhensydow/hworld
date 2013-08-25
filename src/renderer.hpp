@@ -12,6 +12,7 @@
 
 //------------------------------------------------------------------------------
 class ChunkProp;
+class Terminal;
 
 //------------------------------------------------------------------------------
 class Renderer {
@@ -19,6 +20,7 @@ public:
     void setup();
     void startFrame() const;
     void render( const ChunkProp & chunkprop );
+    void render( const Terminal & terminal );
 
     sf::RenderWindow * getWindow();
 

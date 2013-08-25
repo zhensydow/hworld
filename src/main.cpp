@@ -21,7 +21,7 @@ int main(){
 
     auto window = renderer.getWindow();
 
-    Terminal terminal{ window };
+    Terminal terminal;
     terminal.initialize();
 
     ChunkProp::setupCommon();
@@ -44,7 +44,7 @@ int main(){
                 running = false;
             }else if(event.type == sf::Event::Resized){
                 glViewport(0, 0, event.size.width, event.size.height);
-                terminal.resize();
+                terminal.resize( event.size.width, event.size.height );
             }
         }
 
@@ -89,7 +89,7 @@ int main(){
 
         window->pushGLStates();
 
-        terminal.draw();
+        terminal.draw( renderer );
 
         window->popGLStates();
 

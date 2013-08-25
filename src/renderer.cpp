@@ -7,6 +7,7 @@
 #include "renderer.hpp"
 #include "chunkprop.hpp"
 #include "shader.hpp"
+#include "terminal.hpp"
 
 //------------------------------------------------------------------------------
 void Renderer::setup(){
@@ -148,7 +149,13 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+}
 
+//------------------------------------------------------------------------------
+void Renderer::render( const Terminal & terminal ){
+    m_window->setView( terminal.getView() );
+    m_window->draw( terminal.getText() );
+    m_window->setView( m_window->getDefaultView() );
 }
 
 //------------------------------------------------------------------------------
