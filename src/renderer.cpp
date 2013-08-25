@@ -149,6 +149,10 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+    glBindTexture( GL_TEXTURE_2D, 0 );
+    glDisableVertexAttribArray( 0 );
+    glDisableVertexAttribArray( 1 );
+    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------
