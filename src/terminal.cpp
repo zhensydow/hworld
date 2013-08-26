@@ -19,21 +19,33 @@ void Terminal::initialize(){
 }
 
 //------------------------------------------------------------------------------
-void Terminal::resize( const int x, const int y ){
+void Terminal::resize( const unsigned int x, const unsigned int y ){
     m_view.reset( sf::FloatRect( 0, 0, x, y ) );
-    auto h = y - 24 * (1 + m_texts.size());
+    m_height = y;
+    updateLines();
+}
+
+//------------------------------------------------------------------------------
+void Terminal::updateLines(){
+    auto h = m_height - 2 * LINE_HEIGHT;
     for( auto t: m_texts ){
-        t->setPosition( 24, h );
-        h += 24;
+        t->setPosition( LINE_BORDER, h );
+        h -= LINE_HEIGHT;
     }
 }
 
 //------------------------------------------------------------------------------
 std::shared_ptr<sf::Text> Terminal::makeLine(){
+    if( m_texts.size() >= MAX_LINES ){
+        m_texts.erase( m_texts.begin() + (MAX_LINES - 1), m_texts.end() );
+    }
+
     auto t = m_texts.emplace( m_texts.begin(), new sf::Text() );
     (*t)->setFont( m_font );
-    (*t)->setCharacterSize( 12 );
+    (*t)->setCharacterSize( LINE_SIZE );
     (*t)->setColor( sf::Color::White );
+
+    updateLines();
 
     return (*t);
 }

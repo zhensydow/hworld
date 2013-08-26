@@ -18,7 +18,7 @@ class Renderer;
 class Terminal{
 public:
     void initialize();
-    void resize( const int x, const int y );
+    void resize( const unsigned int x, const unsigned int y );
     void draw( Renderer & renderer );
 
     void newLine( const std::string & line );
@@ -28,12 +28,18 @@ public:
     const std::vector< std::shared_ptr<sf::Text> > & getTexts() const;
 
 private:
-    std::shared_ptr<sf::Text> makeLine();
+    constexpr static unsigned int LINE_HEIGHT = 20;
+    constexpr static unsigned int LINE_BORDER = 18;
+    constexpr static unsigned int LINE_SIZE = 12;
+    constexpr static unsigned int MAX_LINES = 15;
 
-    sf::Font m_font;
-    sf::View m_view;
+    std::shared_ptr<sf::Text> makeLine();
+    void updateLines();
 
     std::vector< std::shared_ptr<sf::Text> > m_texts;
+    sf::Font m_font;
+    sf::View m_view;
+    unsigned int m_height;
 };
 
 //------------------------------------------------------------------------------
