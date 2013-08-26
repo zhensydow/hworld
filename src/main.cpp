@@ -19,8 +19,6 @@ int main(){
 
     renderer.setup();
 
-    auto window = renderer.getWindow();
-
     Terminal terminal;
     terminal.initialize();
 
@@ -29,12 +27,13 @@ int main(){
     auto chunk = createRandomChunk( -5, 5 );
     auto cprop = createChunkProp( chunk );
 
+    std::cout << "Sizes :" << sizeof(chunk) << ", " << sizeof(cprop) << std::endl;
+
+    auto window = renderer.getWindow();
     float fov = 45.0;
     float px = 4;
     float py = 3;
     float pz = 3;
-
-    glm::mat4 proj, view, model;
 
     bool running = true;
     while( running ){
@@ -95,13 +94,11 @@ int main(){
 
         cprop.draw( renderer );
 
-        window->pushGLStates();
+        renderer.startGUI();
 
         terminal.draw( renderer );
 
-        window->popGLStates();
-
-        window->display();
+        renderer.endFrame();
     }
 
     return 0;

@@ -19,6 +19,9 @@ class Renderer {
 public:
     void setup();
     void startFrame() const;
+    void startGUI();
+    void endFrame();
+
     void render( const ChunkProp & chunkprop );
     void render( const Terminal & terminal );
 
@@ -52,6 +55,19 @@ sf::RenderWindow * Renderer::getWindow(){
 inline
 void Renderer::startFrame() const{
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::startGUI(){
+    m_window->pushGLStates();
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::endFrame(){
+    m_window->popGLStates();
+    m_window->display();
 }
 
 //------------------------------------------------------------------------------
