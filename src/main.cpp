@@ -42,9 +42,17 @@ int main(){
         while( window->pollEvent(event) ){
             if( event.type == sf::Event::Closed ){
                 running = false;
-            }else if(event.type == sf::Event::Resized){
+            }else if( event.type == sf::Event::Resized ){
                 glViewport(0, 0, event.size.width, event.size.height);
                 terminal.resize( event.size.width, event.size.height );
+            }else if( event.type == sf::Event::KeyReleased ){
+                if( event.key.code == sf::Keyboard::A ){
+                    terminal.newLine( "Key A Pressed " );
+                }else if( event.key.code == sf::Keyboard::B ){
+                    terminal.newLine( "Key B is Pressed well" );
+                }else{
+                    terminal.newLine( "Key Pressed " );
+                }
             }
         }
 
