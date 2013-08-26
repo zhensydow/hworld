@@ -158,7 +158,10 @@ void Renderer::render( const ChunkProp & chunkprop ){
 //------------------------------------------------------------------------------
 void Renderer::render( const Terminal & terminal ){
     m_window->setView( terminal.getView() );
-    m_window->draw( terminal.getText() );
+    auto texts = terminal.getTexts();
+    for( const auto t: texts ){
+        m_window->draw( (*t) );
+    }
     m_window->setView( m_window->getDefaultView() );
 }
 

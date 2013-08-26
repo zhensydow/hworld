@@ -8,6 +8,7 @@
 #define TERMINAL_HPP_
 
 //------------------------------------------------------------------------------
+#include <memory>
 #include <SFML/Graphics.hpp>
 
 //------------------------------------------------------------------------------
@@ -20,13 +21,19 @@ public:
     void resize( const int x, const int y );
     void draw( Renderer & renderer );
 
+    void newLine( const std::string & line );
+    void newLine( std::string && line );
+
     const sf::View & getView() const;
-    const sf::Text & getText() const;
+    const std::vector< std::shared_ptr<sf::Text> > & getTexts() const;
 
 private:
+    std::shared_ptr<sf::Text> makeLine();
+
     sf::Font m_font;
     sf::View m_view;
-    sf::Text m_text;
+
+    std::vector< std::shared_ptr<sf::Text> > m_texts;
 };
 
 //------------------------------------------------------------------------------
@@ -37,8 +44,8 @@ const sf::View & Terminal::getView() const{
 
 //------------------------------------------------------------------------------
 inline
-const sf::Text & Terminal::getText() const{
-    return m_text;
+const std::vector< std::shared_ptr<sf::Text> > & Terminal::getTexts() const{
+    return m_texts;
 }
 
 //------------------------------------------------------------------------------
