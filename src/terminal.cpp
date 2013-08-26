@@ -27,10 +27,14 @@ void Terminal::resize( const unsigned int x, const unsigned int y ){
 
 //------------------------------------------------------------------------------
 void Terminal::updateLines(){
+    auto col = sf::Color::White;
+    auto degradation = sf::Color( 230, 230, 230 );
     auto h = m_height - 2 * LINE_HEIGHT;
     for( auto t: m_texts ){
         t->setPosition( LINE_BORDER, h );
+        t->setColor( col );
         h -= LINE_HEIGHT;
+        col *= degradation;
     }
 }
 
