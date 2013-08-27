@@ -15,6 +15,7 @@ void Terminal::initialize(){
         std::terminate();
     }
 
+    m_texts.reserve( MAX_LINES );
     newLine( "Terminal Initialized" );
 }
 
