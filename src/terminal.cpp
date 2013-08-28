@@ -69,7 +69,9 @@ void Terminal::newLine( std::string && line ){
 
 //------------------------------------------------------------------------------
 void Terminal::draw( Renderer & renderer ){
-    renderer.render( *this );
+    if( m_visible ){
+        renderer.render( *this );
+    }
 }
 
 //------------------------------------------------------------------------------

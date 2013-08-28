@@ -21,6 +21,9 @@ public:
     void resize( const unsigned int x, const unsigned int y );
     void draw( Renderer & renderer );
 
+    bool isVisible() const;
+    void setVisible( bool b );
+
     void newLine( const std::string & line );
     void newLine( std::string && line );
 
@@ -40,7 +43,20 @@ private:
     sf::Font m_font;
     sf::View m_view;
     unsigned int m_height;
+    bool m_visible{ false };
 };
+
+//------------------------------------------------------------------------------
+inline
+bool Terminal::isVisible() const{
+    return m_visible;
+}
+
+//------------------------------------------------------------------------------
+inline
+void Terminal::setVisible( bool b ){
+    m_visible = b;
+}
 
 //------------------------------------------------------------------------------
 inline
