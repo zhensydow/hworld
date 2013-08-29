@@ -66,10 +66,12 @@ private:
     static std::array< GLfloat, Chunk::VERTS_TILE*2 > s_tileUVs;
     static std::array< GLushort, TRIS_TILE*3 > s_tileTris;
 
-    std::array< GLuint, 3 > m_faceBuffers;
+    static std::array< GLushort, m_numFaceTris*3 > s_faceTris;
+    static GLuint s_faceTrisBuffer;
+
+    std::array< GLuint, 2 > m_faceBuffers;
     std::array< GLfloat, m_numFaceVerts*3 > m_faceVerts;
     std::array< GLfloat, m_numFaceVerts*2 > m_faceUVs;
-    std::array< GLushort, m_numFaceTris*3 > m_faceTris;
 
     std::array< glm::vec3, Chunk::NTILES > m_tilePos;
     glm::vec3 m_floorPos;
@@ -120,13 +122,13 @@ GLuint ChunkProp::faceUVBuff() const{
 //------------------------------------------------------------------------------
 inline
 GLuint ChunkProp::faceTrisBuff() const{
-    return m_faceBuffers[2];
+    return s_faceTrisBuffer;
 }
 
 //------------------------------------------------------------------------------
 inline
 unsigned int ChunkProp::faceTrisSize() const{
-    return m_faceTris.size();
+    return s_faceTris.size();
 }
 
 //------------------------------------------------------------------------------

@@ -20,6 +20,9 @@ std::array< GLuint, 3 > ChunkProp::s_tileBuffers;
 std::array< GLfloat, Chunk::VERTS_TILE*3 > ChunkProp::s_tileVerts;
 std::array< GLfloat, Chunk::VERTS_TILE*2 > ChunkProp::s_tileUVs;
 std::array< GLushort, ChunkProp::TRIS_TILE*3 > ChunkProp::s_tileTris;
+std::array< GLushort, ChunkProp::m_numFaceTris*3 > ChunkProp::s_faceTris;
+GLuint ChunkProp::s_faceTrisBuffer;
+
 
 //------------------------------------------------------------------------------
 void ChunkProp::setupCommon(){
@@ -83,6 +86,23 @@ void ChunkProp::setupCommon(){
         s_floorTris[ dst + 2 ] = ( i + 2 )*3;
     }
 
+    // generate face tris
+    glGenBuffers( 1, &s_faceTrisBuffer );
+    for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
+        for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
+            auto pface = tile*FACES_TILE + face;
+            auto dst = pface*TRIS_FACE*3;
+            auto src = pface*VERTS_FACE;
+
+            s_faceTris[ dst + 0 ] = src;
+            s_faceTris[ dst + 1 ] = src + 1;
+            s_faceTris[ dst + 2 ] = src + 3;
+            s_faceTris[ dst + 3 ] = src;
+            s_faceTris[ dst + 4 ] = src + 3;
+            s_faceTris[ dst + 5 ] = src + 2;
+        }
+    }
+
     // send buffers to openGL
     glBindBuffer( GL_ARRAY_BUFFER, s_floorBuffers[0] );
     glBufferData( GL_ARRAY_BUFFER, s_floorVerts.size()*sizeof(GLfloat),
@@ -106,6 +126,10 @@ void ChunkProp::setupCommon(){
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, s_tileTris.size()*sizeof(GLushort),
                   &s_tileTris[0], GL_STATIC_DRAW );
 
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, s_faceTrisBuffer );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, s_faceTris.size()*sizeof(GLushort),
+                  &s_faceTris[0], GL_STATIC_DRAW );
+
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 }
 
@@ -125,7 +149,6 @@ void ChunkProp::setup( const Chunk & chunk ){
     auto heigths = chunk.m_heights;
 
     // generate tile positions
-    GLfloat h;
     glm::vec2 offset;
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
         if( tile == 0 ){
@@ -135,10 +158,9 @@ void ChunkProp::setup( const Chunk & chunk ){
                                   60.0f * (tile - 1) );
         }
 
-        h = heigths[tile] * Chunk::STEP_SIZE;
-
-
-        m_tilePos[ tile ] = glm::vec3( offset.x, h, offset.y );
+        m_tilePos[ tile ] = glm::vec3( offset.x,
+                                       heigths[tile] * Chunk::STEP_SIZE,
+                                       offset.y );
     }
 
     // generate lateral faces
@@ -148,7 +170,7 @@ void ChunkProp::setup( const Chunk & chunk ){
     }
     GLfloat minh = (minimun - 1) * Chunk::STEP_SIZE;
 
-    glGenBuffers( 3, &m_faceBuffers[0] );
+    glGenBuffers( m_faceBuffers.size(), &m_faceBuffers[0] );
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES ; ++tile ){
         if( tile == 0 ){
@@ -158,7 +180,7 @@ void ChunkProp::setup( const Chunk & chunk ){
                                   60.0f * (tile - 1) );
         }
 
-        h = heigths[tile] * Chunk::STEP_SIZE;
+        auto h = heigths[tile] * Chunk::STEP_SIZE;
         auto uvh = abs( heigths[tile] * Chunk::STEP_SIZE - minh );
 
         for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
@@ -190,16 +212,6 @@ void ChunkProp::setup( const Chunk & chunk ){
             m_faceUVs[ dst + 5 ] = 0.0f;
             m_faceUVs[ dst + 6 ] = 1.0f;
             m_faceUVs[ dst + 7 ] = 0.0f;
-
-            auto src = pface*VERTS_FACE;
-            dst = pface*TRIS_FACE*3;
-
-            m_faceTris[ dst + 0 ] = src;
-            m_faceTris[ dst + 1 ] = src + 1;
-            m_faceTris[ dst + 2 ] = src + 3;
-            m_faceTris[ dst + 3 ] = src;
-            m_faceTris[ dst + 4 ] = src + 3;
-            m_faceTris[ dst + 5 ] = src + 2;
         }
     }
 
@@ -213,12 +225,6 @@ void ChunkProp::setup( const Chunk & chunk ){
                   &m_faceUVs[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_faceBuffers[2] );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_faceTris.size()*sizeof(GLushort),
-                  &m_faceTris[0], GL_STATIC_DRAW );
-
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
     // setup positions
     m_floorPos = glm::vec3( 0.0f, minh, 0.0f);
