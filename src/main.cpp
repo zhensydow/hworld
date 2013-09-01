@@ -9,6 +9,8 @@
 #include "chunk.hpp"
 #include "renderer.hpp"
 #include "util.hpp"
+#include "world.hpp"
+#include "terrainprop.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -16,11 +18,15 @@
  */
 int main(){
     Renderer renderer;
-
     renderer.setup();
 
     Terminal terminal;
     terminal.initialize();
+
+    World world;
+
+    TerrainProp terrain( world );
+    terrain.setFocus( 0 );
 
     auto chunk = createRandomChunk( -5, 5 );
     auto cprop = createChunkProp( chunk );
