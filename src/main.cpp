@@ -27,8 +27,6 @@ int main(){
     auto chunk = createRandomChunk( -5, 5 );
     auto cprop = createChunkProp( chunk );
 
-    std::cout << "Sizes :" << sizeof(chunk) << ", " << sizeof(cprop) << std::endl;
-
     auto window = renderer.getWindow();
     float fov = 45.0;
     float px = 4;
