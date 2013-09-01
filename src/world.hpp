@@ -7,9 +7,17 @@
 #ifndef WORLD_HPP_
 #define WORLD_HPP_
 
+//------------------------------------------------------------------------------
+#include <unordered_map>
+#include "chunk.hpp"
+
+//------------------------------------------------------------------------------
 class World{
 public:
+    World();
+
 private:
+    std::unordered_map< unsigned int, Chunk>  m_terrain;
 };
 
 //------------------------------------------------------------------------------
