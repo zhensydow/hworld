@@ -9,6 +9,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH} 
 
 find_package( OpenGL REQUIRED )
 find_package( SFML 2.0 REQUIRED system window graphics )
+find_package( Boost 1.52 COMPONENTS system filesystem REQUIRED )
 
 add_subdirectory( soil )
 add_subdirectory( src )
