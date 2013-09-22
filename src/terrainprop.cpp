@@ -33,10 +33,7 @@ void TerrainProp::setFocus( unsigned int center ){
         queue.pop();
 
         auto cit = m_chunks.find( idx );
-        if( cit != m_chunks.end() ){
-            std::cout << "Already inserted" << std::endl;
-        }else{
-            std::cout << "Not Already inserted" << std::endl;
+        if( cit == m_chunks.end() ){
             auto chunk = m_world.getChunk( idx );
             auto cprop = std::make_shared<ChunkProp>( createChunkProp( chunk ) );
 
