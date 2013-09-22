@@ -10,6 +10,7 @@
 #include "world.hpp"
 #include "terrainprop.hpp"
 #include "memory.hpp"
+#include "filedata.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -51,6 +52,9 @@ int main(){
                     terminal.newLine( "Key A Pressed " );
                 }else if( event.key.code == sf::Keyboard::B ){
                     terminal.newLine( "Key B is Pressed well" );
+                }else if( event.key.code == sf::Keyboard::S ){
+                    terminal.newLine( "Saving..." );
+                    saveWorld( world, "data" );
                 }else{
                     terminal.newLine( "Key Pressed " );
                 }
