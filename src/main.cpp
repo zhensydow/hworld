@@ -6,9 +6,7 @@
 //------------------------------------------------------------------------------
 #include "gfxinc.hpp"
 #include "terminal.hpp"
-#include "chunk.hpp"
 #include "renderer.hpp"
-#include "util.hpp"
 #include "world.hpp"
 #include "terrainprop.hpp"
 
@@ -27,9 +25,6 @@ int main(){
 
     TerrainProp terrain( world );
     terrain.setFocus( 0 );
-
-    auto chunk = createRandomChunk( -5, 5 );
-    auto cprop = createChunkProp( chunk );
 
     auto window = renderer.getWindow();
     float fov = 45.0;
@@ -96,7 +91,7 @@ int main(){
 
         renderer.startFrame();
 
-        cprop.draw( renderer );
+        terrain.draw( renderer );
 
         renderer.startGUI();
 

@@ -16,6 +16,8 @@ class World{
 public:
     World();
 
+    Chunk & getChunk( unsigned int );
+
 private:
     std::unordered_map< unsigned int, Chunk>  m_terrain;
 };

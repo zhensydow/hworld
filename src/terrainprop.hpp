@@ -8,16 +8,27 @@
 #define TERRAINPROP_HPP_
 
 //------------------------------------------------------------------------------
+#include <unordered_map>
+#include <memory>
+
+//------------------------------------------------------------------------------
 class World;
+class Renderer;
+class ChunkProp;
 
 //------------------------------------------------------------------------------
 class TerrainProp{
 public:
-    TerrainProp( const World & world );
+    TerrainProp( World & world );
 
     void setFocus( unsigned int index );
 
+    void draw( Renderer & renderer );
+
 private:
+    World & m_world;
+
+    std::unordered_map< unsigned int, std::shared_ptr< ChunkProp > > m_chunks;
 };
 
 //------------------------------------------------------------------------------
