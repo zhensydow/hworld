@@ -9,12 +9,15 @@
 #include "renderer.hpp"
 #include "world.hpp"
 #include "terrainprop.hpp"
+#include "memory.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
    @returns the exit code of program.
  */
 int main(){
+    outMemoryInfo();
+
     Renderer renderer;
     renderer.setup();
 
