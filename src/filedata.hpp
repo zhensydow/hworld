@@ -10,12 +10,13 @@
 
 //------------------------------------------------------------------------------
 #include <string>
+#include <boost/filesystem.hpp>
 
 //------------------------------------------------------------------------------
 class World;
 
 //------------------------------------------------------------------------------
-void saveWorld( const World & world, const std::string & path );
+void saveWorld( const World & world, const boost::filesystem::path & folder );
 
 //------------------------------------------------------------------------------
 #endif//FILEDATA_HPP_

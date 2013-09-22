@@ -7,7 +7,10 @@
 #include "filedata.hpp"
 
 //------------------------------------------------------------------------------
-void saveWorld( const World & world, const std::string & path ){
+using namespace boost::filesystem;
+
+//------------------------------------------------------------------------------
+void saveWorld( const World & world, const path & folder ){
 }
 
 //------------------------------------------------------------------------------
