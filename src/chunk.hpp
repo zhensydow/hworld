@@ -12,15 +12,22 @@
 #include "gfxinc.hpp"
 
 //------------------------------------------------------------------------------
+constexpr unsigned int CHUNK_NULL_IDX = std::numeric_limits<unsigned int>::max();
+
+//------------------------------------------------------------------------------
 class Chunk{
 public:
     constexpr static unsigned int NTILES = 7;
+    constexpr static unsigned int NNEIGHBOURS = 6;
     constexpr static unsigned int VERTS_TILE = 6;
     constexpr static float STEP_SIZE = 0.2f;
+
+    Chunk();
 
     void setHeight( unsigned int i, const int val );
 
     std::array< int, NTILES > m_heights;
+    std::array< unsigned int, NNEIGHBOURS > m_neighbours;
 };
 
 //------------------------------------------------------------------------------
