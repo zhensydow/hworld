@@ -23,6 +23,8 @@ public:
     ChunkProp();
     ChunkProp( const Chunk & chunk );
     void setup( const Chunk & chunk );
+    void setPosition( const glm::vec3 & pos );
+    const glm::vec3 & getPosition() const;
 
     void draw( Renderer & renderer );
 
@@ -74,8 +76,21 @@ private:
     std::array< GLfloat, m_numFaceVerts*2 > m_faceUVs;
 
     std::array< glm::vec3, Chunk::NTILES > m_tilePos;
+    glm::vec3 m_position;
     glm::vec3 m_floorPos;
 };
+
+//------------------------------------------------------------------------------
+inline
+void ChunkProp::setPosition( const glm::vec3 & pos ){
+    m_position = pos;
+}
+
+//------------------------------------------------------------------------------
+inline
+const glm::vec3 & ChunkProp::getPosition() const{
+    return m_position;
+}
 
 //------------------------------------------------------------------------------
 inline

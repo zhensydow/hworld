@@ -90,11 +90,12 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.tileTrisBuff() );
 
+    auto chunkPos = chunkprop.getPosition();
     auto model = glm::mat4(1.0f);
 
     for( unsigned i = 0 ; i < Chunk::NTILES ; ++i ){
         auto pos = chunkprop.tilePos( i );
-        model = glm::translate( pos );
+        model = glm::translate( pos + chunkPos );
         m_mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
         glUniform2f( offset_id, pos.x, pos.z );
@@ -121,7 +122,7 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.faceTrisBuff() );
 
-    model = glm::mat4(1.0f);
+    model = glm::translate( chunkPos );
     m_mvp = proj * view * model;
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
     glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
@@ -134,7 +135,7 @@ void Renderer::render( const ChunkProp & chunkprop ){
 
     glUseProgram( m_chk_floor_prg );
 
-    model = glm::translate( chunkprop.floorPos() );
+    model = glm::translate( chunkprop.floorPos() + chunkPos );
     m_mvp = proj * view * model;
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
 
