@@ -4,6 +4,7 @@
     @date 2013-09-22
 */
 //------------------------------------------------------------------------------
+#include "memory.hpp"
 #include "chunk.hpp"
 #include "chunkprop.hpp"
 #include "terrainprop.hpp"
