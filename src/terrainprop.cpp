@@ -46,7 +46,7 @@ void TerrainProp::setFocus( unsigned int center ){
 
 //------------------------------------------------------------------------------
 void TerrainProp::draw( Renderer & renderer ){
-    for( auto chunk: m_chunks ){
+    for( auto & chunk: m_chunks ){
         renderer.render( *chunk.second );
     }
 }
