@@ -43,7 +43,7 @@ int main(){
             if( event.type == sf::Event::Closed ){
                 running = false;
             }else if( event.type == sf::Event::Resized ){
-                glViewport(0, 0, event.size.width, event.size.height);
+                renderer.setViewport( event.size.width, event.size.height );
                 terminal.resize( event.size.width, event.size.height );
             }else if( event.type == sf::Event::KeyReleased ){
                 if( event.key.code == sf::Keyboard::Tab ){

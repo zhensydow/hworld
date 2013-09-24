@@ -22,6 +22,9 @@ public:
     void startGUI();
     void endFrame();
 
+    void setViewport( GLsizei width, GLsizei height );
+    glm::vec4 getViewport() const;
+
     void render( const ChunkProp & chunkprop );
     void render( const Terminal & terminal );
 
@@ -35,6 +38,9 @@ private:
 
     glm::mat4 m_mvp;
 
+    float m_width;
+    float m_height;
+
     GLuint m_vertexArrayID;
 
     GLuint m_tex_2d0;
@@ -44,6 +50,20 @@ private:
     GLuint m_chk_tile_prg;
     GLuint m_chk_floor_prg;
 };
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::setViewport( GLsizei width, GLsizei height ){
+    m_width = width;
+    m_height = height;
+    glViewport(0, 0, width, height);
+}
+
+//------------------------------------------------------------------------------
+inline
+glm::vec4 Renderer::getViewport() const {
+    return glm::vec4( 0, 0, m_width, m_height );
+}
 
 //------------------------------------------------------------------------------
 inline

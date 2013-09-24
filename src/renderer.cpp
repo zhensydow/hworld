@@ -22,6 +22,8 @@ void Renderer::setup(){
     m_window = new sf::RenderWindow{
         sf::VideoMode(800, 600),
         "HexWorld", sf::Style::Default, desired };
+    m_height = 600;
+    m_width = 800;
 
     m_window->setVerticalSyncEnabled( true );
 
