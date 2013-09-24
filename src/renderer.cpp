@@ -10,6 +10,19 @@
 #include "terminal.hpp"
 
 //------------------------------------------------------------------------------
+Ray Renderer::getMouseRay() const{
+    auto viewport = getViewport();
+    auto mpos = sf::Mouse::getPosition( *m_window );
+    auto position = glm::vec3( mpos.x, viewport.z - mpos.y, 0.f );
+    auto ray = Ray{};
+    ray.origin = glm::unProject( position, view, proj, viewport );
+    ray.direction = glm::unProject( glm::vec3( position.x, position.y, 1.0f ),
+                                    view, proj, viewport );
+    ray.direction = glm::normalize( ray.direction );
+    return ray;
+}
+
+//------------------------------------------------------------------------------
 void Renderer::setup(){
     sf::ContextSettings desired;
     desired.depthBits = 24;

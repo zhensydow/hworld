@@ -9,6 +9,7 @@
 
 //------------------------------------------------------------------------------
 #include "gfxinc.hpp"
+#include "ray.hpp"
 
 //------------------------------------------------------------------------------
 class ChunkProp;
@@ -24,6 +25,8 @@ public:
 
     void setViewport( GLsizei width, GLsizei height );
     glm::vec4 getViewport() const;
+
+    Ray getMouseRay() const;
 
     void render( const ChunkProp & chunkprop );
     void render( const Terminal & terminal );
