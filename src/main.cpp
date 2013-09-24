@@ -32,9 +32,9 @@ int main(){
 
     auto window = renderer.getWindow();
     float fov = 45.0;
-    float px = 4;
-    float py = 3;
-    float pz = 3;
+    float dist = 7.0f;
+    float angle1 = 0;
+    float angle2 = 0;
 
     bool running = true;
     while( running ){
@@ -72,28 +72,30 @@ int main(){
                 fov = 10.0;
             }
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
-            px += 0.25;
+            angle1 += 1.f;
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ){
-            px -= 0.25;
+            angle1 -= 1.f;
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ){
             if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ){
-                pz += 0.25;
+                dist += 0.25;
             }else{
-                py += 0.25;
+                angle2 += 1.f;
             }
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ){
             if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ){
-                pz -= 0.25;
+                dist -= 0.25;
             }else{
-                py -= 0.25;
+                angle2 -= 1.f;
             }
         }
 
-        renderer.view = glm::lookAt(
-                                    glm::vec3( px, py, pz ), // origing
-                                    glm::vec3(0,0,0), // looks to
-                                    glm::vec3(0,1,0)  // up
-                                    );
+        auto rot1 = glm::rotate( angle1, 0.0f, 1.0f, 0.0f );
+        auto axis2 = rot1 * glm::vec4( 0.0f, 0.0f, -1.0f, 1.0f );
+        auto vecx = glm::rotate( angle2, axis2.x, axis2.y, axis2.z )
+            * rot1 * glm::vec4( dist, 0.0f, 0.0f, 0.0f );
+        auto eye = glm::vec3( vecx.x, vecx.y, vecx.z );
+        auto up = glm::cross( eye, glm::vec3( axis2.x, axis2.y, axis2.z ) );
+        renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), up );
         renderer.proj = glm::perspective( fov, 4.0f / 3.0f, 0.1f, 100.0f );
 
         renderer.startFrame();
