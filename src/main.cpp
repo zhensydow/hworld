@@ -11,6 +11,7 @@
 #include "terrainprop.hpp"
 #include "memory.hpp"
 #include "filedata.hpp"
+#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -18,6 +19,8 @@
  */
 int main(){
     outMemoryInfo();
+
+    Engine engine;
 
     Renderer renderer;
     renderer.setup();
@@ -36,26 +39,11 @@ int main(){
     float angle1 = 0;
     float angle2 = 0;
 
-    double t = 0.0;
-    constexpr double FRAMES_PER_SECOND = 10.0;
-    constexpr double dt = 1.0 / FRAMES_PER_SECOND;
-    constexpr double MAX_FRAME_TIME = 0.25;
-
-    sf::Clock clock;
-    double accum = 0.0;
-
-    bool running = true;
-    while( running ){
-        double frameTime = clock.restart().asSeconds();
-        if( frameTime > MAX_FRAME_TIME ){
-            frameTime = MAX_FRAME_TIME;
-        }
-
-        accum += frameTime;
+    while( engine.isRunning() ){
         sf::Event event;
         while( window->pollEvent(event) ){
             if( event.type == sf::Event::Closed ){
-                running = false;
+                engine.stop();
             }else if( event.type == sf::Event::Resized ){
                 renderer.setViewport( event.size.width, event.size.height );
                 terminal.resize( event.size.width, event.size.height );
@@ -75,11 +63,7 @@ int main(){
             }
         }
 
-        while( accum >= dt ){
-            std::cout << " update " << t << std::endl;
-            t += dt;
-            accum -= dt;
-        }
+        engine.update();
 
         auto ray = renderer.getMouseRay();
         std::cout << ray.origin.x << ", " << ray.origin.y << ", "
@@ -134,7 +118,7 @@ int main(){
 
         renderer.endFrame();
 
-        sf::sleep( sf::milliseconds(1) );
+        engine.yield();
     }
 
     return 0;
