@@ -8,13 +8,20 @@
 #define ENTITY_HPP_
 
 //------------------------------------------------------------------------------
+#include <vector>
+#include <memory>
+
+//------------------------------------------------------------------------------
 class Component;
 
 //------------------------------------------------------------------------------
-class Entity{
+class Entity final{
+public:
+    ~Entity();
+
     unsigned int m_id;
 
-    std::vector< shared_ptr<Component> > m_components;
+    std::vector< std::shared_ptr<Component> > m_components;
 };
 
 //------------------------------------------------------------------------------
