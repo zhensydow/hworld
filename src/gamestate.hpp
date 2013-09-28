@@ -10,7 +10,21 @@
 //------------------------------------------------------------------------------
 class GameState {
 public:
+    GameState( const GameState& ) = default;
+    GameState( GameState&& ) = default;
+    GameState& operator=( const GameState& ) = default;
+    GameState& operator=( GameState&& ) = default;
+    virtual ~GameState();
+
+    virtual void update( double dt ) = 0;
+
 private:
+};
+
+//------------------------------------------------------------------------------
+inline
+GameState::~GameState(){
+    //empty
 };
 
 //------------------------------------------------------------------------------

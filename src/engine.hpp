@@ -8,8 +8,11 @@
 #define ENGINE_HPP_
 
 //------------------------------------------------------------------------------
+#include <memory>
+#include <stack>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
+#include "gamestate.hpp"
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -28,6 +31,8 @@ private:
     static constexpr double MAX_FRAME_TIME = 0.25;
 
     sf::Clock m_clock;
+    std::stack< std::shared_ptr<GameState> > m_states;
+
     double m_t = 0.0;
     double m_accum = 0.0;
 

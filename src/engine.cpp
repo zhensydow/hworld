@@ -16,7 +16,14 @@ void Engine::update(){
 
     m_accum += frameTime;
     while( m_accum >= dt ){
-        //engine.update( dt );
+        if( not m_states.empty() ){
+            auto state = m_states.top();
+            if( state ){
+                state->update( dt );
+            }else{
+                m_states.pop();
+            }
+        }
         std::cout << " update " << m_t << std::endl;
         m_t += dt;
         m_accum -= dt;
