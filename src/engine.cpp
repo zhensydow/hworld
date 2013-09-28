@@ -8,6 +8,11 @@
 #include <iostream>
 
 //------------------------------------------------------------------------------
+Engine::Engine(){
+    //empty
+}
+
+//------------------------------------------------------------------------------
 void Engine::update(){
     double frameTime = m_clock.restart().asSeconds();
     if( frameTime > MAX_FRAME_TIME ){

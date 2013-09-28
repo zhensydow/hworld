@@ -17,6 +17,8 @@
 //------------------------------------------------------------------------------
 class Engine {
 public:
+    Engine();
+
     void update();
 
     bool isRunning() const;
