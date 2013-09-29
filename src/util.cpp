@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "util.hpp"
 #include <random>
+#include "lua.hpp"
 
 //------------------------------------------------------------------------------
 Chunk createRandomChunk( int min, int max ){
@@ -27,6 +28,22 @@ ChunkProp createChunkProp( const Chunk & chunk ){
     ChunkProp cprop( chunk );
 
     return cprop;
+}
+
+//--------------------------------------------------------------------------
+bool checkLuaReturn( lua_State * const ls, const int ret ){
+    if( ret != 0 ){
+        auto msg = lua_tostring( ls, -1);
+        if( msg == nullptr ){
+            std::cout << "Lua error object is not a string" << std::endl;
+        }else{
+            std::cout << "Lua: " << msg << std::endl;
+        }
+        // remove error message from stack
+        lua_pop( ls, 1 );
+        return false;
+    }
+    return true;
 }
 
 //------------------------------------------------------------------------------
