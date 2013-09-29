@@ -12,9 +12,7 @@
 #include <stack>
 #include <SFML/System/Clock.hpp>
 #include <boost/filesystem.hpp>
-
-//------------------------------------------------------------------------------
-class GameState;
+#include "gamestate.hpp"
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -29,9 +27,9 @@ public:
 
     void yield();
 
-    void setState( std::shared_ptr<GameState> state );
+    void setState( std::unique_ptr<GameState> state );
 
-    std::shared_ptr<GameState> makeGameState( const std::string & name ) const;
+    std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
 private:
     enum class NextState{
@@ -46,10 +44,10 @@ private:
     static constexpr double MAX_FRAME_TIME = 0.25;
 
     sf::Clock m_clock;
-    std::stack< std::shared_ptr<GameState> > m_states;
+    std::stack< GameState > m_states;
 
     NextState m_nextStateType = NextState::NOTHING;
-    std::shared_ptr<GameState> m_nextState = nullptr;
+    std::unique_ptr<GameState> m_nextState = nullptr;
 
     boost::filesystem::path m_datadir = "data";
 

@@ -16,14 +16,14 @@ using namespace std;
 using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
-Engine::Engine(){
+Engine::Engine() : m_nextState{nullptr} {
     //empty
 }
 
 //------------------------------------------------------------------------------
-void Engine::setState( shared_ptr<GameState> state ){
+void Engine::setState( std::unique_ptr<GameState> state ){
     if( state ){
-        m_nextState = state;
+        m_nextState = std::move(state);
         m_nextStateType = NextState::NEW_STATE;
     }
 }
@@ -38,8 +38,8 @@ void Engine::update(){
     m_accum += frameTime;
     while( m_accum >= dt ){
         if( not m_states.empty() ){
-            auto state = m_states.top();
-            state->update( dt );
+            auto & state = m_states.top();
+            state.update( dt );
         }
         m_t += dt;
         m_accum -= dt;
@@ -53,14 +53,14 @@ void Engine::yield(){
     case NextState::NEW_STATE:
         cout << " new state " << m_t << endl;
         if( not m_states.empty() ){
-            auto old = m_states.top();
-            if( old ){
-                old->stop();
-            }
+            auto old = std::move(m_states.top());
             m_states.pop();
+            old.stop();
         }
-        m_states.push( m_nextState );
-        m_nextState->start();
+        if( m_nextState ){
+            m_nextState->start();
+            m_states.push( std::move(*m_nextState) );
+        }
 
         m_nextStateType = NextState::NOTHING;
         m_nextState = nullptr;
@@ -82,7 +82,7 @@ const luaL_Reg enginelib[] = {
 };
 
 //------------------------------------------------------------------------------
-shared_ptr<GameState> Engine::makeGameState( const string & name ) const{
+unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto statedir = path(m_datadir) /= "state";
     auto filename = statedir /= (name + ".lua");
 
@@ -109,7 +109,7 @@ shared_ptr<GameState> Engine::makeGameState( const string & name ) const{
     lua_gc( ls, LUA_GCRESTART, 0 );
 
     // create Lua Game State
-    auto state = make_shared<GameState>( ls );
+    auto state = std::unique_ptr<GameState>(new GameState( ls ) );
     if( !state ){
         lua_close( ls );
         cout << "Can't create agent class '" << name << "' instance" << endl;

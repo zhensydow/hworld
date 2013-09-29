@@ -39,8 +39,7 @@ int main(){
     float angle1 = 0;
     float angle2 = 0;
 
-    auto state = engine.makeGameState( "test" );
-    engine.setState( state );
+    engine.setState( engine.makeGameState( "test" ) );
 
     while( engine.isRunning() ){
         sf::Event event;

@@ -9,12 +9,33 @@
 #include "util.hpp"
 
 //------------------------------------------------------------------------------
-GameState::GameState( lua_State * ls ) : m_ls{ls} {
+GameState::GameState() noexcept : m_ls{nullptr} {
     //empty
+    std::cout << "GameState empty constructor" << std::endl;
 }
 
 //------------------------------------------------------------------------------
-GameState::~GameState(){
+GameState::GameState( lua_State * ls ) noexcept : m_ls{ls} {
+    //empty
+    std::cout << "GameState constructor" << std::endl;
+}
+
+GameState::GameState( GameState&& gs ) noexcept {
+    std::cout << "GameState copy move" << std::endl;
+    m_ls = std::move( gs.m_ls );
+    gs.m_ls = nullptr;
+}
+
+GameState& GameState::operator=( GameState&& gs ) noexcept {
+    std::cout << "GameState assign move" << std::endl;
+    m_ls = std::move( gs.m_ls );
+    gs.m_ls = nullptr;
+    return *this;
+}
+
+//------------------------------------------------------------------------------
+GameState::~GameState() noexcept{
+    std::cout << "GameState destructor" << std::endl;
     if( m_ls ){
         lua_close( m_ls );
     }
