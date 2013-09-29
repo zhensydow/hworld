@@ -1,27 +1,27 @@
-/** @file gs_lua.cpp
-    @brief GameStateLua definitions.
+/** @file gamestate.cpp
+    @brief Game State definitions.
     @author Luis Cabellos
     @date 2013-09-29
 */
 //------------------------------------------------------------------------------
-#include "gs_lua.hpp"
+#include "gamestate.hpp"
 #include "lua.hpp"
 #include "util.hpp"
 
 //------------------------------------------------------------------------------
-GSLua::GSLua( lua_State * ls ) : m_ls{ls} {
+GameState::GameState( lua_State * ls ) : m_ls{ls} {
     //empty
 }
 
 //------------------------------------------------------------------------------
-GSLua::~GSLua(){
+GameState::~GameState(){
     if( m_ls ){
         lua_close( m_ls );
     }
 }
 
 //------------------------------------------------------------------------------
-void GSLua::start(){
+void GameState::start(){
     if( m_ls ){
         lua_getfield( m_ls, LUA_GLOBALSINDEX, "start" );     // 1
         if( lua_isfunction( m_ls, -1 ) ){
@@ -32,7 +32,7 @@ void GSLua::start(){
 }
 
 //------------------------------------------------------------------------------
-void GSLua::update( double dt ){
+void GameState::update( double dt ){
     if( m_ls ){
         lua_getfield( m_ls, LUA_GLOBALSINDEX, "update" );    // 1
         if( lua_isfunction( m_ls, -1 ) ){
@@ -44,7 +44,7 @@ void GSLua::update( double dt ){
 }
 
 //------------------------------------------------------------------------------
-void GSLua::stop(){
+void GameState::stop(){
     if( m_ls ){
         lua_getfield( m_ls, LUA_GLOBALSINDEX, "stop" );      // 1
         if( lua_isfunction( m_ls, -1 ) ){

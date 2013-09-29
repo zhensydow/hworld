@@ -8,26 +8,24 @@
 #define GAMESTATE_HPP_
 
 //------------------------------------------------------------------------------
-class GameState {
+struct lua_State;
+
+//------------------------------------------------------------------------------
+class GameState final {
 public:
-    GameState() = default;
+    GameState( lua_State * lua );
     GameState( const GameState& ) = default;
     GameState( GameState&& ) = default;
     GameState& operator=( const GameState& ) = default;
     GameState& operator=( GameState&& ) = default;
-    virtual ~GameState();
+    ~GameState();
 
-    virtual void start() = 0;
-    virtual void update( double dt ) = 0;
-    virtual void stop() = 0;
+    void start();
+    void update( double dt );
+    void stop();
 
 private:
-};
-
-//------------------------------------------------------------------------------
-inline
-GameState::~GameState(){
-    //empty
+    lua_State * m_ls = nullptr;
 };
 
 //------------------------------------------------------------------------------

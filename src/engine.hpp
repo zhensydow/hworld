@@ -31,7 +31,7 @@ public:
 
     void setState( std::shared_ptr<GameState> state );
 
-    std::shared_ptr<GameState> makeGSLua( const std::string & name ) const;
+    std::shared_ptr<GameState> makeGameState( const std::string & name ) const;
 
 private:
     enum class NextState{

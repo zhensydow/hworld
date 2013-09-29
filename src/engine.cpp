@@ -8,8 +8,8 @@
 #include <iostream>
 #include <SFML/System/Sleep.hpp>
 #include "lua.hpp"
-#include "gs_lua.hpp"
 #include "util.hpp"
+#include "gamestate.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -82,7 +82,7 @@ const luaL_Reg enginelib[] = {
 };
 
 //------------------------------------------------------------------------------
-shared_ptr<GameState> Engine::makeGSLua( const string & name ) const{
+shared_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto statedir = path(m_datadir) /= "state";
     auto filename = statedir /= (name + ".lua");
 
@@ -109,7 +109,7 @@ shared_ptr<GameState> Engine::makeGSLua( const string & name ) const{
     lua_gc( ls, LUA_GCRESTART, 0 );
 
     // create Lua Game State
-    auto state = make_shared<GSLua>( ls );
+    auto state = make_shared<GameState>( ls );
     if( !state ){
         lua_close( ls );
         cout << "Can't create agent class '" << name << "' instance" << endl;

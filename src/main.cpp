@@ -39,7 +39,7 @@ int main(){
     float angle1 = 0;
     float angle2 = 0;
 
-    auto state = engine.makeGSLua( "test" );
+    auto state = engine.makeGameState( "test" );
     engine.setState( state );
 
     while( engine.isRunning() ){
