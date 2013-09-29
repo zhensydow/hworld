@@ -11,7 +11,10 @@
 #include <memory>
 #include <stack>
 #include <SFML/System/Clock.hpp>
-#include "gamestate.hpp"
+#include <boost/filesystem.hpp>
+
+//------------------------------------------------------------------------------
+class GameState;
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -27,6 +30,8 @@ public:
     void yield();
 
     void setState( std::shared_ptr<GameState> state );
+
+    std::shared_ptr<GameState> makeGSLua( const std::string & name ) const;
 
 private:
     enum class NextState{
@@ -45,6 +50,8 @@ private:
 
     NextState m_nextStateType = NextState::NOTHING;
     std::shared_ptr<GameState> m_nextState = nullptr;
+
+    boost::filesystem::path m_datadir = "data";
 
     double m_t = 0.0;
     double m_accum = 0.0;

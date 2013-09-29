@@ -7,6 +7,13 @@
 #include "engine.hpp"
 #include <iostream>
 #include <SFML/System/Sleep.hpp>
+#include "lua.hpp"
+#include "gs_lua.hpp"
+#include "util.hpp"
+
+//------------------------------------------------------------------------------
+using namespace std;
+using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
 Engine::Engine(){
@@ -14,7 +21,7 @@ Engine::Engine(){
 }
 
 //------------------------------------------------------------------------------
-void Engine::setState( std::shared_ptr<GameState> state ){
+void Engine::setState( shared_ptr<GameState> state ){
     if( state ){
         m_nextState = state;
         m_nextStateType = NextState::NEW_STATE;
@@ -44,7 +51,7 @@ void Engine::update(){
 void Engine::yield(){
     switch( m_nextStateType ){
     case NextState::NEW_STATE:
-        std::cout << " new state " << m_t << std::endl;
+        cout << " new state " << m_t << endl;
         if( not m_states.empty() ){
             auto old = m_states.top();
             if( old ){
@@ -66,5 +73,56 @@ void Engine::yield(){
     sf::sleep( sf::milliseconds(1) );
 }
 
+//--------------------------------------------------------------------------
+/** List of functions of AgentClass lua library for Agent files.
+*/
+const luaL_Reg enginelib[] = {
+    //{"newstate",  engine_newstate},
+    {nullptr, nullptr}
+};
+
+//------------------------------------------------------------------------------
+shared_ptr<GameState> Engine::makeGSLua( const string & name ) const{
+    auto statedir = path(m_datadir) /= "state";
+    auto filename = statedir /= (name + ".lua");
+
+    if( !is_regular_file( filename ) ){
+        cout << "Not file for class '" <<  name << "'" << endl;
+        return nullptr;
+    }
+
+    // Lua Initialization
+    auto ls = luaL_newstate();
+    if( !ls ){
+        cout << "Can't create Lua State" << endl;
+        return nullptr;
+    }
+
+    lua_gc( ls, LUA_GCSTOP, 0 );
+    luaL_openlibs( ls );
+    // set engine functions
+    luaL_register( ls, "engine", enginelib );
+    lua_pushlightuserdata( ls, (void*)this );
+    lua_setfield( ls, -2, "_this" );
+    // removes table
+    lua_pop( ls, 1 );
+    lua_gc( ls, LUA_GCRESTART, 0 );
+
+    // create Lua Game State
+    auto state = make_shared<GSLua>( ls );
+    if( !state ){
+        lua_close( ls );
+        cout << "Can't create agent class '" << name << "' instance" << endl;
+        return nullptr;
+    }
+
+    // execute class file
+    auto ret = luaL_dofile( ls, filename.c_str() );
+    if( !checkLuaReturn( ls, ret ) ){
+        return nullptr;
+    }
+
+    return state;
+}
 
 //------------------------------------------------------------------------------

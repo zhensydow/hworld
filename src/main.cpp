@@ -12,7 +12,6 @@
 #include "memory.hpp"
 #include "filedata.hpp"
 #include "engine.hpp"
-#include "gamestatefactory.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -20,8 +19,6 @@
  */
 int main(){
     outMemoryInfo();
-
-    GameStateFactory gsFactory;
 
     Engine engine;
 
@@ -42,7 +39,7 @@ int main(){
     float angle1 = 0;
     float angle2 = 0;
 
-    auto state = gsFactory.makeGSLua( "test" );
+    auto state = engine.makeGSLua( "test" );
     engine.setState( state );
 
     while( engine.isRunning() ){

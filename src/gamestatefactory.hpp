@@ -9,18 +9,9 @@
 
 //------------------------------------------------------------------------------
 #include <memory>
-#include <boost/filesystem.hpp>
-
-//------------------------------------------------------------------------------
-class GameState;
 
 //------------------------------------------------------------------------------
 class GameStateFactory {
-public:
-    std::shared_ptr<GameState> makeGSLua( const std::string & name ) const;
-
-private:
-    boost::filesystem::path m_datadir = "data/state";
 };
 
 //------------------------------------------------------------------------------
