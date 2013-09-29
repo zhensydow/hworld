@@ -68,8 +68,6 @@ int main(){
         auto ray = renderer.getMouseRay();
         std::cout << ray.origin.x << ", " << ray.origin.y << ", "
                   << ray.origin.z << " -> ";
-        std::cout << ray.direction.x << ", " << ray.direction.y << ", "
-                  << ray.direction.z << std::endl;
 
         if( sf::Keyboard::isKeyPressed( sf::Keyboard::U ) ){
             fov += 1;
