@@ -27,6 +27,8 @@ public:
 
     void yield() const;
 
+    void setState( std::shared_ptr<GameState> state );
+
 private:
     static constexpr double FRAMES_PER_SECOND = 10.0;
     static constexpr double dt = 1.0 / FRAMES_PER_SECOND;

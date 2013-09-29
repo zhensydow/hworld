@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 class GameState {
 public:
+    GameState() = default;
     GameState( const GameState& ) = default;
     GameState( GameState&& ) = default;
     GameState& operator=( const GameState& ) = default;

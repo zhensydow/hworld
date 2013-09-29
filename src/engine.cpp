@@ -13,6 +13,11 @@ Engine::Engine(){
 }
 
 //------------------------------------------------------------------------------
+void Engine::setState( std::shared_ptr<GameState> state ){
+    //empty
+}
+
+//------------------------------------------------------------------------------
 void Engine::update(){
     double frameTime = m_clock.restart().asSeconds();
     if( frameTime > MAX_FRAME_TIME ){
