@@ -21,7 +21,12 @@ public:
 
     ~GSLua();
 
+    void start() override;
     void update( double dt ) override;
+    void stop() override;
+
+private:
+    lua_State * m_ls = nullptr;
 };
 
 //------------------------------------------------------------------------------

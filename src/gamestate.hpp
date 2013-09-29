@@ -17,7 +17,9 @@ public:
     GameState& operator=( GameState&& ) = default;
     virtual ~GameState();
 
+    virtual void start() = 0;
     virtual void update( double dt ) = 0;
+    virtual void stop() = 0;
 
 private:
 };

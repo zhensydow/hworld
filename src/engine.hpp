@@ -11,7 +11,6 @@
 #include <memory>
 #include <stack>
 #include <SFML/System/Clock.hpp>
-#include <SFML/System/Sleep.hpp>
 #include "gamestate.hpp"
 
 //------------------------------------------------------------------------------
@@ -25,17 +24,27 @@ public:
 
     void stop();
 
-    void yield() const;
+    void yield();
 
     void setState( std::shared_ptr<GameState> state );
 
 private:
+    enum class NextState{
+        NEW_STATE,
+            PUSH_STATE,
+            POP_STATE,
+            NOTHING
+    };
+
     static constexpr double FRAMES_PER_SECOND = 10.0;
     static constexpr double dt = 1.0 / FRAMES_PER_SECOND;
     static constexpr double MAX_FRAME_TIME = 0.25;
 
     sf::Clock m_clock;
     std::stack< std::shared_ptr<GameState> > m_states;
+
+    NextState m_nextStateType = NextState::NOTHING;
+    std::shared_ptr<GameState> m_nextState = nullptr;
 
     double m_t = 0.0;
     double m_accum = 0.0;
@@ -53,12 +62,6 @@ bool Engine::isRunning() const{
 inline
 void Engine::stop() {
     m_running = false;
-}
-
-//------------------------------------------------------------------------------
-inline
-void Engine::yield() const{
-    sf::sleep( sf::milliseconds(1) );
 }
 
 //------------------------------------------------------------------------------

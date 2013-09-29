@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "engine.hpp"
 #include <iostream>
+#include <SFML/System/Sleep.hpp>
 
 //------------------------------------------------------------------------------
 Engine::Engine(){
@@ -14,7 +15,10 @@ Engine::Engine(){
 
 //------------------------------------------------------------------------------
 void Engine::setState( std::shared_ptr<GameState> state ){
-    //empty
+    if( state ){
+        m_nextState = state;
+        m_nextStateType = NextState::NEW_STATE;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -28,17 +32,39 @@ void Engine::update(){
     while( m_accum >= dt ){
         if( not m_states.empty() ){
             auto state = m_states.top();
-            if( state ){
-                state->update( dt );
-            }else{
-                m_states.pop();
-            }
+            state->update( dt );
         }
-        std::cout << " update " << m_t << std::endl;
         m_t += dt;
         m_accum -= dt;
     }
 
 }
+
+//------------------------------------------------------------------------------
+void Engine::yield(){
+    switch( m_nextStateType ){
+    case NextState::NEW_STATE:
+        std::cout << " new state " << m_t << std::endl;
+        if( not m_states.empty() ){
+            auto old = m_states.top();
+            if( old ){
+                old->stop();
+            }
+            m_states.pop();
+        }
+        m_states.push( m_nextState );
+        m_nextState->start();
+
+        m_nextStateType = NextState::NOTHING;
+        m_nextState = nullptr;
+        break;
+
+    default:
+        break;
+    }
+
+    sf::sleep( sf::milliseconds(1) );
+}
+
 
 //------------------------------------------------------------------------------
