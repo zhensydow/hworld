@@ -74,10 +74,25 @@ void Engine::yield(){
 }
 
 //--------------------------------------------------------------------------
+int engine_newstate( lua_State *ls ){
+    auto str = luaL_checkstring( ls, 1 );
+    lua_getfield( ls, LUA_GLOBALSINDEX, "engine" );
+    lua_getfield( ls, -1, "_this");
+    lua_remove( ls, -2 );
+    if( lua_islightuserdata( ls, -1 ) ){
+        auto engine = (Engine*) lua_topointer( ls, -1 );
+        auto state = engine->makeGameState( str );
+        engine->setState( std::move(state) );
+    }
+
+    return 0;
+}
+
+//--------------------------------------------------------------------------
 /** List of functions of AgentClass lua library for Agent files.
 */
 const luaL_Reg enginelib[] = {
-    //{"newstate",  engine_newstate},
+    {"newstate",  engine_newstate},
     {nullptr, nullptr}
 };
 
