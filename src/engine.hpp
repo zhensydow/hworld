@@ -13,19 +13,27 @@
 #include <SFML/System/Clock.hpp>
 #include <boost/filesystem.hpp>
 #include "gamestate.hpp"
+#include "world.hpp"
+#include "terrainprop.hpp"
+#include "terminal.hpp"
+#include "renderer.hpp"
 
 //------------------------------------------------------------------------------
 class Engine {
 public:
     Engine();
 
-    void update();
+    void setup();
 
     bool isRunning() const;
-
+    void update();
+    void draw();
+    void yield();
     void stop();
 
-    void yield();
+    World & getWorld();
+    Renderer & getRenderer();
+    Terminal & getTerminal();
 
     void setState( std::unique_ptr<GameState> state );
 
@@ -49,6 +57,11 @@ private:
     NextState m_nextStateType = NextState::NOTHING;
     std::unique_ptr<GameState> m_nextState = nullptr;
 
+    Renderer m_renderer;
+    World m_world;
+    Terminal m_terminal;
+    std::unique_ptr<TerrainProp> m_terrain;
+
     boost::filesystem::path m_datadir = "data";
 
     double m_t = 0.0;
@@ -67,6 +80,24 @@ bool Engine::isRunning() const{
 inline
 void Engine::stop() {
     m_running = false;
+}
+
+//------------------------------------------------------------------------------
+inline
+World & Engine::getWorld(){
+    return m_world;
+}
+
+//------------------------------------------------------------------------------
+inline
+Renderer & Engine::getRenderer(){
+    return m_renderer;
+}
+
+//------------------------------------------------------------------------------
+inline
+Terminal & Engine::getTerminal(){
+    return m_terminal;
 }
 
 //------------------------------------------------------------------------------

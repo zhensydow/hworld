@@ -5,10 +5,6 @@
 */
 //------------------------------------------------------------------------------
 #include "gfxinc.hpp"
-#include "terminal.hpp"
-#include "renderer.hpp"
-#include "world.hpp"
-#include "terrainprop.hpp"
 #include "memory.hpp"
 #include "filedata.hpp"
 #include "engine.hpp"
@@ -21,17 +17,11 @@ int main(){
     outMemoryInfo();
 
     Engine engine;
+    engine.setup();
 
-    Renderer renderer;
-    renderer.setup();
-
-    Terminal terminal;
-    terminal.initialize();
-
-    World world;
-
-    TerrainProp terrain( world );
-    terrain.setFocus( 0 );
+    auto & world = engine.getWorld();
+    auto & renderer = engine.getRenderer();
+    auto & terminal = engine.getTerminal();
 
     auto window = renderer.getWindow();
     float fov = 45.0;
@@ -104,15 +94,7 @@ int main(){
         renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), up );
         renderer.proj = glm::perspective( fov, 4.0f / 3.0f, 0.1f, 100.0f );
 
-        renderer.startFrame();
-
-        terrain.draw( renderer );
-
-        renderer.startGUI();
-
-        terminal.draw( renderer );
-
-        renderer.endFrame();
+        engine.draw();
 
         engine.yield();
     }

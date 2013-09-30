@@ -21,6 +21,16 @@ Engine::Engine() : m_nextState{nullptr} {
 }
 
 //------------------------------------------------------------------------------
+void Engine::setup(){
+    m_renderer.setup();
+
+    m_terminal.initialize();
+
+    m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
+    m_terrain->setFocus( 0 );
+}
+
+//------------------------------------------------------------------------------
 void Engine::setState( std::unique_ptr<GameState> state ){
     if( state ){
         m_nextState = std::move(state);
@@ -45,6 +55,19 @@ void Engine::update(){
         m_accum -= dt;
     }
 
+}
+
+//------------------------------------------------------------------------------
+void Engine::draw(){
+    m_renderer.startFrame();
+
+    m_terrain->draw( m_renderer );
+
+    m_renderer.startGUI();
+
+    m_terminal.draw( m_renderer );
+
+    m_renderer.endFrame();
 }
 
 //------------------------------------------------------------------------------
