@@ -13,7 +13,7 @@
 //------------------------------------------------------------------------------
 class CNull : public Component {
 public:
-    static constexpr ComponentType type = ComponentType::CT_NULL;
+    constexpr static ComponentType type = ComponentType::CT_NULL;
 
     CNull( Entity & e );
 
@@ -27,7 +27,7 @@ private:
 //------------------------------------------------------------------------------
 inline
 ComponentType CNull::getType() const{
-    return ComponentType::CT_NULL;
+    return type;
 }
 
 //------------------------------------------------------------------------------
