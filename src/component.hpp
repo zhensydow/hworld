@@ -8,20 +8,33 @@
 #define COMPONENT_HPP_
 
 //------------------------------------------------------------------------------
-#include <memory>
+#include "entity.hpp"
 
 //------------------------------------------------------------------------------
-class Entity;
-
-//------------------------------------------------------------------------------
-class Component{
+class Component {
 public:
-    Component( std::shared_ptr<Entity> entity );
-    ~Component();
+    Component( Entity & e );
+    virtual ~Component();
+
+    virtual ComponentType getType() const = 0;
+
+    Entity & getEntity();
 
 private:
-    std::shared_ptr<Entity> m_entity;
+    Entity & m_entity;
 };
+
+//------------------------------------------------------------------------------
+inline
+Entity & Component::getEntity(){
+    return m_entity;
+}
+
+//------------------------------------------------------------------------------
+inline
+std::shared_ptr<Component> getComponent( Component & c, ComponentType ct ){
+    return c.getEntity().getComponent( ct );
+}
 
 //------------------------------------------------------------------------------
 #endif//COMPONENT_HPP_

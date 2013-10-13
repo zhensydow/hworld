@@ -5,16 +5,15 @@
 */
 //------------------------------------------------------------------------------
 #include "component.hpp"
-#include <iostream>
 
 //------------------------------------------------------------------------------
-Component::Component( std::shared_ptr<Entity> entity ) : m_entity( entity ){
-    std::cout << "Component Created" << std::endl;
+Component::Component( Entity & e ) : m_entity(e) {
+    //empty
 }
 
 //------------------------------------------------------------------------------
-Component::~Component(){
-    std::cout << "Component Destroyed" << std::endl;    
+Component::~Component() {
+    //empty
 }
 
 //------------------------------------------------------------------------------

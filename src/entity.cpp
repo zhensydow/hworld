@@ -5,12 +5,24 @@
 */
 //------------------------------------------------------------------------------
 #include "entity.hpp"
-#include <iostream>
+#include "component.hpp"
 
 //------------------------------------------------------------------------------
-Entity::~Entity(){
-    std::cout << "Entity " << m_id << "destroyed";
-    m_components.clear();
+std::shared_ptr<Component> Entity::getComponent( ComponentType ct ){
+    auto it = m_components.find( ct );
+
+    if( it != m_components.end() ){
+        return it->second;
+    }
+
+    return nullptr;
+}
+
+//------------------------------------------------------------------------------
+void Entity::insertComponent( std::shared_ptr<Component> c ){
+    auto ct = c->getType();
+
+    m_components[ ct ] = c;
 }
 
 //------------------------------------------------------------------------------

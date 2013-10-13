@@ -8,20 +8,21 @@
 #define ENTITY_HPP_
 
 //------------------------------------------------------------------------------
-#include <vector>
+#include <unordered_map>
 #include <memory>
+#include "components.hpp"
 
 //------------------------------------------------------------------------------
 class Component;
 
 //------------------------------------------------------------------------------
-class Entity final{
+class Entity final {
 public:
-    ~Entity();
+    std::shared_ptr<Component> getComponent( ComponentType ct );
+    void insertComponent( std::shared_ptr<Component> c );
 
-    unsigned int m_id;
-
-    std::vector< std::shared_ptr<Component> > m_components;
+private:
+    std::unordered_map< ComponentType, std::shared_ptr<Component>, ComponentType_hash > m_components;
 };
 
 //------------------------------------------------------------------------------
