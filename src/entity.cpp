@@ -13,10 +13,10 @@ bool Entity::hasComponent( ComponentType ct ) const{
 }
 
 //------------------------------------------------------------------------------
-void Entity::insertComponent( std::shared_ptr<Component> c ){
+void Entity::insertComponent( std::unique_ptr<Component> && c ){
     auto ct = c->getType();
 
-    m_components[ ct ] = c;
+    m_components[ ct ] = std::move(c);
 }
 
 //------------------------------------------------------------------------------
