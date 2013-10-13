@@ -13,6 +13,8 @@
 //------------------------------------------------------------------------------
 class CNull : public Component {
 public:
+    static constexpr ComponentType type = ComponentType::CT_NULL;
+
     CNull( Entity & e );
 
     ComponentType getType() const override;

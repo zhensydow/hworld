@@ -19,7 +19,7 @@ class Component;
 class Entity final {
 public:
     bool hasComponent( ComponentType ct ) const;
-    template<typename T> T & getComponent( ComponentType ct );
+    template<typename T> T & getComponent();
     void insertComponent( std::unique_ptr<Component> && c );
 
 private:
@@ -28,8 +28,8 @@ private:
 
 //------------------------------------------------------------------------------
 template<typename T>
-T & Entity::getComponent( ComponentType ct ){
-    auto it = m_components.find( ct );
+T & Entity::getComponent(){
+    auto it = m_components.find( T::type );
 
     if( it != m_components.end() ){
         return *static_cast<T*>( it->second.get() );

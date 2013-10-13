@@ -38,8 +38,8 @@ int main(){
     auto cnull = std::unique_ptr<CNull>{ new CNull( camera ) };
     camera.insertComponent( std::move(cnull) );
 
-    if( camera.hasComponent( ComponentType::CT_NULL ) ){
-        auto on = camera.getComponent<CNull>( ComponentType::CT_NULL );
+    if( camera.hasComponent( CNull::type ) ){
+        auto on = camera.getComponent<CNull>();
         on.test();
     }
 
