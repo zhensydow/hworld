@@ -8,6 +8,7 @@
 #define COMPONENTS_HPP_
 
 enum class ComponentType{
+    CT_NULL
 };
 
 struct ComponentType_hash{
