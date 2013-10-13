@@ -8,6 +8,8 @@
 #include "memory.hpp"
 #include "filedata.hpp"
 #include "engine.hpp"
+#include "entity.hpp"
+#include "c_null.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -30,6 +32,16 @@ int main(){
     float angle2 = 0;
 
     engine.setState( engine.makeGameState( "test" ) );
+
+    Entity camera;
+
+    auto cnull = std::unique_ptr<CNull>{ new CNull( camera ) };
+    camera.insertComponent( std::move(cnull) );
+
+    if( camera.hasComponent( ComponentType::CT_NULL ) ){
+        auto on = camera.getComponent<CNull>( ComponentType::CT_NULL );
+        on.test();
+    }
 
     while( engine.isRunning() ){
         sf::Event event;
