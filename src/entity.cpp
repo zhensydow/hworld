@@ -8,14 +8,8 @@
 #include "component.hpp"
 
 //------------------------------------------------------------------------------
-std::shared_ptr<Component> Entity::getComponent( ComponentType ct ){
-    auto it = m_components.find( ct );
-
-    if( it != m_components.end() ){
-        return it->second;
-    }
-
-    return nullptr;
+bool Entity::hasComponent( ComponentType ct ) const{
+    return m_components.find( ct ) != m_components.end();
 }
 
 //------------------------------------------------------------------------------

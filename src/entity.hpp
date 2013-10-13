@@ -18,12 +18,25 @@ class Component;
 //------------------------------------------------------------------------------
 class Entity final {
 public:
-    std::shared_ptr<Component> getComponent( ComponentType ct );
+    bool hasComponent( ComponentType ct ) const;
+    template<typename T> T & getComponent( ComponentType ct );
     void insertComponent( std::shared_ptr<Component> c );
 
 private:
     std::unordered_map< ComponentType, std::shared_ptr<Component>, ComponentType_hash > m_components;
 };
+
+//------------------------------------------------------------------------------
+template<typename T>
+T & Entity::getComponent( ComponentType ct ){
+    auto it = m_components.find( ct );
+
+    if( it != m_components.end() ){
+        return *std::dynamic_pointer_cast<T>(it->second);
+    }
+
+    std::terminate();
+}
 
 //------------------------------------------------------------------------------
 #endif//ENTITY_HPP_

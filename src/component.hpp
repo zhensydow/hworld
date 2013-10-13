@@ -32,8 +32,15 @@ Entity & Component::getEntity(){
 
 //------------------------------------------------------------------------------
 inline
-std::shared_ptr<Component> getComponent( Component & c, ComponentType ct ){
-    return c.getEntity().getComponent( ct );
+bool hasComponent( Component & c, ComponentType ct ){
+    return c.getEntity().hasComponent( ct );
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+inline
+T & getComponent( Component & c, ComponentType ct ){
+    return c.getEntity().getComponent<T>( ct );
 }
 
 //------------------------------------------------------------------------------
