@@ -8,7 +8,9 @@
 #define COMPONENTS_HPP_
 
 enum class ComponentType{
-    CT_NULL
+    CT_NULL,
+        CT_TRANSFORM,
+        CT_CAMERA
 };
 
 struct ComponentType_hash{
