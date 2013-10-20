@@ -20,10 +20,10 @@ class Entity final {
 public:
     bool hasComponent( ComponentType ct ) const;
     template<typename T> T & getComponent();
-    void insertComponent( std::unique_ptr<Component> && c );
+    void insertComponent( std::shared_ptr<Component> c );
 
 private:
-    std::unordered_map< ComponentType, std::unique_ptr<Component>, ComponentType_hash > m_components;
+    std::unordered_map< ComponentType, std::shared_ptr<Component>, ComponentType_hash > m_components;
 };
 
 //------------------------------------------------------------------------------
