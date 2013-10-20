@@ -13,11 +13,11 @@ find_package( Boost 1.52 COMPONENTS system filesystem REQUIRED )
 find_package(LuaJIT REQUIRED)
 set(LUA_INCLUDE_DIRS ${LuaJIT_INCLUDE_DIRS})
 set(LUA_LIBRARIES ${LuaJIT_LIBRARIES})
+find_package( jsoncpp REQUIRED )
 
 add_subdirectory( soil )
 add_subdirectory( src )
 add_subdirectory( test )
-
 
 # documentation
 find_package( Doxygen )
