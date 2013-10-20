@@ -43,6 +43,7 @@ int main(){
         on.test();
     }
 
+    bool test_flag = false;
     while( engine.isRunning() ){
         sf::Event event;
         while( window->pollEvent(event) ){
@@ -95,6 +96,10 @@ int main(){
             }else{
                 angle2 -= 1.f;
             }
+        }
+
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Q ) ){
+            test_flag = not test_flag;
         }
 
         auto rot1 = glm::rotate( angle1, 0.0f, 1.0f, 0.0f );
