@@ -9,7 +9,6 @@
 #include "filedata.hpp"
 #include "engine.hpp"
 #include "entity.hpp"
-#include "c_null.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
 
@@ -36,19 +35,11 @@ int main(){
 
     Entity camera;
 
-    auto cnull = std::make_shared<CNull>( camera );
-    camera.insertComponent( cnull );
-
     auto ctrans = std::make_shared<CTransform>( camera );
     camera.insertComponent( ctrans );
 
     auto ccam = std::make_shared<CCamera>( camera );
     camera.insertComponent( ccam );
-
-    if( camera.hasComponent( CNull::type ) ){
-        auto on = camera.getComponent<CNull>();
-        on.test();
-    }
 
     bool test_flag = false;
     while( engine.isRunning() ){
