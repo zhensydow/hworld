@@ -10,6 +10,8 @@
 #include "engine.hpp"
 #include "entity.hpp"
 #include "c_null.hpp"
+#include "c_transform.hpp"
+#include "c_camera.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -26,7 +28,6 @@ int main(){
     auto & terminal = engine.getTerminal();
 
     auto window = renderer.getWindow();
-    float fov = 45.0;
     float dist = 7.0f;
     float angle1 = 0;
     float angle2 = 0;
@@ -35,8 +36,14 @@ int main(){
 
     Entity camera;
 
-    auto cnull = std::unique_ptr<CNull>{ new CNull( camera ) };
-    camera.insertComponent( std::move(cnull) );
+    auto cnull = std::make_shared<CNull>( camera );
+    camera.insertComponent( cnull );
+
+    auto ctrans = std::make_shared<CTransform>( camera );
+    camera.insertComponent( ctrans );
+
+    auto ccam = std::make_shared<CCamera>( camera );
+    camera.insertComponent( ccam );
 
     if( camera.hasComponent( CNull::type ) ){
         auto on = camera.getComponent<CNull>();
@@ -71,15 +78,17 @@ int main(){
         engine.update();
 
         if( sf::Keyboard::isKeyPressed( sf::Keyboard::U ) ){
-            fov += 1;
+            auto fov = ccam->getFov() + 1;
             if( fov > 80.0 ){
                 fov = 80.0;
             }
+            ccam->setFov( fov );
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::I ) ){
-            fov -= 1;
+            auto fov = ccam->getFov() - 1;
             if( fov < 10.0 ){
                 fov = 10.0;
             }
+            ccam->setFov( fov );
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
             angle1 += 1.f;
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ){
@@ -107,9 +116,9 @@ int main(){
         auto vecx = glm::rotate( angle2, axis2.x, axis2.y, axis2.z )
             * rot1 * glm::vec4( dist, 0.0f, 0.0f, 0.0f );
         auto eye = glm::vec3( vecx.x, vecx.y, vecx.z );
-        auto up = glm::cross( eye, glm::vec3( axis2.x, axis2.y, axis2.z ) );
-        renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), up );
-        renderer.proj = glm::perspective( fov, 4.0f / 3.0f, 0.1f, 100.0f );
+        renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
+        renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
+        renderer.proj = ccam->getProjection();
 
         engine.draw();
 
