@@ -10,7 +10,8 @@
 enum class ComponentType{
     CT_NULL,
         CT_TRANSFORM,
-        CT_CAMERA
+        CT_CAMERA,
+        CT_SCRIPT
 };
 
 struct ComponentType_hash{
