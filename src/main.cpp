@@ -11,6 +11,7 @@
 #include "entity.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
+#include "c_script.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -40,6 +41,13 @@ int main(){
 
     auto ccam = std::make_shared<CCamera>( camera );
     camera.insertComponent( ccam );
+
+    auto cscr = std::make_shared<CScript>( camera );
+    camera.insertComponent( cscr );
+
+    cscr->load( "data/simple_cam.lua" );
+
+    ctrans->setPosition( glm::vec3( 10.0f, 10.0f, 10.0f ) );
 
     bool test_flag = false;
     while( engine.isRunning() ){
@@ -81,6 +89,7 @@ int main(){
             }
             ccam->setFov( fov );
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
+            ccam->rotate_y( 1.0f );
             angle1 += 1.f;
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ){
             angle1 -= 1.f;

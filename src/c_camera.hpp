@@ -19,6 +19,7 @@ public:
     glm::mat4 getProjection() const;
     float getFov() const;
     void setFov( float f );
+    void rotate_y( float angle );
 
 private:
     float m_fov {45.0f};
