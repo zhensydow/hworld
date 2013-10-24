@@ -10,9 +10,10 @@
 //------------------------------------------------------------------------------
 #include "component.hpp"
 #include "lua.hpp"
+#include "iupdate.hpp"
 
 //------------------------------------------------------------------------------
-class CScript : public Component {
+class CScript : public Component, public IUpdate {
 public:
     constexpr static ComponentType type = ComponentType::CT_SCRIPT;
 
@@ -21,6 +22,8 @@ public:
     ComponentType getType() const override;
 
     void load( const std::string & filename );
+
+    void update( double d ) override;
 
 private:
     lua_State * m_lua = nullptr;
