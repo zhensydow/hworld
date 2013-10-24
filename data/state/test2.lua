@@ -7,6 +7,9 @@ function update( dt )
    if input.isKeyPressed( input.K )then
       engine.newstate( 'test' )
    end
+   if input.isButtonPressed( input.MouseLeft )then
+      print( "MOUSED" )
+   end
 end
 
 function stop()
