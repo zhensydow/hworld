@@ -39,6 +39,14 @@ T & Entity::getComponent(){
 }
 
 //------------------------------------------------------------------------------
+template<typename C, typename... Args>
+std::shared_ptr<C> newComponent( Entity & entity, Args&&... args ){
+    auto comp = std::make_shared<C>( entity, std::forward<Args>(args)... );
+    entity.insertComponent( comp );
+    return comp;
+}
+
+//------------------------------------------------------------------------------
 #endif//ENTITY_HPP_
 
 //------------------------------------------------------------------------------

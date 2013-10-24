@@ -36,14 +36,9 @@ int main(){
 
     auto camera = std::make_shared<Entity>();
 
-    auto ctrans = std::make_shared<CTransform>( *camera );
-    camera->insertComponent( ctrans );
-
-    auto ccam = std::make_shared<CCamera>( *camera );
-    camera->insertComponent( ccam );
-
-    auto cscr = std::make_shared<CScript>( *camera );
-    camera->insertComponent( cscr );
+    auto ctrans = newComponent<CTransform>( *camera );
+    auto ccam = newComponent<CCamera>( *camera );
+    auto cscr = newComponent<CScript>( *camera );
 
     cscr->load( "data/simple_cam.lua" );
 
