@@ -7,10 +7,12 @@
 #include "terminal.hpp"
 #include <iostream>
 #include "renderer.hpp"
+#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 void Terminal::initialize(){
-    if( !m_font.loadFromFile( "data/GentiumPlus-R.ttf") ){
+    auto filename = Engine::instance().getDataFilename( "GentiumPlus-R.ttf" );
+    if( !m_font.loadFromFile( filename ) ){
         std::cout << "Error loading Font\n";
         std::terminate();
     }

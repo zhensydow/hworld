@@ -8,6 +8,7 @@
 #include "chunkprop.hpp"
 #include "shader.hpp"
 #include "terminal.hpp"
+#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 Ray Renderer::getMouseRay() const{
@@ -24,6 +25,8 @@ Ray Renderer::getMouseRay() const{
 
 //------------------------------------------------------------------------------
 void Renderer::setup(){
+    auto & engine = Engine::instance();
+
     sf::ContextSettings desired;
     desired.depthBits = 24;
 
@@ -47,7 +50,8 @@ void Renderer::setup(){
     glEnable( GL_CULL_FACE );
 
     // load texture
-    m_tex_2d0 = SOIL_load_OGL_texture( "data/tile01.png",
+    auto tex_filename = engine.getDataFilename( "tile01.png" ).c_str();
+    m_tex_2d0 = SOIL_load_OGL_texture( tex_filename,
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                        | SOIL_FLAG_NTSC_SAFE_RGB
@@ -57,7 +61,8 @@ void Renderer::setup(){
         std::terminate();
     }
 
-    m_tex_2d1 = SOIL_load_OGL_texture( "data/tile03.png",
+    tex_filename = engine.getDataFilename( "tile03.png" ).c_str();
+    m_tex_2d1 = SOIL_load_OGL_texture( tex_filename,
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                        | SOIL_FLAG_NTSC_SAFE_RGB
@@ -76,9 +81,9 @@ void Renderer::setup(){
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
-    m_chk_wall_prg = loadProgram( "data/shaders/chunk_wall" );
-    m_chk_tile_prg = loadProgram( "data/shaders/chunk_tile" );
-    m_chk_floor_prg = loadProgram( "data/shaders/chunk_floor" );
+    m_chk_wall_prg = loadProgram( engine.getDataFilename( "shaders/chunk_wall" ) );
+    m_chk_tile_prg = loadProgram( engine.getDataFilename( "shaders/chunk_tile" ) );
+    m_chk_floor_prg = loadProgram( engine.getDataFilename( "shaders/chunk_floor" ) );
 }
 
 //------------------------------------------------------------------------------

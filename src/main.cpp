@@ -40,7 +40,7 @@ int main(){
     auto ccam = newComponent<CCamera>( *camera );
     auto cscr = newComponent<CScript>( *camera );
 
-    cscr->load( "data/simple_cam.lua" );
+    cscr->load( engine.getDataFilename("simple_cam.lua") );
 
     ctrans->setPosition( glm::vec3( 10.0f, 10.0f, 10.0f ) );
 
