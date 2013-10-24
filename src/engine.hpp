@@ -27,6 +27,8 @@ class Engine {
 public:
     static Engine & instance();
 
+    std::string getDataFilename( const std::string & filename ) const;
+
     void setup();
 
     bool isRunning() const;
@@ -80,6 +82,13 @@ private:
 
     bool m_running = true;
 };
+
+//------------------------------------------------------------------------------
+inline
+std::string Engine::getDataFilename( const std::string & filename ) const{
+    auto final = boost::filesystem::path(m_datadir) /= filename;
+    return final.native();
+}
 
 //------------------------------------------------------------------------------
 inline
