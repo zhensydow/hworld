@@ -7,8 +7,8 @@
 #include "c_script.hpp"
 #include <iostream>
 #include <boost/filesystem.hpp>
-#include <SFML/Graphics.hpp>
 #include "util.hpp"
+#include "script.hpp"
 
 //------------------------------------------------------------------------------
 using namespace boost::filesystem;
@@ -26,12 +26,6 @@ CScript::~CScript(){
     if( m_lua ){
         lua_close( m_lua );
     }
-}
-
-//------------------------------------------------------------------------------
-int isKeyPressed( lua_State *lua ){
-    auto val = luaL_checkint( lua, 1 );
-    return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(val));
 }
 
 //------------------------------------------------------------------------------
@@ -62,20 +56,7 @@ void CScript::load( const std::string & filename ){
 
     lua_gc( m_lua, LUA_GCSTOP, 0 );
     luaL_openlibs( m_lua );
-
-    // set input
-    lua_newtable( m_lua );                            // 1
-    lua_pushstring( m_lua, "isKeyPressed");           // 2
-    lua_pushcfunction( m_lua, isKeyPressed );         // 3
-    lua_settable( m_lua, -3 );                        // 1
-    lua_pushstring( m_lua, "U" );                     // 2
-    lua_pushnumber( m_lua, static_cast<int>(sf::Keyboard::U) ); // 3
-    lua_settable( m_lua, -3 );                        // 1
-    lua_pushstring( m_lua, "I" );                     // 2
-    lua_pushnumber( m_lua, static_cast<int>(sf::Keyboard::I) ); // 3
-    lua_settable( m_lua, -3 );                        // 1
-    lua_setglobal( m_lua, "input" );                  // 0
-
+    openInput( m_lua );
     // set entity
     lua_newtable( m_lua );                             // 1
     luaL_newmetatable( m_lua, "entity" );              // 2
