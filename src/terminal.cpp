@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 void Terminal::initialize(){
-    if( !m_font.loadFromFile( "GentiumPlus-R.ttf") ){
+    if( !m_font.loadFromFile( "data/GentiumPlus-R.ttf") ){
         std::cout << "Error loading Font\n";
         std::terminate();
     }
