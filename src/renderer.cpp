@@ -76,7 +76,7 @@ void Renderer::setup(){
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
-    m_chk_wall_prg = loadProgram( "data/shaders/test01" );
+    m_chk_wall_prg = loadProgram( "data/shaders/chunk_wall" );
     m_chk_tile_prg = loadProgram( "data/shaders/chunk_tile" );
     m_chk_floor_prg = loadProgram( "data/shaders/chunk_floor" );
 }
