@@ -44,6 +44,7 @@ int main(){
 
     ctrans->setPosition( glm::vec3( 10.0f, 10.0f, 10.0f ) );
 
+    engine.addEntity( camera );
 
     bool test_flag = false;
     while( engine.isRunning() ){

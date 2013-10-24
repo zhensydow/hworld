@@ -10,6 +10,8 @@
 #include "lua.hpp"
 #include "util.hpp"
 #include "gamestate.hpp"
+#include "entity.hpp"
+#include "c_script.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -41,6 +43,13 @@ void Engine::setState( std::unique_ptr<GameState> state ){
     if( state ){
         m_nextState = std::move(state);
         m_nextStateType = NextState::NEW_STATE;
+    }
+}
+
+//------------------------------------------------------------------------------
+void Engine::addEntity( shared_ptr<Entity> entity ){
+    if( entity ){
+        m_entities.push_back( entity );
     }
 }
 

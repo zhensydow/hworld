@@ -19,6 +19,9 @@
 #include "renderer.hpp"
 
 //------------------------------------------------------------------------------
+class Entity;
+
+//------------------------------------------------------------------------------
 class Engine {
 public:
     static Engine & instance();
@@ -38,6 +41,8 @@ public:
     void setState( std::unique_ptr<GameState> state );
 
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
+
+    void addEntity( std::shared_ptr<Entity> entity );
 
 private:
     Engine();
@@ -65,6 +70,8 @@ private:
     std::unique_ptr<TerrainProp> m_terrain;
 
     boost::filesystem::path m_datadir = "data";
+
+    std::vector< std::shared_ptr<Entity> > m_entities;
 
     double m_t = 0.0;
     double m_accum = 0.0;
