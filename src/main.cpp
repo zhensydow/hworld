@@ -20,7 +20,7 @@
 int main(){
     outMemoryInfo();
 
-    Engine engine;
+    auto & engine = Engine::instance();
     engine.setup();
 
     auto & world = engine.getWorld();

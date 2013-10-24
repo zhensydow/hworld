@@ -16,6 +16,12 @@ using namespace std;
 using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
+Engine & Engine::instance(){
+    static Engine s_engine;
+    return s_engine;
+}
+
+//------------------------------------------------------------------------------
 Engine::Engine() : m_nextState{nullptr} {
     //empty
 }

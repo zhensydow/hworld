@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 class Engine {
 public:
-    Engine();
+    static Engine & instance();
 
     void setup();
 
@@ -40,6 +40,8 @@ public:
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
 private:
+    Engine();
+
     enum class NextState{
         NEW_STATE,
             PUSH_STATE,
