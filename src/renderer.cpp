@@ -78,7 +78,7 @@ void Renderer::setup(){
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
-    m_chunkprogram = loadProgram( "data/shaders/test01" );
+    m_chk_wall_prg = loadProgram( "data/shaders/test01" );
     m_chk_tile_prg = loadProgram( "data/shaders/chunk_tile" );
     m_chk_floor_prg = loadProgram( "data/shaders/chunk_floor" );
 }
@@ -118,9 +118,9 @@ void Renderer::render( const ChunkProp & chunkprop ){
                         GL_UNSIGNED_SHORT, nullptr);
     }
 
-    matrix_id = glGetUniformLocation( m_chunkprogram , "MVP");
-    texture_id = glGetUniformLocation( m_chunkprogram , "texSampler");
-    glUseProgram( m_chunkprogram );
+    matrix_id = glGetUniformLocation( m_chk_wall_prg, "MVP");
+    texture_id = glGetUniformLocation( m_chk_wall_prg, "texSampler");
+    glUseProgram( m_chk_wall_prg );
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d1 );
