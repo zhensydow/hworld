@@ -20,6 +20,7 @@
 
 //------------------------------------------------------------------------------
 class Entity;
+class IUpdate;
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -72,6 +73,7 @@ private:
     boost::filesystem::path m_datadir = "data";
 
     std::vector< std::shared_ptr<Entity> > m_entities;
+    std::vector< std::shared_ptr<IUpdate> > m_updateList;
 
     double m_t = 0.0;
     double m_accum = 0.0;

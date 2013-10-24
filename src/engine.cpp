@@ -62,6 +62,10 @@ void Engine::update(){
 
     m_accum += frameTime;
     while( m_accum >= dt ){
+        for( auto & comp: m_updateList ){
+            comp->update( dt );
+        }
+
         if( not m_states.empty() ){
             auto & state = m_states.top();
             state.update( dt );
