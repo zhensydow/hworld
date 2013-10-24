@@ -12,6 +12,7 @@
 #include "gamestate.hpp"
 #include "entity.hpp"
 #include "c_script.hpp"
+#include "script.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -162,6 +163,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
 
     lua_gc( ls, LUA_GCSTOP, 0 );
     luaL_openlibs( ls );
+    openInput( ls );
     // set engine functions
     luaL_register( ls, "engine", enginelib );
     lua_pushlightuserdata( ls, (void*)this );
