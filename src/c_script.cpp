@@ -7,7 +7,6 @@
 #include "c_script.hpp"
 #include <iostream>
 #include <boost/filesystem.hpp>
-#include <luabind/luabind.hpp>
 #include <SFML/Graphics.hpp>
 #include "util.hpp"
 
@@ -29,7 +28,9 @@ CScript::~CScript(){
     }
 }
 
-bool isKeyPressed( int val ){
+//------------------------------------------------------------------------------
+int isKeyPressed( lua_State *lua ){
+    auto val = luaL_checkint( lua, 1 );
     return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(val));
 }
 
@@ -63,19 +64,17 @@ void CScript::load( const std::string & filename ){
     luaL_openlibs( m_lua );
 
     // set input
-    luabind::module( m_lua, "input" )
-        [
-         luabind::def("isKeyPressed", &(isKeyPressed) )
-         ];
-
-    lua_getglobal( m_lua, "input" );                  // 1
+    lua_newtable( m_lua );                            // 1
+    lua_pushstring( m_lua, "isKeyPressed");           // 2
+    lua_pushcfunction( m_lua, isKeyPressed );         // 3
+    lua_settable( m_lua, -3 );                        // 1
     lua_pushstring( m_lua, "U" );                     // 2
     lua_pushnumber( m_lua, static_cast<int>(sf::Keyboard::U) ); // 3
     lua_settable( m_lua, -3 );                        // 1
     lua_pushstring( m_lua, "I" );                     // 2
     lua_pushnumber( m_lua, static_cast<int>(sf::Keyboard::I) ); // 3
     lua_settable( m_lua, -3 );                        // 1
-    lua_pop( m_lua, 1 );                              // 0
+    lua_setglobal( m_lua, "input" );                  // 0
 
     // set entity
     lua_newtable( m_lua );                             // 1
