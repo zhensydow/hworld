@@ -60,7 +60,8 @@ GLuint createShader(GLenum shaderType, const std::string &filename ){
             break;
         }
 
-        std::cerr << "Compile failure in " << strShaderType << " shader: \n" 
+        std::cerr << "Compile failure in " << strShaderType << " shader: \n"
+                  << "  " << filename << std::endl
                   << strInfoLog << std::endl;
         delete[] strInfoLog;
     }
