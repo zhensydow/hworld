@@ -26,8 +26,6 @@ Ray Renderer::getMouseRay() const{
 void Renderer::setup(){
     sf::ContextSettings desired;
     desired.depthBits = 24;
-    desired.majorVersion = 3;
-    desired.minorVersion = 3;
 
     glGenVertexArrays( 1, &m_vertexArrayID );
     glBindVertexArray( m_vertexArrayID );
