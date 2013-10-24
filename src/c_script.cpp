@@ -13,6 +13,9 @@
 using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
+constexpr ComponentType CScript::type;
+
+//------------------------------------------------------------------------------
 CScript::CScript( Entity & e ) : Component( e ) {
     //empty
 }
