@@ -50,6 +50,11 @@ void Engine::setState( std::unique_ptr<GameState> state ){
 void Engine::addEntity( shared_ptr<Entity> entity ){
     if( entity ){
         m_entities.push_back( entity );
+
+        auto comp = entity->getComponent<CScript>();
+        if( comp ){
+            m_updateList.push_back( std::static_pointer_cast<IUpdate>(comp) );
+        }
     }
 }
 
