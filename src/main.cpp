@@ -34,20 +34,21 @@ int main(){
 
     engine.setState( engine.makeGameState( "test" ) );
 
-    Entity camera;
+    auto camera = std::make_shared<Entity>();
 
-    auto ctrans = std::make_shared<CTransform>( camera );
-    camera.insertComponent( ctrans );
+    auto ctrans = std::make_shared<CTransform>( *camera );
+    camera->insertComponent( ctrans );
 
-    auto ccam = std::make_shared<CCamera>( camera );
-    camera.insertComponent( ccam );
+    auto ccam = std::make_shared<CCamera>( *camera );
+    camera->insertComponent( ccam );
 
-    auto cscr = std::make_shared<CScript>( camera );
-    camera.insertComponent( cscr );
+    auto cscr = std::make_shared<CScript>( *camera );
+    camera->insertComponent( cscr );
 
     cscr->load( "data/simple_cam.lua" );
 
     ctrans->setPosition( glm::vec3( 10.0f, 10.0f, 10.0f ) );
+
 
     bool test_flag = false;
     while( engine.isRunning() ){
