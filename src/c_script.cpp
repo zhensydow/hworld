@@ -56,10 +56,11 @@ void CScript::update( double d ){
         lua_getfield( m_lua, LUA_GLOBALSINDEX, "onUpdate" );     // 1
         if( lua_isfunction( m_lua, -1 ) ){
             lua_pushnumber( m_lua, d );                          // 2
-            auto ret = lua_pcall( m_lua, 1, 0, 0 );              // 1
+            auto ret = lua_pcall( m_lua, 1, 0, 0 );              // 0
             checkLuaReturn( m_lua, ret );
+        }else{
+            lua_pop( m_lua, 1 );                                 // 0
         }
-        lua_pop( m_lua, 1 );                                     // 0
     }
 }
 
