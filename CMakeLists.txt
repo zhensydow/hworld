@@ -10,9 +10,10 @@ set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH} 
 find_package( OpenGL REQUIRED )
 find_package( SFML 2.0 REQUIRED system window graphics )
 find_package( Boost 1.52 COMPONENTS system filesystem REQUIRED )
-find_package(LuaJIT REQUIRED)
-set(LUA_INCLUDE_DIRS ${LuaJIT_INCLUDE_DIRS})
-set(LUA_LIBRARIES ${LuaJIT_LIBRARIES})
+find_package( LuaJIT REQUIRED )
+find_package( Luabind REQUIRED )
+set(LUA_INCLUDE_DIRS ${LuaJIT_INCLUDE_DIR} ${LUABIND_INCLUDE_DIR} )
+set(LUA_LIBRARIES ${LuaJIT_LIBRARIES} ${LUABIND_LIBRARIES} )
 find_package( jsoncpp REQUIRED )
 
 add_subdirectory( soil )
