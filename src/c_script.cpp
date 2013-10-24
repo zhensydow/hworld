@@ -21,6 +21,13 @@ CScript::CScript( Entity & e ) : Component( e ) {
 }
 
 //------------------------------------------------------------------------------
+CScript::~CScript(){
+    if( m_lua ){
+        lua_close( m_lua );
+    }
+}
+
+//------------------------------------------------------------------------------
 void CScript::load( const std::string & filename ){
     if( !is_regular_file(filename) ){
         std::cout << "Not file '" << filename << "'" << std::endl;

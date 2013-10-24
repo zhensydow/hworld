@@ -18,6 +18,7 @@ public:
     constexpr static ComponentType type = ComponentType::CT_SCRIPT;
 
     CScript( Entity & e );
+    ~CScript();
 
     ComponentType getType() const override;
 
