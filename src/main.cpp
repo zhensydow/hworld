@@ -58,15 +58,9 @@ int main(){
             }else if( event.type == sf::Event::KeyReleased ){
                 if( event.key.code == sf::Keyboard::Tab ){
                     terminal.setVisible( not terminal.isVisible() );
-                }else if( event.key.code == sf::Keyboard::A ){
-                    terminal.newLine( "Key A Pressed " );
-                }else if( event.key.code == sf::Keyboard::B ){
-                    terminal.newLine( "Key B is Pressed well" );
                 }else if( event.key.code == sf::Keyboard::S ){
                     terminal.newLine( "Saving..." );
                     saveWorld( world, "data" );
-                }else{
-                    terminal.newLine( "Key Pressed " );
                 }
             }
         }
