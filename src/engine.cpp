@@ -164,6 +164,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     lua_gc( ls, LUA_GCSTOP, 0 );
     luaL_openlibs( ls );
     openInput( ls );
+    openTerminal( ls );
     // set engine functions
     luaL_register( ls, "engine", enginelib );
     lua_pushlightuserdata( ls, (void*)this );
