@@ -31,7 +31,7 @@ public:
     const std::vector< std::shared_ptr<sf::Text> > & getTexts() const;
 
 private:
-    constexpr static unsigned int LINE_HEIGHT = 20;
+    constexpr static unsigned int LINE_HEIGHT = 16;
     constexpr static unsigned int LINE_BORDER = 18;
     constexpr static unsigned int LINE_SIZE = 12;
     constexpr static unsigned int MAX_LINES = 15;
