@@ -8,6 +8,8 @@
 #define COMPONENT_HPP_
 
 //------------------------------------------------------------------------------
+#include <unordered_map>
+#include "lua.hpp"
 #include "entity.hpp"
 
 //------------------------------------------------------------------------------
@@ -20,7 +22,15 @@ public:
 
     Entity & getEntity();
 
+    lua_CFunction getFunction( const std::string & name ) const;
+
+protected:
+    using ScriptTable = std::unordered_map< std::string, lua_CFunction>;
+    void registerScripTable( std::shared_ptr<ScriptTable> table );
+
 private:
+    std::shared_ptr<ScriptTable> m_scriptTable = nullptr;
+
     Entity & m_entity;
 };
 
@@ -34,6 +44,12 @@ Entity & Component::getEntity(){
 inline
 bool hasComponent( Component & c, ComponentType ct ){
     return c.getEntity().hasComponent( ct );
+}
+
+//------------------------------------------------------------------------------
+inline
+void Component::registerScripTable( std::shared_ptr<Component::ScriptTable> table ){
+    m_scriptTable = table;
 }
 
 //------------------------------------------------------------------------------

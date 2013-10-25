@@ -17,3 +17,15 @@ Component::~Component() {
 }
 
 //------------------------------------------------------------------------------
+lua_CFunction Component::getFunction( const std::string & name ) const{
+    if( m_scriptTable ){
+        auto it = m_scriptTable->find( name );
+        if( it != m_scriptTable->end() ){
+            return it->second;
+        }
+    }
+
+    return nullptr;
+}
+
+//------------------------------------------------------------------------------
