@@ -73,19 +73,7 @@ int main(){
 
         engine.update();
 
-        if( sf::Keyboard::isKeyPressed( sf::Keyboard::U ) ){
-            auto fov = ccam->getFov() + 1;
-            if( fov > 80.0 ){
-                fov = 80.0;
-            }
-            ccam->setFov( fov );
-        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::I ) ){
-            auto fov = ccam->getFov() - 1;
-            if( fov < 10.0 ){
-                fov = 10.0;
-            }
-            ccam->setFov( fov );
-        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
             ccam->rotate_y( 1.0f );
             angle1 += 1.f;
         }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ){
