@@ -26,10 +26,10 @@ public:
 
 protected:
     using ScriptTable = std::unordered_map< std::string, lua_CFunction>;
-    void registerScripTable( std::shared_ptr<ScriptTable> table );
+    void registerScriptTable( ScriptTable * table );
 
 private:
-    std::shared_ptr<ScriptTable> m_scriptTable = nullptr;
+    ScriptTable * m_scriptTable = nullptr;
 
     Entity & m_entity;
 };
@@ -48,7 +48,7 @@ bool hasComponent( Component & c, ComponentType ct ){
 
 //------------------------------------------------------------------------------
 inline
-void Component::registerScripTable( std::shared_ptr<Component::ScriptTable> table ){
+void Component::registerScriptTable( Component::ScriptTable * table ){
     m_scriptTable = table;
 }
 
