@@ -22,6 +22,8 @@ public:
     void rotate_y( float angle );
 
 private:
+    static Component::ScriptTable s_cameraTable;
+
     float m_fov {45.0f};
 };
 
