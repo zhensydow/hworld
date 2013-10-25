@@ -13,7 +13,6 @@ int component_index( lua_State *lua ){
     lua_rawget( lua, -3 );
     auto component = static_cast<Component*>( lua_touserdata( lua, -1 ) );
     if( component ){
-        std::cout << "GET COMP method " << name << std::endl;
         auto function = component->getFunction( name );
         if( function ){
             lua_pushcfunction( lua, function );
