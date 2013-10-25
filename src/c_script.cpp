@@ -29,20 +29,6 @@ CScript::~CScript(){
 }
 
 //------------------------------------------------------------------------------
-int entity_index( lua_State *lua ){
-    std::string name = luaL_checkstring( lua, 2 );
-    std::cout << "GET INDEX " << name << std::endl;
-    return 0;
-}
-
-//------------------------------------------------------------------------------
-int entity_newindex( lua_State *lua ){
-    std::string name = luaL_checkstring( lua, 2 );
-    std::cout << "NEW INDEX " << name << std::endl;
-    return 0;
-}
-
-//------------------------------------------------------------------------------
 void CScript::load( const std::string & filename ){
     if( !is_regular_file(filename) ){
         std::cout << "Not file '" << filename << "'" << std::endl;
@@ -58,15 +44,7 @@ void CScript::load( const std::string & filename ){
     luaL_openlibs( m_lua );
     openInput( m_lua );
     // set entity
-    lua_newtable( m_lua );                             // 1
-    luaL_newmetatable( m_lua, "entity" );              // 2
-    lua_pushstring( m_lua, "__newindex");              // 3
-    lua_pushcfunction( m_lua, entity_newindex );       // 4
-    lua_settable( m_lua, -3 );                         // 2
-    lua_pushstring( m_lua, "__index");                 // 3
-    lua_pushcfunction( m_lua, entity_index );          // 4
-    lua_settable( m_lua, -3 );                         // 2
-    lua_setmetatable( m_lua, -2 );                     // 1
+    lua_pushEntity( m_lua, getEntity() );              // 1
     lua_setfield( m_lua, LUA_GLOBALSINDEX, "entity" ); // 0
 
     lua_gc( m_lua, LUA_GCRESTART, 0 );
