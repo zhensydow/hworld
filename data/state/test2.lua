@@ -1,5 +1,5 @@
 function start()
-   print( 'Start state test2' )
+   terminal.newLine( 'Start state test2' )
 end
 
 function update( dt )
@@ -13,5 +13,5 @@ function update( dt )
 end
 
 function stop()
-   print( 'Stop state test2' )
+   terminal.newLine( 'Stop state test2' )
 end

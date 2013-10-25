@@ -1,7 +1,7 @@
 dtime = 0
 
 function start()
-   print( 'Start state' )
+   terminal.newLine( 'Start state' )
 end
 
 function update( dt )
@@ -14,5 +14,5 @@ function update( dt )
 end
 
 function stop()
-   print( 'Stop state' )
+   terminal.newLine( 'Stop state' )
 end
