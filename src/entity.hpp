@@ -20,7 +20,7 @@ class Entity final {
 public:
     bool hasComponent( ComponentType ct ) const;
     template<typename T> std::shared_ptr<T> getComponent();
-    std::shared_ptr<Component> getComponent( ComponentType type );
+    template<typename T=Component> std::shared_ptr<T> getComponent( ComponentType type );
     void insertComponent( std::shared_ptr<Component> c );
 
 private:
@@ -40,12 +40,12 @@ std::shared_ptr<T> Entity::getComponent(){
 }
 
 //------------------------------------------------------------------------------
-inline
-std::shared_ptr<Component> Entity::getComponent( ComponentType type ){
+template<typename T>
+std::shared_ptr<T> Entity::getComponent( ComponentType type ){
     auto it = m_components.find( type );
 
     if( it != m_components.end() ){
-        return it->second;
+        return std::static_pointer_cast<T>(it->second);
     }
 
     return nullptr;
