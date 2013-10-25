@@ -7,7 +7,12 @@
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
+//------------------------------------------------------------------------------
+#include <string>
+
+//------------------------------------------------------------------------------
 enum class ComponentType{
+    CT_INVALID,
     CT_NULL,
         CT_TRANSFORM,
         CT_CAMERA,
@@ -22,6 +27,9 @@ struct ComponentType_hash{
         return static_cast<std::size_t>(value);
     }
 };
+
+//------------------------------------------------------------------------------
+ComponentType getComponentType( const std::string & name );
 
 //------------------------------------------------------------------------------
 #endif//COMPONENTS_HPP_
