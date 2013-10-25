@@ -112,9 +112,8 @@ int main(){
         auto axis2 = rot1 * glm::vec4( 0.0f, 0.0f, -1.0f, 1.0f );
         auto vecx = glm::rotate( angle2, axis2.x, axis2.y, axis2.z )
             * rot1 * glm::vec4( dist, 0.0f, 0.0f, 0.0f );
-        //auto eye = glm::vec3( vecx.x, vecx.y, vecx.z );
+        ctrans->setPosition( glm::vec3( vecx.x, vecx.y, vecx.z ) );
         auto eye = ctrans->getGlobalPosition();
-        renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
         renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
         renderer.proj = ccam->getProjection();
 
