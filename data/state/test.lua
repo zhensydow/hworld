@@ -1,15 +1,15 @@
-count = 0
+dtime = 0
 
 function start()
    print( 'Start state' )
 end
 
 function update( dt )
-   count = count + 1
-   print( 'Update state ' .. dt .. ' and ' .. count )
-   if count > 10 then
+   dtime = dtime + dt
+   print( 'Update state ' .. dt .. ' and ' .. dtime )
+   if dtime > 1 then
       engine.newstate( 'test2' )
-      count = 0
+      dtime = 0
    end
 end
 
