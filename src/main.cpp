@@ -28,9 +28,6 @@ int main(){
     auto & terminal = engine.getTerminal();
 
     auto window = renderer.getWindow();
-    float dist = 7.0f;
-    float angle1 = 0;
-    float angle2 = 0;
 
     engine.setState( engine.makeGameState( "test" ) );
 
@@ -41,8 +38,6 @@ int main(){
     auto cscr = newComponent<CScript>( *camera );
 
     cscr->load( engine.getDataFilename("simple_cam.lua") );
-
-    ctrans->setPosition( glm::vec3( 10.0f, 10.0f, 10.0f ) );
 
     engine.addEntity( camera );
 
@@ -67,34 +62,10 @@ int main(){
 
         engine.update();
 
-        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) ){
-            ccam->rotate_y( 1.0f );
-            angle1 += 1.f;
-        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ){
-            angle1 -= 1.f;
-        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ){
-            if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ){
-                dist += 0.25;
-            }else{
-                angle2 += 1.f;
-            }
-        }else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ){
-            if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) ){
-                dist -= 0.25;
-            }else{
-                angle2 -= 1.f;
-            }
-        }
-
         if( sf::Keyboard::isKeyPressed( sf::Keyboard::Q ) ){
             test_flag = not test_flag;
         }
 
-        auto rot1 = glm::rotate( angle1, 0.0f, 1.0f, 0.0f );
-        auto axis2 = rot1 * glm::vec4( 0.0f, 0.0f, -1.0f, 1.0f );
-        auto vecx = glm::rotate( angle2, axis2.x, axis2.y, axis2.z )
-            * rot1 * glm::vec4( dist, 0.0f, 0.0f, 0.0f );
-        ctrans->setPosition( glm::vec3( vecx.x, vecx.y, vecx.z ) );
         auto eye = ctrans->getGlobalPosition();
         renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
         renderer.proj = ccam->getProjection();
