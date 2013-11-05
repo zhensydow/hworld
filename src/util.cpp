@@ -47,3 +47,12 @@ bool checkLuaReturn( lua_State * const ls, const int ret ){
 }
 
 //------------------------------------------------------------------------------
+bool lua_isUserData( lua_State * const ls, int idx, const std::string & str ){
+    lua_getmetatable( ls, idx );              // +1
+    luaL_getmetatable( ls, str.c_str() );     // +2
+    auto ret = lua_equal( ls, -1, -2 ) == 1;  // +2
+    lua_pop( ls, 2 );                         //  0
+    return ret;
+}
+
+//------------------------------------------------------------------------------
