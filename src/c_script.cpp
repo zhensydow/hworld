@@ -44,6 +44,7 @@ void CScript::load( const std::string & filename ){
     luaL_openlibs( m_lua );
     openInput( m_lua );
     openTerminal( m_lua );
+    openGLM( m_lua );
     // set entity
     lua_pushEntity( m_lua, getEntity() );              // 1
     lua_setfield( m_lua, LUA_GLOBALSINDEX, "entity" ); // 0

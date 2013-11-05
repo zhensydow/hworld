@@ -1,20 +1,22 @@
 //------------------------------------------------------------------------------
-#ifndef SCRIPT_HPP_
-#define SCRIPT_HPP_
+#include "script.hpp"
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
 
 //------------------------------------------------------------------------------
-#include "lua.hpp"
+int glm_rotate( lua_State *lua ){
+    return 0;
+}
 
 //------------------------------------------------------------------------------
-class Entity;
+const luaL_Reg glmLib[] = {
+    {"rotate", glm_rotate},
+    {nullptr, nullptr}
+};
 
 //------------------------------------------------------------------------------
-void openInput( lua_State * lua );
-void openTerminal( lua_State * lua );
-void openGLM( lua_State * lua );
-void lua_pushEntity( lua_State * lua, Entity & entity );
-
-//------------------------------------------------------------------------------
-#endif//SCRIPT_HPP_
+void openGLM( lua_State * lua ){
+    luaL_register( lua, "glm", glmLib );
+}
 
 //------------------------------------------------------------------------------
