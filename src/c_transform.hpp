@@ -24,6 +24,8 @@ public:
     glm::vec3 getGlobalPosition() const;
 
 private:
+    static Component::ScriptTable s_transformTable;
+
     glm::vec3 m_pos = glm::vec3( 0.0, 0.0, 0.0 );
     glm::vec3 m_rot;
 };
