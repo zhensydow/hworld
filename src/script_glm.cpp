@@ -86,9 +86,32 @@ int glm_mat4x4_get( lua_State * lua ){
 
     if( mat ){
         lua_pushnumber( lua, (*mat)[i][j] );
+        return 1;
     }
 
     return 0;
+}
+
+//------------------------------------------------------------------------------
+int glm_mat4x4_mul( lua_State * lua ){
+    int n = lua_gettop( lua );
+    if( n != 2 ){
+        return luaL_error( lua, "Got %d arguments expected 2", n );
+    }
+
+    glm::mat4x4 * mat = (glm::mat4x4 *) luaL_checkudata( lua, 1, "glm_mat4x4" );
+
+    if( lua_isUserData( lua, 2, "glm_vec4" ) ){
+        auto vec = (glm::vec4 *) luaL_checkudata( lua, 2, "glm_vec4" );
+        lua_push_vec4( lua, (*mat) * (*vec) );
+        return 1;
+    }else if( lua_isUserData( lua, 2, "glm_mat4x4" ) ){
+        auto mat2 = (glm::mat4x4 *) luaL_checkudata( lua, 1, "glm_mat4x4" );
+        lua_push_mat4x4( lua, (*mat) * (*mat2) );
+        return 1;
+    }else{
+        return luaL_error( lua, "Invalid value to multiply with mat4x4" );
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -101,6 +124,7 @@ const luaL_Reg glmLib[] = {
 //------------------------------------------------------------------------------
 const luaL_Reg glm_mat4x4Lib[] = {
     {"get", glm_mat4x4_get},
+    {"mul", glm_mat4x4_mul},
     {nullptr, nullptr}
 };
 
