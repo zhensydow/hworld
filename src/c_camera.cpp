@@ -25,6 +25,8 @@ int ccamera_getFov( lua_State * lua ){
         return 1;
     }
 
+    lua_pop( lua, 1 );
+
     return 0;
 }
 
@@ -45,6 +47,8 @@ int ccamera_setFov( lua_State * lua ){
     if( component ){
         component->setFov( fov );
     }
+
+    lua_pop( lua, 1 );
 
     return 0;
 }
