@@ -19,7 +19,6 @@ public:
     glm::mat4 getProjection() const;
     float getFov() const;
     void setFov( float f );
-    void rotate_y( float angle );
 
 private:
     static Component::ScriptTable s_cameraTable;
