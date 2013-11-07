@@ -34,10 +34,10 @@ void Renderer::setup(){
     glBindVertexArray( m_vertexArrayID );
 
     m_window = new sf::RenderWindow{
-        sf::VideoMode(800, 600),
+        sf::VideoMode( DESIRED_WIDTH, DESIRED_HEIGHT ),
         "HexWorld", sf::Style::Default, desired };
-    m_height = 600;
-    m_width = 800;
+    m_height = DESIRED_HEIGHT;
+    m_width = DESIRED_WIDTH;
 
     m_window->setVerticalSyncEnabled( true );
 

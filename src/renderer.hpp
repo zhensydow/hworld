@@ -37,6 +37,9 @@ public:
     glm::mat4 proj;
 
 private:
+    constexpr static unsigned int DESIRED_WIDTH = 800;
+    constexpr static unsigned int DESIRED_HEIGHT = 600;
+
     sf::RenderWindow * m_window;
 
     glm::mat4 m_mvp;
