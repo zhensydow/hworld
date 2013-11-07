@@ -52,6 +52,9 @@ Ray Renderer::getMouseRay() const{
 
 //------------------------------------------------------------------------------
 void Renderer::setup(){
+    static_assert( DESIRED_HEIGHT > 0 and DESIRED_WIDTH > 0
+                   , "Screen size must be > 0" );
+
     auto & engine = Engine::instance();
 
     sf::ContextSettings desired;
