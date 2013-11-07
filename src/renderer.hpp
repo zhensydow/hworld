@@ -59,14 +59,6 @@ private:
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::setViewport( GLsizei width, GLsizei height ){
-    m_width = width;
-    m_height = height;
-    glViewport(0, 0, width, height);
-}
-
-//------------------------------------------------------------------------------
-inline
 glm::vec4 Renderer::getViewport() const {
     return glm::vec4( 0, 0, m_width, m_height );
 }

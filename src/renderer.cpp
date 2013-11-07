@@ -11,6 +11,35 @@
 #include "engine.hpp"
 
 //------------------------------------------------------------------------------
+void Renderer::setViewport( GLsizei width, GLsizei height ){
+    constexpr float SCR_FACTOR = float(DESIRED_WIDTH) / float(DESIRED_HEIGHT);
+    static_assert( SCR_FACTOR > 0, "SCR_FACTOR must be > 0" );
+
+    m_width = width;
+    m_height = height;
+    glViewport(0, 0, width, height);
+
+    if( height > 0 ){
+        auto newView = sf::View( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0},
+                                 {DESIRED_WIDTH, DESIRED_HEIGHT} );
+        auto newFactor = float(width)/float(height);
+        if( newFactor > 0 ){
+            if( newFactor > SCR_FACTOR ){
+                auto size = SCR_FACTOR/newFactor;
+                auto offset = (1.0f - size) / 2.0f;
+                newView.setViewport( {offset, 0.0f, size , 1.0f } );
+            }else{
+                auto size = newFactor/SCR_FACTOR;
+                auto offset = (1.0f - size) / 2.0f;
+                newView.setViewport( {0.0f, offset, 1.0f, size } );
+            }
+
+            m_window->setView( newView );
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
 Ray Renderer::getMouseRay() const{
     auto viewport = getViewport();
     auto mpos = sf::Mouse::getPosition( *m_window );
