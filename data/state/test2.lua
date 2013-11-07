@@ -3,7 +3,7 @@ function start()
 end
 
 function update( dt )
-   print( 'Update state ' .. dt .. ' test2' )
+   --print( 'Update state ' .. dt .. ' test2' )
    if input.isKeyPressed( input.K )then
       engine.newstate( 'test' )
    end
