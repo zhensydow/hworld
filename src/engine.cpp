@@ -18,6 +18,9 @@
 using namespace std;
 using namespace boost::filesystem;
 
+sf::Sprite spr;
+sf::Texture tex;
+
 //------------------------------------------------------------------------------
 Engine & Engine::instance(){
     static Engine s_engine;
@@ -37,6 +40,12 @@ void Engine::setup(){
 
     m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
     m_terrain->setFocus( 0 );
+
+    if( !tex.loadFromFile( getDataFilename( "template.png" ) ) ){
+        std::terminate();
+    }
+
+    spr.setTexture( tex, true );
 }
 
 //------------------------------------------------------------------------------
@@ -91,6 +100,9 @@ void Engine::draw(){
     m_renderer.startGUI();
 
     m_terminal.draw( m_renderer );
+
+    auto window = m_renderer.getWindow();
+    window->draw( spr );
 
     m_renderer.endFrame();
 }
