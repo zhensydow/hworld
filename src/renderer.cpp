@@ -20,21 +20,19 @@ void Renderer::setViewport( GLsizei width, GLsizei height ){
     glViewport(0, 0, width, height);
 
     if( height > 0 ){
-        auto newView = sf::View( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0},
-                                 {DESIRED_WIDTH, DESIRED_HEIGHT} );
         auto newFactor = float(width)/float(height);
         if( newFactor > 0 ){
             if( newFactor > SCR_FACTOR ){
                 auto size = SCR_FACTOR/newFactor;
                 auto offset = (1.0f - size) / 2.0f;
-                newView.setViewport( {offset, 0.0f, size , 1.0f } );
+                m_guiView.setViewport( {offset, 0.0f, size , 1.0f } );
             }else{
                 auto size = newFactor/SCR_FACTOR;
                 auto offset = (1.0f - size) / 2.0f;
-                newView.setViewport( {0.0f, offset, 1.0f, size } );
+                m_guiView.setViewport( {0.0f, offset, 1.0f, size } );
             }
 
-            m_window->setView( newView );
+            m_window->setView( m_guiView );
         }
     }
 }
@@ -67,6 +65,8 @@ void Renderer::setup(){
         "HexWorld", sf::Style::Default, desired };
     m_height = DESIRED_HEIGHT;
     m_width = DESIRED_WIDTH;
+    m_guiView.setCenter( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0} );
+    m_guiView.setSize( {DESIRED_WIDTH, DESIRED_HEIGHT} );
 
     m_window->setVerticalSyncEnabled( true );
 
@@ -210,7 +210,7 @@ void Renderer::render( const Terminal & terminal ){
     for( const auto t: texts ){
         m_window->draw( (*t) );
     }
-    m_window->setView( m_window->getDefaultView() );
+    m_window->setView( m_guiView );
 }
 
 //------------------------------------------------------------------------------

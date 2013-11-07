@@ -41,6 +41,7 @@ private:
     constexpr static unsigned int DESIRED_HEIGHT = 600;
 
     sf::RenderWindow * m_window;
+    sf::View m_guiView;
 
     glm::mat4 m_mvp;
 
