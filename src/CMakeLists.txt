@@ -7,7 +7,7 @@ include_directories( ${LUA_INCLUDE_DIRS})
 
 link_directories( ${Boost_LIBRARY_DIRS} )
 
-add_definitions( -Wall -Wextra -std=c++11 )
+add_definitions( -Wall -Wextra -std=c++11 -O3 )
 add_executable( hworld ${SRC_SOURCES} )
 
 target_link_libraries( hworld ${OPENGL_LIBRARIES} )
