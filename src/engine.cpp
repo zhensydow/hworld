@@ -11,6 +11,8 @@
 #include "util.hpp"
 #include "gamestate.hpp"
 #include "entity.hpp"
+#include "c_transform.hpp"
+#include "c_camera.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
 
@@ -93,6 +95,16 @@ void Engine::update(){
 
 //------------------------------------------------------------------------------
 void Engine::draw(){
+    if( m_camera ){
+        auto ctrans = m_camera->getComponent<CTransform>();
+        auto ccam = m_camera->getComponent<CCamera>();
+        if( ctrans and ccam ){
+            auto eye = ctrans->getGlobalPosition();
+            m_renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
+            m_renderer.proj = ccam->getProjection();
+        }
+    }
+
     m_renderer.startFrame();
 
     m_terrain->draw( m_renderer );

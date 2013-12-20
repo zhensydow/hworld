@@ -46,6 +46,7 @@ public:
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
     void addEntity( std::shared_ptr<Entity> entity );
+    void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 
 private:
     Engine();
@@ -76,6 +77,8 @@ private:
 
     std::vector< std::shared_ptr<Entity> > m_entities;
     std::vector< std::shared_ptr<IUpdate> > m_updateList;
+
+    std::shared_ptr<Entity> m_camera = nullptr;
 
     double m_t = 0.0;
     double m_accum = 0.0;
@@ -118,6 +121,12 @@ Renderer & Engine::getRenderer(){
 inline
 Terminal & Engine::getTerminal(){
     return m_terminal;
+}
+
+//------------------------------------------------------------------------------
+inline
+void Engine::setCamera( std::shared_ptr<Entity> cam ) noexcept {
+    m_camera = cam;
 }
 
 //------------------------------------------------------------------------------
