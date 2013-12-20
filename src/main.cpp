@@ -40,6 +40,7 @@ int main(){
     cscr->load( engine.getDataFilename("simple_cam.lua") );
 
     engine.addEntity( camera );
+    engine.setCamera( camera );
 
     bool test_flag = false;
     while( engine.isRunning() ){
@@ -65,10 +66,6 @@ int main(){
         if( sf::Keyboard::isKeyPressed( sf::Keyboard::Q ) ){
             test_flag = not test_flag;
         }
-
-        auto eye = ctrans->getGlobalPosition();
-        renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
-        renderer.proj = ccam->getProjection();
 
         engine.draw();
 
