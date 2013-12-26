@@ -11,6 +11,14 @@ cmake -DCMAKE_PREFIX_PATH=/installpath/ ..
 make
 ~~~~~~~~~~~~~~~~~~~~~
 
+Generate documentation:
+~~~~~~~~~~~~~~~~~~~~~
+mkdir build
+cd build
+cmake -DCMAKE_PREFIX_PATH=/installpath/ ..
+make doc
+~~~~~~~~~~~~~~~~~~~~~
+
 Libraries
 ---------
 
@@ -19,6 +27,26 @@ Libraries
  * SOIL (Simple OpenGL Image Library) [->](http://lonesock.net/soil.html)
  * jsoncpp [->](http://jsoncpp.sourceforge.net)
  * LuaJIT [->](http://luajit.org)
+
+How to
+------
+
+ * Memory profiling
+
+~~~~~~~~~~~~~~~~~~~~~
+valgrind -v --leak-check=full --show-reachable=yes build/src/hworld
+~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~
+valgrind -v --tool=massif build/src/hworld
+~~~~~~~~~~~~~~~~~~~~~
+
+ * Call profiling
+
+~~~~~~~~~~~~~~~~~~~~~
+valgrind --tool=callgrind build/src/hworld
+kcachegrind callgrind.out.*
+~~~~~~~~~~~~~~~~~~~~~
 
 Other Resources
 ---------------
