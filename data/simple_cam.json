@@ -1,11 +1,9 @@
 {
-  "transform": {
-    "pos": [10.0, 10.0, 10.0],
-  },
+  "transform": {},
   "camera": {
-    "fov": 45.0,
+    "fov": 45.0
   },
   "script": {
-    "file": "simple_cam.lua",
-  },
+    "file": "simple_cam.lua"
+  }
 }
