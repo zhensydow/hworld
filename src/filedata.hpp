@@ -14,9 +14,10 @@
 
 //------------------------------------------------------------------------------
 class World;
-
+class Entity;
 //------------------------------------------------------------------------------
 void saveWorld( const World & world, const boost::filesystem::path & folder );
+std::shared_ptr<Entity> makeEntity( const std::string  & filename );
 
 //------------------------------------------------------------------------------
 #endif//FILEDATA_HPP_
