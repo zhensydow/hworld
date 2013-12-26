@@ -31,16 +31,11 @@ int main(){
 
     engine.setState( engine.makeGameState( "test" ) );
 
-    auto camera = std::make_shared<Entity>();
-
-    auto ctrans = newComponent<CTransform>( *camera );
-    auto ccam = newComponent<CCamera>( *camera );
-    auto cscr = newComponent<CScript>( *camera );
-
-    cscr->load( engine.getDataFilename("simple_cam.lua") );
-
-    engine.addEntity( camera );
-    engine.setCamera( camera );
+    auto camera = makeEntity( engine.getDataFilename("simple_cam.json") );
+    if( camera ){
+        engine.addEntity( camera );
+        engine.setCamera( camera );
+    }
 
     bool test_flag = false;
     while( engine.isRunning() ){
