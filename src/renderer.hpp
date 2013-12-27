@@ -19,6 +19,7 @@ class Terminal;
 class Renderer {
 public:
     void setup();
+    void destroy();
     void startFrame() const;
     void startGUI();
     void endFrame();

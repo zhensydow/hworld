@@ -51,6 +51,11 @@ void Engine::setup(){
 }
 
 //------------------------------------------------------------------------------
+void Engine::destroy(){
+    m_renderer.destroy();
+}
+
+//------------------------------------------------------------------------------
 void Engine::setState( std::unique_ptr<GameState> state ){
     if( state ){
         m_nextState = std::move(state);

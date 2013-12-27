@@ -67,6 +67,8 @@ int main(){
         engine.yield();
     }
 
+    engine.destroy();
+
     return 0;
 }
 

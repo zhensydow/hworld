@@ -30,6 +30,7 @@ public:
     std::string getDataFilename( const std::string & filename ) const;
 
     void setup();
+    void destroy();
 
     bool isRunning() const;
     void update();

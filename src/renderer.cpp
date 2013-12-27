@@ -119,6 +119,11 @@ void Renderer::setup(){
 }
 
 //------------------------------------------------------------------------------
+void Renderer::destroy(){
+    m_window->close();
+}
+
+//------------------------------------------------------------------------------
 void Renderer::render( const ChunkProp & chunkprop ){
     auto matrix_id = glGetUniformLocation( m_chk_tile_prg , "MVP");
     auto offset_id = glGetUniformLocation( m_chk_tile_prg , "offset");
