@@ -11,6 +11,14 @@ cmake -DCMAKE_PREFIX_PATH=/installpath/ ..
 make
 ~~~~~~~~~~~~~~~~~~~~~
 
+Compile debug:
+~~~~~~~~~~~~~~~~~~~~~
+mkdir debug
+cd debug
+cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -DCMAKE_PREFIX_PATH=/installpath/ ..
+make
+~~~~~~~~~~~~~~~~~~~~~
+
 Generate documentation:
 ~~~~~~~~~~~~~~~~~~~~~
 mkdir build
