@@ -7,7 +7,7 @@
 #include "component.hpp"
 
 //------------------------------------------------------------------------------
-Component::Component( Entity & e ) : m_entity(e) {
+Component::Component( Entity & e ) noexcept : m_entity(e) {
     //empty
 }
 

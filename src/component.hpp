@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 class Component {
 public:
-    Component( Entity & e );
+    Component( Entity & e ) noexcept;
     virtual ~Component();
 
     virtual ComponentType getType() const = 0;
