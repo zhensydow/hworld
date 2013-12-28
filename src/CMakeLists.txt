@@ -8,8 +8,9 @@ include_directories( ${jsoncpp_INCLUDE_DIRS} )
 
 link_directories( ${Boost_LIBRARY_DIRS} )
 
-add_definitions( -Wall -Wextra -std=c++11 -O3 )
 add_executable( hworld ${SRC_SOURCES} )
+
+add_definitions( -Wall -Wextra -std=c++11 )
 
 target_link_libraries( hworld ${OPENGL_LIBRARIES} )
 target_link_libraries( hworld ${SFML_LIBRARIES} )

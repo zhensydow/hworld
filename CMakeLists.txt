@@ -16,6 +16,8 @@ set(LUA_INCLUDE_DIRS ${LuaJIT_INCLUDE_DIR} ${LUABIND_INCLUDE_DIR} )
 set(LUA_LIBRARIES ${LuaJIT_LIBRARIES} ${LUABIND_LIBRARIES} )
 find_package( jsoncpp REQUIRED )
 
+add_definitions( -O3 )
+
 add_subdirectory( soil )
 add_subdirectory( src )
 add_subdirectory( test )
