@@ -1,6 +1,7 @@
-file( GLOB SRC_SOURCES "*.cpp")
+file( GLOB SRC_SOURCES "*.cpp" "ent/*.cpp")
 
 include_directories( . )
+include_directories( ent )
 include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${PROJECT_SOURCE_DIR}/soil )
 include_directories( ${LUA_INCLUDE_DIRS} )
