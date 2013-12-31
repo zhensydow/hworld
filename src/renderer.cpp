@@ -8,6 +8,7 @@
 #include "chunkprop.hpp"
 #include "shader.hpp"
 #include "terminal.hpp"
+#include "staticmesh.hpp"
 #include "engine.hpp"
 
 //------------------------------------------------------------------------------
@@ -116,6 +117,8 @@ void Renderer::setup(){
     m_chk_wall_prg = loadProgram( engine.getDataFilename( "shaders/chunk_wall" ) );
     m_chk_tile_prg = loadProgram( engine.getDataFilename( "shaders/chunk_tile" ) );
     m_chk_floor_prg = loadProgram( engine.getDataFilename( "shaders/chunk_floor" ) );
+
+    m_nomat_prg = loadProgram( engine.getDataFilename( "shaders/nomat" ) );
 }
 
 //------------------------------------------------------------------------------
@@ -223,6 +226,29 @@ void Renderer::render( const Terminal & terminal ){
 
 //------------------------------------------------------------------------------
 void Renderer::render( const StaticMesh & mesh ){
+    auto matrix_id = glGetUniformLocation( m_nomat_prg, "MVP");
+
+    glUseProgram( m_nomat_prg );
+
+    auto model = glm::translate( glm::vec3(0,0,0) );
+    m_mvp = proj * view * model;
+    glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+
+    glEnableVertexAttribArray( 0 );
+    glBindBuffer( GL_ARRAY_BUFFER, mesh.vertsBuff() );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, mesh.trisBuff() );
+
+    glDrawElements( GL_TRIANGLES, mesh.trisSize(),
+                    GL_UNSIGNED_SHORT, nullptr);
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+    glBindTexture( GL_TEXTURE_2D, 0 );
+    glDisableVertexAttribArray( 0 );
+
+    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------

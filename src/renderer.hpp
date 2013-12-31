@@ -59,6 +59,8 @@ private:
     GLuint m_chk_wall_prg;
     GLuint m_chk_tile_prg;
     GLuint m_chk_floor_prg;
+
+    GLuint m_nomat_prg;
 };
 
 //------------------------------------------------------------------------------
