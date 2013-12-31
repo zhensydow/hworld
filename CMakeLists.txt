@@ -15,6 +15,7 @@ find_package( Luabind REQUIRED )
 set(LUA_INCLUDE_DIRS ${LuaJIT_INCLUDE_DIR} ${LUABIND_INCLUDE_DIR} )
 set(LUA_LIBRARIES ${LuaJIT_LIBRARIES} ${LUABIND_LIBRARIES} )
 find_package( jsoncpp REQUIRED )
+find_package( assimp REQUIRED )
 
 add_definitions( -O3 )
 

@@ -17,6 +17,9 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "SOIL.h"
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 //------------------------------------------------------------------------------
 #endif//GFXINC_HPP_
