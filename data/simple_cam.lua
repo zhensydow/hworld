@@ -43,6 +43,14 @@ function onUpdate( delta )
       end
    end
 
+   if angle2 > 40 then
+      angle2 = 40
+   end
+
+   if angle2 < -40 then
+      angle2 = -40
+   end
+
    rot1 = glm.rotate( angle1, 0.0, 1.0, 0.0 )
    axis2 = rot1:mul( glm.vec4( 0.0, 0.0, -1.0, 1.0 ) )
    rot2 = glm.rotate( angle2, axis2:get(0), axis2:get(1), axis2:get(2) )
