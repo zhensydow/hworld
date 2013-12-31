@@ -56,6 +56,11 @@ valgrind --tool=callgrind build/src/hworld
 kcachegrind callgrind.out.*
 ~~~~~~~~~~~~~~~~~~~~~
 
+ * Export 3DS from blender
+
+Forward: Z Forward
+Up: Y Up
+
 Other Resources
 ---------------
 
