@@ -14,6 +14,7 @@
 //------------------------------------------------------------------------------
 class ChunkProp;
 class Terminal;
+class StaticMesh;
 
 //------------------------------------------------------------------------------
 class Renderer {
@@ -31,6 +32,7 @@ public:
 
     void render( const ChunkProp & chunkprop );
     void render( const Terminal & terminal );
+    void render( const StaticMesh & mesh );
 
     sf::RenderWindow * getWindow();
 
