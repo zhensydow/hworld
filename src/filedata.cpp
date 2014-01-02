@@ -24,14 +24,14 @@ void saveWorld( const World & /*world*/, const path & /*folder*/ ){
 //------------------------------------------------------------------------------
 void makeCCamera( shared_ptr<Entity> entity, const Json::Value & /*data*/){
     if( entity ){
-        newComponent<CCamera>( *entity );
+        getMakeComponent<CCamera>( *entity );
     }
 }
 
 //------------------------------------------------------------------------------
 void makeCTransform( shared_ptr<Entity> entity, const Json::Value & /*data*/){
     if( entity ){
-        newComponent<CTransform>( *entity );
+        getMakeComponent<CTransform>( *entity );
     }
 }
 
@@ -39,7 +39,7 @@ void makeCTransform( shared_ptr<Entity> entity, const Json::Value & /*data*/){
 void makeCScript( shared_ptr<Entity> entity, const Json::Value & data){
     if( entity ){
         auto & engine = Engine::instance();
-        auto comp = newComponent<CScript>( *entity );
+        auto comp = getMakeComponent<CScript>( *entity );
 
         if( data.isMember( "file" ) ){
             auto & filevalue = data["file"];
