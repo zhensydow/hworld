@@ -15,6 +15,7 @@ enum class ComponentType{
     CT_INVALID,
     CT_NULL,
         CT_TRANSFORM,
+        CT_STATICMODEL,
         CT_CAMERA,
         CT_SCRIPT
 };

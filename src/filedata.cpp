@@ -11,6 +11,7 @@
 #include "engine.hpp"
 #include "c_camera.hpp"
 #include "c_transform.hpp"
+#include "c_staticmodel.hpp"
 #include "c_script.hpp"
 
 //------------------------------------------------------------------------------
@@ -43,6 +44,13 @@ void makeCTransform( shared_ptr<Entity> entity, const Json::Value & /*data*/){
 }
 
 //------------------------------------------------------------------------------
+void makeCStaticModel( shared_ptr<Entity> entity, const Json::Value & /*data*/){
+    if( entity ){
+        getMakeComponent<CStaticModel>( *entity );
+    }
+}
+
+//------------------------------------------------------------------------------
 void makeCScript( shared_ptr<Entity> entity, const Json::Value & data){
     if( entity ){
         auto & engine = Engine::instance();
@@ -64,6 +72,7 @@ using MakeComponentFunction = void (*)( shared_ptr<Entity>, const Json::Value & 
 //------------------------------------------------------------------------------
 static unordered_map< string, MakeComponentFunction > s_componentTable =
     { {"camera", makeCCamera },
+      {"staticmodel", makeCStaticModel },
       {"script", makeCScript },
       {"transform", makeCTransform } };
 
