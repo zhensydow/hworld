@@ -22,9 +22,16 @@ void saveWorld( const World & /*world*/, const path & /*folder*/ ){
 }
 
 //------------------------------------------------------------------------------
-void makeCCamera( shared_ptr<Entity> entity, const Json::Value & /*data*/){
+void makeCCamera( shared_ptr<Entity> entity, const Json::Value & data){
     if( entity ){
-        getMakeComponent<CCamera>( *entity );
+        auto comp = getMakeComponent<CCamera>( *entity );
+
+        if( data.isMember( "fov" ) ){
+            auto & fovvalue = data["fov"];
+            if( fovvalue.isNumeric() ){
+                comp->setFov( fovvalue.asFloat() );
+            }
+        }
     }
 }
 
