@@ -78,6 +78,8 @@ void Renderer::setup(){
     std::cout << "OpenGL version: " << settings.majorVersion << "."
               << settings.minorVersion << std::endl;
 
+    clearModelStack();
+
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LESS );
     glEnable( GL_CULL_FACE );

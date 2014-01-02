@@ -8,6 +8,7 @@
 #define RENDERER_HPP_
 
 //------------------------------------------------------------------------------
+#include <stack>
 #include "gfxinc.hpp"
 #include "ray.hpp"
 
@@ -36,6 +37,11 @@ public:
 
     sf::RenderWindow * getWindow();
 
+    void clearModelStack();
+    void pushModel( const glm::mat4 & model );
+    glm::mat4 & getModel();
+    void popModel();
+
     glm::mat4 view;
     glm::mat4 proj;
 
@@ -45,6 +51,8 @@ private:
 
     sf::RenderWindow * m_window;
     sf::View m_guiView;
+
+    std::stack<glm::mat4> m_modelStack;
 
     glm::mat4 m_mvp;
 
@@ -62,6 +70,35 @@ private:
 
     GLuint m_nomat_prg;
 };
+
+//------------------------------------------------------------------------------
+inline
+glm::mat4 & Renderer::getModel(){
+    return m_modelStack.top();
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::clearModelStack(){
+    while( not m_modelStack.empty() ){
+        m_modelStack.pop();
+    }
+    m_modelStack.emplace( glm::mat4(1.0f) );
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::popModel(){
+    if( m_modelStack.size() > 1 ){
+        m_modelStack.pop();
+    }
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::pushModel( const glm::mat4 & mat ){
+    m_modelStack.emplace( mat*getModel() );
+}
 
 //------------------------------------------------------------------------------
 inline
