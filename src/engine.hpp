@@ -17,6 +17,7 @@
 #include "terrainprop.hpp"
 #include "terminal.hpp"
 #include "renderer.hpp"
+#include "resourcefactory.hpp"
 
 //------------------------------------------------------------------------------
 class Entity;
@@ -41,6 +42,7 @@ public:
     World & getWorld();
     Renderer & getRenderer();
     Terminal & getTerminal();
+    ResourceFactory & getResourceFactory();
 
     void setState( std::unique_ptr<GameState> state );
 
@@ -72,6 +74,8 @@ private:
     Renderer m_renderer;
     World m_world;
     Terminal m_terminal;
+    ResourceFactory m_resourceFactory;
+
     std::unique_ptr<TerrainProp> m_terrain;
 
     boost::filesystem::path m_datadir = "data";
@@ -122,6 +126,12 @@ Renderer & Engine::getRenderer(){
 inline
 Terminal & Engine::getTerminal(){
     return m_terminal;
+}
+
+//------------------------------------------------------------------------------
+inline
+ResourceFactory & Engine::getResourceFactory(){
+    return m_resourceFactory;
 }
 
 //------------------------------------------------------------------------------
