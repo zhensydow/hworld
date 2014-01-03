@@ -8,9 +8,14 @@
 #define STATICMODEL_HPP_
 
 //------------------------------------------------------------------------------
+#include <memory>
+#include "staticmesh.hpp"
+
+//------------------------------------------------------------------------------
 class StaticModel {
 public:
     void insertMesh( std::unique_ptr<StaticMesh> mesh );
+    void draw( Renderer & renderer );
 
 private:
     std::vector< std::unique_ptr<StaticMesh> > m_meshes;
