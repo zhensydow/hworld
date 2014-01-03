@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 //------------------------------------------------------------------------------
 class StaticModel;
@@ -20,6 +21,8 @@ public:
     std::shared_ptr<StaticModel> getSimpleModel( const std::string & name );
 
 private:
+    std::unordered_map< std::string, std::shared_ptr<StaticModel> > m_modelMap;
+
 };
 
 //------------------------------------------------------------------------------
