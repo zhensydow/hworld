@@ -22,6 +22,7 @@
 //------------------------------------------------------------------------------
 class Entity;
 class IUpdate;
+class IDrawable;
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -82,6 +83,7 @@ private:
 
     std::vector< std::shared_ptr<Entity> > m_entities;
     std::vector< std::shared_ptr<IUpdate> > m_updateList;
+    std::vector< std::shared_ptr<IDrawable> > m_drawableList;
 
     std::shared_ptr<Entity> m_camera = nullptr;
 

@@ -13,6 +13,7 @@
 #include "entity.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
+#include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
 
@@ -68,9 +69,14 @@ void Engine::addEntity( shared_ptr<Entity> entity ){
     if( entity ){
         m_entities.push_back( entity );
 
-        auto comp = entity->getComponent<CScript>();
-        if( comp ){
-            m_updateList.push_back( std::static_pointer_cast<IUpdate>(comp) );
+        auto scomp = entity->getComponent<CScript>();
+        if( scomp ){
+            m_updateList.push_back( static_pointer_cast<IUpdate>(scomp) );
+        }
+
+        auto mcomp = entity->getComponent<CStaticModel>();
+        if( mcomp ){
+            m_drawableList.push_back( static_pointer_cast<IDrawable>(mcomp) );
         }
     }
 }
@@ -113,6 +119,10 @@ void Engine::draw(){
     m_renderer.startFrame();
 
     m_terrain->draw( m_renderer );
+
+    for( auto & comp: m_drawableList ){
+        comp->draw( m_renderer );
+    }
 
     m_renderer.startGUI();
 
