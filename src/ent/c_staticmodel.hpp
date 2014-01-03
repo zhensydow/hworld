@@ -9,15 +9,18 @@
 
 //------------------------------------------------------------------------------
 #include "component.hpp"
+#include "idrawable.hpp"
 
 //------------------------------------------------------------------------------
-class CStaticModel : public Component {
+class CStaticModel : public Component, public IDrawable {
 public:
     constexpr static ComponentType type = ComponentType::CT_STATICMODEL;
 
     CStaticModel( Entity & e );
 
     ComponentType getType() const override;
+
+    void draw( Renderer & renderer ) override;
 
 private:
 };
