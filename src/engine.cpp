@@ -57,9 +57,9 @@ void Engine::destroy(){
 }
 
 //------------------------------------------------------------------------------
-void Engine::setState( std::unique_ptr<GameState> state ){
+void Engine::setState( unique_ptr<GameState> state ){
     if( state ){
-        m_nextState = std::move(state);
+        m_nextState = move(state);
         m_nextStateType = NextState::NEW_STATE;
     }
 }
