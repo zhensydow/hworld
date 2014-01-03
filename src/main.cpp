@@ -9,9 +9,6 @@
 #include "filedata.hpp"
 #include "engine.hpp"
 #include "entity.hpp"
-#include "c_transform.hpp"
-#include "c_camera.hpp"
-#include "c_script.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
