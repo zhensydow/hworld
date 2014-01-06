@@ -44,9 +44,15 @@ void makeCTransform( shared_ptr<Entity> entity, const Json::Value & /*data*/){
 }
 
 //------------------------------------------------------------------------------
-void makeCStaticModel( shared_ptr<Entity> entity, const Json::Value & /*data*/){
+void makeCStaticModel( shared_ptr<Entity> entity, const Json::Value & data){
     if( entity ){
-        getMakeComponent<CStaticModel>( *entity );
+        auto comp = getMakeComponent<CStaticModel>( *entity );
+        if( data.isMember( "file" ) ){
+            auto & filevalue = data["file"];
+            if( filevalue.isString() ){
+                comp->setModel( filevalue.asString() );
+            }
+        }
     }
 }
 
