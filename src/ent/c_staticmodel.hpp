@@ -12,6 +12,9 @@
 #include "idrawable.hpp"
 
 //------------------------------------------------------------------------------
+class StaticModel;
+
+//------------------------------------------------------------------------------
 class CStaticModel : public Component, public IDrawable {
 public:
     constexpr static ComponentType type = ComponentType::CT_STATICMODEL;
@@ -22,7 +25,11 @@ public:
 
     void draw( Renderer & renderer ) override;
 
+    void setModel( const std::string & name );
+
 private:
+    std::shared_ptr<StaticModel> m_model = nullptr;
+
 };
 
 //------------------------------------------------------------------------------
