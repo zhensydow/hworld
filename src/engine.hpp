@@ -62,7 +62,7 @@ private:
             NOTHING
     };
 
-    static constexpr double FRAMES_PER_SECOND = 30.0;
+    static constexpr double FRAMES_PER_SECOND = 60.0;
     static constexpr double dt = 1.0 / FRAMES_PER_SECOND;
     static constexpr double MAX_FRAME_TIME = 0.25;
 
