@@ -161,7 +161,7 @@ void Engine::yield(){
 }
 
 //--------------------------------------------------------------------------
-int engine_newstate( lua_State *ls ){
+int engine_newState( lua_State *ls ){
     auto str = luaL_checkstring( ls, 1 );
     lua_getfield( ls, LUA_GLOBALSINDEX, "engine" );
     lua_getfield( ls, -1, "_this");
@@ -179,7 +179,7 @@ int engine_newstate( lua_State *ls ){
 /** List of functions of AgentClass lua library for Agent files.
 */
 const luaL_Reg enginelib[] = {
-    {"newstate",  engine_newstate},
+    {"newState",  engine_newState},
     {nullptr, nullptr}
 };
 

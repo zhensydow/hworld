@@ -8,7 +8,7 @@ function update( dt )
    dtime = dtime + dt
    --print( 'Update state ' .. dt .. ' and ' .. dtime )
    if dtime > 1 then
-      engine.newstate( 'test2' )
+      engine.newState( 'test2' )
       dtime = 0
    end
 end
