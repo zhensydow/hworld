@@ -55,8 +55,8 @@ void Component::registerScriptTable( Component::ScriptTable * table ){
 //------------------------------------------------------------------------------
 template<typename T>
 inline
-T & getComponent( Component & c, ComponentType ct ){
-    return c.getEntity().getComponent<T>( ct );
+std::shared_ptr<T> getComponent( Component & c ){
+    return c.getEntity().getComponent<T>();
 }
 
 //------------------------------------------------------------------------------

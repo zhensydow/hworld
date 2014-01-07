@@ -7,6 +7,7 @@
 #include "c_staticmodel.hpp"
 #include "staticmodel.hpp"
 #include "engine.hpp"
+#include "c_transform.hpp"
 
 //------------------------------------------------------------------------------
 constexpr ComponentType CStaticModel::type;
@@ -19,7 +20,16 @@ CStaticModel::CStaticModel( Entity & e ) : Component( e ){
 //------------------------------------------------------------------------------
 void CStaticModel::draw( Renderer & renderer ){
     if( m_model ){
+        auto tcomp = getComponent<CTransform>( *this );
+        if( tcomp ){
+            renderer.pushModel( glm::translate( tcomp->getGlobalPosition() ) );
+        }
+
         m_model->draw( renderer );
+
+        if( tcomp ){
+            renderer.popModel();
+        }
     }
 }
 
