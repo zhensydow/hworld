@@ -16,6 +16,7 @@
 #include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
+#include "filedata.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -171,10 +172,36 @@ int engine_newState( lua_State *ls ){
 }
 
 //--------------------------------------------------------------------------
+int engine_newEntity( lua_State *ls ){
+    auto str = std::string( luaL_checkstring( ls, 1 ) );
+
+    auto n = str.rfind( ".json" );
+    if( n == std::string::npos ){
+        str += ".json";
+    }else{
+        if( str.substr(n) != ".json" ){
+            str += ".json";
+        }
+    }
+
+    auto & engine = Engine::instance();
+    auto entity = makeEntity( engine.getDataFilename( str ) );
+    if( entity ){
+        engine.addEntity( entity );
+        lua_pushEntity( ls, *entity );
+
+        return 1;
+    }
+
+    return 0;
+}
+
+//--------------------------------------------------------------------------
 /** List of functions of AgentClass lua library for Agent files.
 */
 const luaL_Reg enginelib[] = {
     {"newState",  engine_newState},
+    {"newEntity", engine_newEntity},
     {nullptr, nullptr}
 };
 
