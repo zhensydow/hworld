@@ -33,6 +33,21 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
         if( !scene ){
             cout << "ERROR: " << aiGetErrorString() << endl;
         }else{
+            for( unsigned i = 0 ; i < scene->mNumMaterials ; ++i ){
+                Material material;
+                auto aiMaterial = scene->mMaterials[i];
+
+                aiColor3D difc( 0.0f, 0.0f, 0.0f );
+                aiMaterial->Get( AI_MATKEY_COLOR_DIFFUSE, difc );
+                material.setDiffuse( glm::vec3( difc.r, difc.g, difc.b) );
+
+                model->insertMaterial( move(material) );
+            }
+
+            if( model->getNumMaterials() == 0 ){
+                model->insertNullMaterial();
+            }
+
             for( unsigned i = 0 ; i < scene->mNumMeshes ; ++i ){
                 auto mesh = unique_ptr<StaticMesh>( new StaticMesh() );
                 auto aiMesh = scene->mMeshes[i];
@@ -56,11 +71,16 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
                                               face.mIndices[2] );
                     }
 
+                    auto midx = min( model->getNumMaterials() - 1,
+                                     aiMesh->mMaterialIndex );
+                    mesh->setMaterialIdx( midx );
+
                     mesh->setupGL();
 
                     model->insertMesh( move(mesh) );
                 }
             }
+
             aiReleaseImport( scene );
         }
     }
