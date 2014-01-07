@@ -232,8 +232,7 @@ void Renderer::render( const StaticMesh & mesh ){
 
     glUseProgram( m_nomat_prg );
 
-    auto model = glm::translate( glm::vec3(0,0,0) );
-    m_mvp = proj * view * model;
+    m_mvp = proj * view * getModel();
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
 
     glEnableVertexAttribArray( 0 );
