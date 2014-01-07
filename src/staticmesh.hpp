@@ -27,6 +27,8 @@ public:
     void reserveTriangles( unsigned int num ) noexcept;
     void insertTriangle( unsigned int num, unsigned int a, unsigned int b, unsigned int c );
 
+    void setMaterialIdx( unsigned int idx ) noexcept;
+
     GLuint vertsBuff() const;
     GLuint trisBuff() const;
     
@@ -36,6 +38,8 @@ private:
     std::array< GLuint, 2 > m_meshBuffers;
     std::vector< GLfloat > m_verts;
     std::vector< GLushort > m_tris;
+
+    unsigned int m_materialIdx = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -48,6 +52,12 @@ void StaticMesh::reserveVertices( unsigned int num ) noexcept {
 inline
 void StaticMesh::reserveTriangles( unsigned int num ) noexcept {
     m_tris.resize( 3*num );
+}
+
+//------------------------------------------------------------------------------
+inline
+void StaticMesh::setMaterialIdx( unsigned int idx ) noexcept {
+    m_materialIdx = idx;
 }
 
 //------------------------------------------------------------------------------
