@@ -27,8 +27,8 @@ void StaticMesh::setupGL(){
 }
 
 //------------------------------------------------------------------------------
-void StaticMesh::draw( Renderer & renderer ){
-    renderer.render( *this );
+void StaticMesh::draw( const Material & mat, Renderer & renderer ){
+    renderer.render( mat, *this );
 }
 
 //------------------------------------------------------------------------------

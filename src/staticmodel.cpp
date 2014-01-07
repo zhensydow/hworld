@@ -16,7 +16,8 @@ void StaticModel::insertNullMaterial(){
 //------------------------------------------------------------------------------
 void StaticModel::draw( Renderer & renderer ){
     for( auto & mesh: m_meshes ){
-        mesh->draw( renderer );
+        const auto & mat = m_materials[ mesh->getMaterialIdx() ];
+        mesh->draw( mat, renderer );
     }
 }
 

@@ -9,6 +9,7 @@
 #include "shader.hpp"
 #include "terminal.hpp"
 #include "staticmesh.hpp"
+#include "material.hpp"
 #include "engine.hpp"
 
 //------------------------------------------------------------------------------
@@ -227,13 +228,13 @@ void Renderer::render( const Terminal & terminal ){
 }
 
 //------------------------------------------------------------------------------
-void Renderer::render( const StaticMesh & mesh ){
+void Renderer::render( const Material & material, const StaticMesh & mesh ){
     auto matrix_id = glGetUniformLocation( m_objmat_prg, "MVP");
     auto diffuse_id = glGetUniformLocation( m_objmat_prg, "diffuse");
 
     glUseProgram( m_objmat_prg );
 
-    glm::vec3 difc( 0.8f, 0.8f, 0.1f );
+    const auto & difc = material.getDiffuse();
     glUniform3fv( diffuse_id, 1, &difc[0] );
 
     m_mvp = proj * view * getModel();

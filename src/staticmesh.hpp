@@ -14,12 +14,13 @@
 
 //------------------------------------------------------------------------------
 class Renderer;
+class Material;
 
 //------------------------------------------------------------------------------
 class StaticMesh{
 public:
     void setupGL();
-    void draw( Renderer & renderer );
+    void draw( const Material & mat, Renderer & renderer );
 
     void reserveVertices( unsigned int num ) noexcept;
     void insertVertex( unsigned int num, glm::vec3 pos );
@@ -28,6 +29,7 @@ public:
     void insertTriangle( unsigned int num, unsigned int a, unsigned int b, unsigned int c );
 
     void setMaterialIdx( unsigned int idx ) noexcept;
+    unsigned int getMaterialIdx() const noexcept;
 
     GLuint vertsBuff() const;
     GLuint trisBuff() const;
@@ -58,6 +60,12 @@ void StaticMesh::reserveTriangles( unsigned int num ) noexcept {
 inline
 void StaticMesh::setMaterialIdx( unsigned int idx ) noexcept {
     m_materialIdx = idx;
+}
+
+//------------------------------------------------------------------------------
+inline
+unsigned int StaticMesh::getMaterialIdx() const noexcept {
+    return m_materialIdx;
 }
 
 //------------------------------------------------------------------------------
