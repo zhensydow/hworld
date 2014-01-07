@@ -31,6 +31,7 @@ struct ComponentType_hash{
 
 //------------------------------------------------------------------------------
 ComponentType getComponentType( const std::string & name );
+std::string getComponentName( ComponentType type );
 
 //------------------------------------------------------------------------------
 #endif//COMPONENTS_HPP_
