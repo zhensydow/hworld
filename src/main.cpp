@@ -34,7 +34,6 @@ int main(){
         engine.setCamera( camera );
     }
 
-    bool test_flag = false;
     while( engine.isRunning() ){
         sf::Event event;
         while( window->pollEvent(event) ){
@@ -54,13 +53,7 @@ int main(){
         }
 
         engine.update();
-
-        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Q ) ){
-            test_flag = not test_flag;
-        }
-
         engine.draw();
-
         engine.yield();
     }
 
