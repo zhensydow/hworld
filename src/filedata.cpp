@@ -37,9 +37,25 @@ void makeCCamera( shared_ptr<Entity> entity, const Json::Value & data){
 }
 
 //------------------------------------------------------------------------------
-void makeCTransform( shared_ptr<Entity> entity, const Json::Value & /*data*/){
+void makeCTransform( shared_ptr<Entity> entity, const Json::Value & data){
     if( entity ){
-        getMakeComponent<CTransform>( *entity );
+        auto comp = getMakeComponent<CTransform>( *entity );
+        if( data.isMember( "pos" ) ){
+            auto & filevalue = data["pos"];
+            if( filevalue.isArray() ){
+                glm::vec3 pos { 0.0f, 0.0f, 0.0f };
+                auto size = filevalue.size();
+                auto limit = std::min<decltype(size)>( 3, size );
+                for( decltype(size) i = 0 ; i < limit ; ++i ){
+                    auto & val = filevalue[i];
+                    if( val.isNumeric() ){
+                        pos[i] = val.asFloat();
+                    }
+                }
+
+                comp->setPosition( pos );
+            }
+        }
     }
 }
 
