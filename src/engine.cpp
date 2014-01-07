@@ -163,14 +163,9 @@ void Engine::yield(){
 //--------------------------------------------------------------------------
 int engine_newState( lua_State *ls ){
     auto str = luaL_checkstring( ls, 1 );
-    lua_getfield( ls, LUA_GLOBALSINDEX, "engine" );
-    lua_getfield( ls, -1, "_this");
-    lua_remove( ls, -2 );
-    if( lua_islightuserdata( ls, -1 ) ){
-        auto engine = (Engine*) lua_topointer( ls, -1 );
-        auto state = engine->makeGameState( str );
-        engine->setState( std::move(state) );
-    }
+    auto & engine = Engine::instance();
+    auto state = engine.makeGameState( str );
+    engine.setState( std::move(state) );
 
     return 0;
 }
@@ -206,8 +201,6 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     openTerminal( ls );
     // set engine functions
     luaL_register( ls, "engine", enginelib );
-    lua_pushlightuserdata( ls, (void*)this );
-    lua_setfield( ls, -2, "_this" );
     // removes table
     lua_pop( ls, 1 );
     lua_gc( ls, LUA_GCRESTART, 0 );
