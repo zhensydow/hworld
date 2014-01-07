@@ -13,6 +13,8 @@ public:
     void setDiffuse( const glm::vec3 & col ) noexcept;
     void setDiffuse( glm::vec3 && col ) noexcept;
 
+    const glm::vec3 & getDiffuse() const noexcept;
+
 private:
     glm::vec3 m_diffuse;
 };
@@ -27,6 +29,12 @@ void Material::setDiffuse( const glm::vec3 & col ) noexcept {
 inline
 void Material::setDiffuse( glm::vec3 && col ) noexcept {
     m_diffuse = std::move(col);
+}
+
+//------------------------------------------------------------------------------
+inline
+const glm::vec3 & Material::getDiffuse() const noexcept {
+    return m_diffuse;
 }
 
 //------------------------------------------------------------------------------
