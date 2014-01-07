@@ -34,11 +34,6 @@ int main(){
         engine.setCamera( camera );
     }
 
-    auto tree = makeEntity( engine.getDataFilename("tree01.json") );
-    if( tree ){
-        engine.addEntity( tree );
-    }
-
     bool test_flag = false;
     while( engine.isRunning() ){
         sf::Event event;
