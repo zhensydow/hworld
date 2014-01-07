@@ -149,12 +149,15 @@ std::shared_ptr<Entity> makeEntity( const string  & filename ){
     }
 
     auto entity = std::make_shared<Entity>();
+    if( entity ){
+        newComponent<CTransform>( *entity );
 
-    auto comps = root.getMemberNames();
+        auto comps = root.getMemberNames();
 
-    for( const auto & name: comps ){
-        auto & value = root[ name ];
-        createComponent( entity, name, value );
+        for( const auto & name: comps ){
+            auto & value = root[ name ];
+            createComponent( entity, name, value );
+        }
     }
 
     return entity;
