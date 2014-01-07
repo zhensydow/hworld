@@ -120,7 +120,7 @@ void Renderer::setup(){
     m_chk_tile_prg = loadProgram( engine.getDataFilename( "shaders/chunk_tile" ) );
     m_chk_floor_prg = loadProgram( engine.getDataFilename( "shaders/chunk_floor" ) );
 
-    m_nomat_prg = loadProgram( engine.getDataFilename( "shaders/nomat" ) );
+    m_objmat_prg = loadProgram( engine.getDataFilename( "shaders/objmat" ) );
 }
 
 //------------------------------------------------------------------------------
@@ -228,9 +228,13 @@ void Renderer::render( const Terminal & terminal ){
 
 //------------------------------------------------------------------------------
 void Renderer::render( const StaticMesh & mesh ){
-    auto matrix_id = glGetUniformLocation( m_nomat_prg, "MVP");
+    auto matrix_id = glGetUniformLocation( m_objmat_prg, "MVP");
+    auto diffuse_id = glGetUniformLocation( m_objmat_prg, "diffuse");
 
-    glUseProgram( m_nomat_prg );
+    glUseProgram( m_objmat_prg );
+
+    glm::vec3 difc( 0.8f, 0.8f, 0.1f );
+    glUniform3fv( diffuse_id, 1, &difc[0] );
 
     m_mvp = proj * view * getModel();
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
