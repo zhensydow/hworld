@@ -23,6 +23,8 @@ public:
     template<typename T=Component> std::shared_ptr<T> getComponent( ComponentType type );
     void insertComponent( std::shared_ptr<Component> c );
 
+    void printDebug() const;
+
 private:
     std::unordered_map< ComponentType, std::shared_ptr<Component>, ComponentType_hash > m_components;
 };
