@@ -39,12 +39,6 @@ int main( int argc, char *argv[] ){
 
     auto window = renderer.getWindow();
 
-    auto camera = makeEntity( engine.getDataFilename("simple_cam.json") );
-    if( camera ){
-        engine.addEntity( camera );
-        engine.setCamera( camera );
-    }
-
     while( engine.isRunning() ){
         sf::Event event;
         while( window->pollEvent(event) ){

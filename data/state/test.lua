@@ -3,6 +3,9 @@ dtime = 0
 function start()
    terminal.newLine( 'Start state' )
 
+   camera = engine.newEntity( 'simple_cam' )
+   engine.setCamera( camera )
+
    tree = engine.newEntity( 'tree01' )
    tree.transform:setPosition( 0, 1, 2 )
 
