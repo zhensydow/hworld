@@ -80,7 +80,7 @@ private:
 
     std::unique_ptr<TerrainProp> m_terrain;
 
-    boost::filesystem::path m_datadir = "data";
+    boost::filesystem::path m_datadir = "";
 
     std::vector< std::shared_ptr<Entity> > m_entities;
     std::vector< std::shared_ptr<IUpdate> > m_updateList;

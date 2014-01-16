@@ -39,6 +39,8 @@ Engine::Engine() : m_nextState{nullptr} {
 
 //------------------------------------------------------------------------------
 void Engine::setup( const Config & config ){
+    m_datadir = config.datadir;
+
     m_renderer.setup();
 
     m_terminal.initialize();

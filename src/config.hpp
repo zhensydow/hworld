@@ -14,6 +14,7 @@
 //------------------------------------------------------------------------------
 class Config{
 public:
+    std::string datadir = "";
     std::string initialState = "";
 };
 

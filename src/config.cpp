@@ -45,6 +45,8 @@ unique_ptr<Config> loadConfig( const string & filename ){
     auto config = unique_ptr<Config>( new Config );
 
     if( config ){
+        config->datadir = path(filename).parent_path().string();
+
         if( root.isMember( "initialState" ) ){
             auto & value = root["initialState"];
             if( value.isString() ){
