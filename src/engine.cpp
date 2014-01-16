@@ -215,11 +215,26 @@ int engine_newEntity( lua_State *ls ){
 }
 
 //--------------------------------------------------------------------------
+int engine_setCamera( lua_State *ls ){
+    auto ent = lua_checkEntity( ls, 1 );
+    if( ent ){
+        auto & engine = Engine::instance();
+        auto entity = engine.getEntity( ent );
+        if( entity ){
+            engine.setCamera( entity );
+        }
+    }
+
+    return 0;
+}
+
+//--------------------------------------------------------------------------
 /** List of functions of AgentClass lua library for Agent files.
 */
 const luaL_Reg enginelib[] = {
     {"newState",  engine_newState},
     {"newEntity", engine_newEntity},
+    {"setCamera", engine_setCamera},
     {nullptr, nullptr}
 };
 
