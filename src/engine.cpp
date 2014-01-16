@@ -73,6 +73,17 @@ void Engine::setState( unique_ptr<GameState> state ){
 }
 
 //------------------------------------------------------------------------------
+shared_ptr<Entity> Engine::getEntity( const Entity * const ent ) noexcept{
+    auto it = find_if( begin(m_entities), end(m_entities),
+                       [ent]( shared_ptr<Entity> & e){ return e.get() == ent; } );
+
+    if( it != end(m_entities) ){
+        return *it;
+    }
+    return nullptr;
+}
+
+//------------------------------------------------------------------------------
 void Engine::addEntity( shared_ptr<Entity> entity ){
     if( entity ){
         m_entities.push_back( entity );
