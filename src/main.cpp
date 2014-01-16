@@ -4,6 +4,8 @@
     @date 2013-07-24
 */
 //------------------------------------------------------------------------------
+#include <cstdlib>
+#include "config.hpp"
 #include "gfxinc.hpp"
 #include "memory.hpp"
 #include "filedata.hpp"
@@ -14,7 +16,18 @@
 /** Main program function.
    @returns the exit code of program.
  */
-int main(){
+int main( int argc, char *argv[] ){
+    if( argc != 2 ){
+        std::cout << "usage: " << argv[0] << " <config filename>" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    auto config = loadConfig( argv[1] );
+    if( not config ){
+        std::cout << "can't load config file" << std::endl;
+        return EXIT_FAILURE;
+    }
+
     outMemoryInfo();
 
     auto & engine = Engine::instance();
@@ -59,7 +72,7 @@ int main(){
 
     engine.destroy();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
