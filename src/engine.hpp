@@ -23,6 +23,7 @@
 class Entity;
 class IUpdate;
 class IDrawable;
+class Config;
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -31,7 +32,7 @@ public:
 
     std::string getDataFilename( const std::string & filename ) const;
 
-    void setup();
+    void setup( const Config & config );
     void destroy();
 
     bool isRunning() const;

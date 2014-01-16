@@ -31,7 +31,7 @@ int main( int argc, char *argv[] ){
     outMemoryInfo();
 
     auto & engine = Engine::instance();
-    engine.setup();
+    engine.setup( *config );
 
     auto & world = engine.getWorld();
     auto & renderer = engine.getRenderer();
