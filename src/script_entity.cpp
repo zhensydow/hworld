@@ -30,8 +30,8 @@ int component_newindex( lua_State *lua ){
 }
 
 //------------------------------------------------------------------------------
-void lua_pushComponent( lua_State * lua, std::shared_ptr<Component> & comp ){ 
-    lua_newtable( lua );                             // 1   
+void lua_pushComponent( lua_State * lua, std::shared_ptr<Component> & comp ){
+    lua_newtable( lua );                             // 1
     lua_pushstring( lua, "_comp" );                  // 2
     lua_pushlightuserdata( lua, comp.get() );        // 3
     lua_settable( lua, -3 );                         // 1
@@ -84,6 +84,20 @@ void lua_pushEntity( lua_State * lua, Entity & entity ){
     lua_pushcfunction( lua, entity_index );          // 4
     lua_settable( lua, -3 );                         // 2
     lua_setmetatable( lua, -2 );                     // 1
+}
+
+//------------------------------------------------------------------------------
+Entity * lua_checkEntity( lua_State * lua, int index ){
+    lua_pushvalue( lua, index );    // 1
+    lua_pushstring( lua, "_ent" );  // 2
+    lua_rawget( lua, -2 );          // 2
+    auto entity = static_cast<Entity*>( lua_touserdata( lua, -1 ) );
+    lua_pop( lua, 2 );
+    if( not entity ){
+        luaL_error( lua, "invalid entity" );
+    }
+
+    return entity;
 }
 
 //------------------------------------------------------------------------------
