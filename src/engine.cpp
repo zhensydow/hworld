@@ -17,6 +17,7 @@
 #include "c_script.hpp"
 #include "script.hpp"
 #include "filedata.hpp"
+#include "config.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -50,6 +51,10 @@ void Engine::setup( const Config & config ){
     }
 
     spr.setTexture( tex, true );
+
+    if( config.initialState != "" ){
+        setState( makeGameState( config.initialState ) );
+    }
 }
 
 //------------------------------------------------------------------------------

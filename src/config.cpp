@@ -43,6 +43,16 @@ unique_ptr<Config> loadConfig( const string & filename ){
     }
 
     auto config = unique_ptr<Config>( new Config );
+
+    if( config ){
+        if( root.isMember( "initialState" ) ){
+            auto & value = root["initialState"];
+            if( value.isString() ){
+                config->initialState = value.asString();
+            }
+        }
+    }
+
     return config;
 }
 

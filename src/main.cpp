@@ -39,8 +39,6 @@ int main( int argc, char *argv[] ){
 
     auto window = renderer.getWindow();
 
-    engine.setState( engine.makeGameState( "test" ) );
-
     auto camera = makeEntity( engine.getDataFilename("simple_cam.json") );
     if( camera ){
         engine.addEntity( camera );
