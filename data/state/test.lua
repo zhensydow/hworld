@@ -2,7 +2,7 @@ dtime = 0
 keyS = false
 
 function start()
-   terminal.newLine( 'Start state' )
+   terminal.newLine( 'Start state test' )
 
    camera = engine.newEntity( 'simple_cam' )
    engine.setCamera( camera )
@@ -35,5 +35,5 @@ function update( dt )
 end
 
 function stop()
-   terminal.newLine( 'Stop state' )
+   terminal.newLine( 'Stop state test' )
 end
