@@ -1,4 +1,5 @@
 dtime = 0
+keyS = false
 
 function start()
    terminal.newLine( 'Start state' )
@@ -21,6 +22,16 @@ function update( dt )
       engine.newState( 'test2' )
       dtime = 0
    end
+
+   if keyS then
+      if not input.isKeyPressed( input.S ) then
+         keyS = false
+         engine.saveWorld( '' )
+      end
+   else
+      keyS = input.isKeyPressed( input.S )
+   end
+
 end
 
 function stop()

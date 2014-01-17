@@ -6,11 +6,8 @@
 //------------------------------------------------------------------------------
 #include <cstdlib>
 #include "config.hpp"
-#include "gfxinc.hpp"
 #include "memory.hpp"
-#include "filedata.hpp"
 #include "engine.hpp"
-#include "entity.hpp"
 
 //------------------------------------------------------------------------------
 /** Main program function.
@@ -33,7 +30,6 @@ int main( int argc, char *argv[] ){
     auto & engine = Engine::instance();
     engine.setup( *config );
 
-    auto & world = engine.getWorld();
     auto & renderer = engine.getRenderer();
     auto & terminal = engine.getTerminal();
 
@@ -50,9 +46,6 @@ int main( int argc, char *argv[] ){
             }else if( event.type == sf::Event::KeyReleased ){
                 if( event.key.code == sf::Keyboard::Tab ){
                     terminal.setVisible( not terminal.isVisible() );
-                }else if( event.key.code == sf::Keyboard::S ){
-                    terminal.newLine( "Saving..." );
-                    saveWorld( world, "data" );
                 }
             }
         }

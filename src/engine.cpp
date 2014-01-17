@@ -229,12 +229,24 @@ int engine_setCamera( lua_State *ls ){
 }
 
 //--------------------------------------------------------------------------
+int engine_saveWorld( lua_State *ls ){
+    auto str = luaL_checkstring( ls, 1 );
+    auto & engine = Engine::instance();
+    auto & world = engine.getWorld();
+    auto & terminal = engine.getTerminal();
+    terminal.newLine( "Saving..." );
+    saveWorld( world, str );
+    return 0;
+}
+
+//--------------------------------------------------------------------------
 /** List of functions of AgentClass lua library for Agent files.
 */
 const luaL_Reg enginelib[] = {
     {"newState",  engine_newState},
     {"newEntity", engine_newEntity},
     {"setCamera", engine_setCamera},
+    {"saveWorld", engine_saveWorld},
     {nullptr, nullptr}
 };
 
