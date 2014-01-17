@@ -21,13 +21,11 @@ GameState::GameState( lua_State * ls ) noexcept : m_ls{ls} {
 }
 
 GameState::GameState( GameState&& gs ) noexcept {
-    std::cout << "GameState copy move" << std::endl;
     m_ls = std::move( gs.m_ls );
     gs.m_ls = nullptr;
 }
 
 GameState& GameState::operator=( GameState&& gs ) noexcept {
-    std::cout << "GameState assign move" << std::endl;
     m_ls = std::move( gs.m_ls );
     gs.m_ls = nullptr;
     return *this;
