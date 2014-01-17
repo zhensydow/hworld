@@ -107,6 +107,21 @@ void Engine::update(){
         frameTime = MAX_FRAME_TIME;
     }
 
+    auto window = m_renderer.getWindow();
+    sf::Event event;
+    while( window->pollEvent(event) ){
+        if( event.type == sf::Event::Closed ){
+            stop();
+        }else if( event.type == sf::Event::Resized ){
+            m_renderer.setViewport( event.size.width, event.size.height );
+            m_terminal.resize( event.size.width, event.size.height );
+        }else if( event.type == sf::Event::KeyReleased ){
+            if( event.key.code == sf::Keyboard::Tab ){
+                m_terminal.setVisible( not m_terminal.isVisible() );
+            }
+        }
+    }
+
     m_accum += frameTime;
     while( m_accum >= dt ){
         for( auto & comp: m_updateList ){

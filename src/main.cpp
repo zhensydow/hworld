@@ -21,7 +21,7 @@ int main( int argc, char *argv[] ){
 
     auto config = loadConfig( argv[1] );
     if( not config ){
-        std::cout << "can't load config file" << std::endl;
+        std::cout << "can't load config file " << argv[1] << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -30,26 +30,7 @@ int main( int argc, char *argv[] ){
     auto & engine = Engine::instance();
     engine.setup( *config );
 
-    auto & renderer = engine.getRenderer();
-    auto & terminal = engine.getTerminal();
-
-    auto window = renderer.getWindow();
-
     while( engine.isRunning() ){
-        sf::Event event;
-        while( window->pollEvent(event) ){
-            if( event.type == sf::Event::Closed ){
-                engine.stop();
-            }else if( event.type == sf::Event::Resized ){
-                renderer.setViewport( event.size.width, event.size.height );
-                terminal.resize( event.size.width, event.size.height );
-            }else if( event.type == sf::Event::KeyReleased ){
-                if( event.key.code == sf::Keyboard::Tab ){
-                    terminal.setVisible( not terminal.isVisible() );
-                }
-            }
-        }
-
         engine.update();
         engine.draw();
         engine.yield();
