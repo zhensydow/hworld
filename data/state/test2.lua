@@ -5,7 +5,7 @@ end
 function update( dt )
    --print( 'Update state ' .. dt .. ' test2' )
    if input.isKeyPressed( input.K )then
-      engine.newstate( 'test' )
+      engine.newState( 'test' )
    end
    if input.isButtonPressed( input.MouseLeft )then
       print( "MOUSED" )
