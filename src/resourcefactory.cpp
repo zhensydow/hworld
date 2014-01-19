@@ -60,10 +60,14 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
                     mesh->reserveVertices( aiMesh->mNumVertices );
                     for( unsigned i = 0 ; i < aiMesh->mNumVertices ; ++i ){
                         auto vertex = aiMesh->mVertices[i];
+                        auto normal = aiMesh->mNormals[i];
                         mesh->insertVertex( i,
                                             glm::vec3( vertex[0],
                                                        vertex[1],
-                                                       vertex[2] ) );
+                                                       vertex[2] ),
+                                            glm::vec3( normal[0],
+                                                       normal[1],
+                                                       normal[2] ) );
                     }
 
                     mesh->reserveTriangles( aiMesh->mNumFaces );
