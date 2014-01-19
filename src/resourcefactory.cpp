@@ -28,9 +28,10 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
         auto & engine = Engine::instance();
         auto filename = engine.getDataFilename( path("gfx") /= name );
         auto scene = aiImportFile( filename.data(),
-                                   aiProcess_CalcTangentSpace |
+                                   aiProcess_GenNormals |
                                    aiProcess_Triangulate |
                                    aiProcess_JoinIdenticalVertices |
+                                   aiProcess_OptimizeMeshes |
                                    aiProcess_SortByPType);
 
         if( !scene ){
