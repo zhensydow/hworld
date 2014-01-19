@@ -86,25 +86,27 @@ void Renderer::setup(){
     glEnable( GL_CULL_FACE );
 
     // load texture
-    auto tex_filename = engine.getDataFilename( "gfx/tile01.png" ).c_str();
-    m_tex_2d0 = SOIL_load_OGL_texture( tex_filename,
+    auto tex_filename = engine.getDataFilename( "gfx/tile01.png" );
+    m_tex_2d0 = SOIL_load_OGL_texture( tex_filename.data(),
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                        | SOIL_FLAG_NTSC_SAFE_RGB
                                        | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == m_tex_2d0 ){
         std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
+        std::cout << " at file " << tex_filename << "'\n";
         std::terminate();
     }
 
-    tex_filename = engine.getDataFilename( "gfx/tile03.png" ).c_str();
-    m_tex_2d1 = SOIL_load_OGL_texture( tex_filename,
+    tex_filename = engine.getDataFilename( "gfx/tile03.png" );
+    m_tex_2d1 = SOIL_load_OGL_texture( tex_filename.data(),
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                        | SOIL_FLAG_NTSC_SAFE_RGB
                                        | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == m_tex_2d1 ){
         std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
+        std::cout << " at file " << tex_filename << "'\n";
         std::terminate();
     }
 

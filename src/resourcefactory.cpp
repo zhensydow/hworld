@@ -12,6 +12,7 @@
 
 //------------------------------------------------------------------------------
 using namespace std;
+using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
 shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
@@ -25,8 +26,8 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
         m_modelMap[ name ] = model;
 
         auto & engine = Engine::instance();
-        auto filename = boost::filesystem::path("gfx") /= name;
-        auto scene = aiImportFile( engine.getDataFilename( filename ).data(),
+        auto filename = engine.getDataFilename( path("gfx") /= name );
+        auto scene = aiImportFile( filename.data(),
                                    aiProcess_CalcTangentSpace |
                                    aiProcess_Triangulate |
                                    aiProcess_JoinIdenticalVertices |
