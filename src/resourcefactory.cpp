@@ -5,6 +5,7 @@
 */
 //------------------------------------------------------------------------------
 #include "resourcefactory.hpp"
+#include <boost/filesystem.hpp>
 #include "engine.hpp"
 #include "gfxinc.hpp"
 #include "staticmodel.hpp"
@@ -24,7 +25,8 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
         m_modelMap[ name ] = model;
 
         auto & engine = Engine::instance();
-        auto scene = aiImportFile( engine.getDataFilename( name ).data(),
+        auto filename = boost::filesystem::path("gfx") /= name;
+        auto scene = aiImportFile( engine.getDataFilename( filename ).data(),
                                    aiProcess_CalcTangentSpace |
                                    aiProcess_Triangulate |
                                    aiProcess_JoinIdenticalVertices |

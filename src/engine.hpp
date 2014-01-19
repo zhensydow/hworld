@@ -30,7 +30,7 @@ class Engine {
 public:
     static Engine & instance();
 
-    std::string getDataFilename( const std::string & filename ) const;
+    std::string getDataFilename( const boost::filesystem::path & filename ) const;
 
     void setup( const Config & config );
     void destroy();
@@ -97,7 +97,8 @@ private:
 
 //------------------------------------------------------------------------------
 inline
-std::string Engine::getDataFilename( const std::string & filename ) const{
+std::string Engine::getDataFilename( const boost::filesystem::path & filename ) const
+{
     auto final = boost::filesystem::path(m_datadir) /= filename;
     return final.native();
 }

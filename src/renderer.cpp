@@ -86,7 +86,7 @@ void Renderer::setup(){
     glEnable( GL_CULL_FACE );
 
     // load texture
-    auto tex_filename = engine.getDataFilename( "tile01.png" ).c_str();
+    auto tex_filename = engine.getDataFilename( "gfx/tile01.png" ).c_str();
     m_tex_2d0 = SOIL_load_OGL_texture( tex_filename,
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
@@ -97,7 +97,7 @@ void Renderer::setup(){
         std::terminate();
     }
 
-    tex_filename = engine.getDataFilename( "tile03.png" ).c_str();
+    tex_filename = engine.getDataFilename( "gfx/tile03.png" ).c_str();
     m_tex_2d1 = SOIL_load_OGL_texture( tex_filename,
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
