@@ -191,7 +191,6 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
                     GL_UNSIGNED_SHORT, nullptr);
 
-    glActiveTexture( 0 );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
     matrix_id = glGetUniformLocation( m_chk_floor_prg, "MVP");
