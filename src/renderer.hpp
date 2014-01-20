@@ -29,6 +29,7 @@ public:
 
     void setViewport( GLsizei width, GLsizei height );
     glm::vec4 getViewport() const;
+    float aspectRatio() const;
 
     Ray getMouseRay() const;
 
@@ -99,6 +100,12 @@ void Renderer::popModel(){
 inline
 void Renderer::pushModel( const glm::mat4 & mat ){
     m_modelStack.emplace( mat*getModel() );
+}
+
+//------------------------------------------------------------------------------
+inline
+float Renderer::aspectRatio() const {
+    return m_width / m_height;
 }
 
 //------------------------------------------------------------------------------
