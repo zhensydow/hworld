@@ -23,7 +23,7 @@ public:
     void draw( const Material & mat, Renderer & renderer );
 
     void reserveVertices( unsigned int num ) noexcept;
-    void insertVertex( unsigned int num, glm::vec3 pos );
+    void insertVertex( unsigned int num, glm::vec3 pos, glm::vec3 n );
 
     void reserveTriangles( unsigned int num ) noexcept;
     void insertTriangle( unsigned int num, unsigned int a, unsigned int b, unsigned int c );
@@ -32,13 +32,15 @@ public:
     unsigned int getMaterialIdx() const noexcept;
 
     GLuint vertsBuff() const;
+    GLuint normalsBuff() const;
     GLuint trisBuff() const;
     
     unsigned int trisSize() const;
 
 private:
-    std::array< GLuint, 2 > m_meshBuffers;
+    std::array< GLuint, 3 > m_meshBuffers;
     std::vector< GLfloat > m_verts;
+    std::vector< GLfloat > m_normals;
     std::vector< GLushort > m_tris;
 
     unsigned int m_materialIdx = 0;
@@ -48,6 +50,7 @@ private:
 inline
 void StaticMesh::reserveVertices( unsigned int num ) noexcept {
     m_verts.resize( 3*num );
+    m_normals.resize( 3*num );
 }
 
 //------------------------------------------------------------------------------
@@ -70,12 +73,16 @@ unsigned int StaticMesh::getMaterialIdx() const noexcept {
 
 //------------------------------------------------------------------------------
 inline
-void StaticMesh::insertVertex( unsigned int num, glm::vec3 pos ){
+void StaticMesh::insertVertex( unsigned int num, glm::vec3 pos, glm::vec3 n ){
     auto idx = num*3;
     if( idx < (m_verts.size()-2) ){
         m_verts[ idx ] = pos[0];
         m_verts[ idx + 1 ] = pos[1];
         m_verts[ idx + 2 ] = pos[2];
+
+        m_normals[ idx ] = n[0];
+        m_normals[ idx + 1 ] = n[1];
+        m_normals[ idx + 2 ] = n[2];
     }
 }
 
@@ -98,8 +105,14 @@ GLuint StaticMesh::vertsBuff() const {
 
 //------------------------------------------------------------------------------
 inline
-GLuint StaticMesh::trisBuff() const {
+GLuint StaticMesh::normalsBuff() const {
     return m_meshBuffers[1];
+}
+
+//------------------------------------------------------------------------------
+inline
+GLuint StaticMesh::trisBuff() const {
+    return m_meshBuffers[2];
 }
 
 //------------------------------------------------------------------------------

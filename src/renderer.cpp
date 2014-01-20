@@ -86,25 +86,27 @@ void Renderer::setup(){
     glEnable( GL_CULL_FACE );
 
     // load texture
-    auto tex_filename = engine.getDataFilename( "tile01.png" ).c_str();
-    m_tex_2d0 = SOIL_load_OGL_texture( tex_filename,
+    auto tex_filename = engine.getDataFilename( "gfx/tile01.png" );
+    m_tex_2d0 = SOIL_load_OGL_texture( tex_filename.data(),
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                        | SOIL_FLAG_NTSC_SAFE_RGB
                                        | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == m_tex_2d0 ){
         std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
+        std::cout << " at file " << tex_filename << "'\n";
         std::terminate();
     }
 
-    tex_filename = engine.getDataFilename( "tile03.png" ).c_str();
-    m_tex_2d1 = SOIL_load_OGL_texture( tex_filename,
+    tex_filename = engine.getDataFilename( "gfx/tile03.png" );
+    m_tex_2d1 = SOIL_load_OGL_texture( tex_filename.data(),
                                        SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
                                        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                        | SOIL_FLAG_NTSC_SAFE_RGB
                                        | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == m_tex_2d1 ){
         std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
+        std::cout << " at file " << tex_filename << "'\n";
         std::terminate();
     }
 
@@ -189,7 +191,6 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
                     GL_UNSIGNED_SHORT, nullptr);
 
-    glActiveTexture( 0 );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
     matrix_id = glGetUniformLocation( m_chk_floor_prg, "MVP");
@@ -230,6 +231,8 @@ void Renderer::render( const Terminal & terminal ){
 //------------------------------------------------------------------------------
 void Renderer::render( const Material & material, const StaticMesh & mesh ){
     auto matrix_id = glGetUniformLocation( m_objmat_prg, "MVP");
+    auto matrix_M_id = glGetUniformLocation( m_objmat_prg, "M");
+    auto matrix_V_id = glGetUniformLocation( m_objmat_prg, "V");
     auto diffuse_id = glGetUniformLocation( m_objmat_prg, "diffuse");
 
     glUseProgram( m_objmat_prg );
@@ -237,12 +240,19 @@ void Renderer::render( const Material & material, const StaticMesh & mesh ){
     const auto & difc = material.getDiffuse();
     glUniform3fv( diffuse_id, 1, &difc[0] );
 
-    m_mvp = proj * view * getModel();
+    auto & mod = getModel();
+    m_mvp = proj * view * mod;
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+    glUniformMatrix4fv( matrix_M_id, 1, GL_FALSE, &mod[0][0] );
+    glUniformMatrix4fv( matrix_V_id, 1, GL_FALSE, &view[0][0] );
 
     glEnableVertexAttribArray( 0 );
     glBindBuffer( GL_ARRAY_BUFFER, mesh.vertsBuff() );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+    glEnableVertexAttribArray( 1 );
+    glBindBuffer( GL_ARRAY_BUFFER, mesh.normalsBuff() );
+    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, mesh.trisBuff() );
 
@@ -253,6 +263,7 @@ void Renderer::render( const Material & material, const StaticMesh & mesh ){
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
     glBindTexture( GL_TEXTURE_2D, 0 );
     glDisableVertexAttribArray( 0 );
+    glDisableVertexAttribArray( 1 );
 
     glUseProgram( 0 );
 }

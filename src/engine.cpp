@@ -48,7 +48,7 @@ void Engine::setup( const Config & config ){
     m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
     m_terrain->setFocus( 0 );
 
-    if( !tex.loadFromFile( getDataFilename( "template.png" ) ) ){
+    if( !tex.loadFromFile( getDataFilename( "gfx/template.png" ) ) ){
         std::terminate();
     }
 

@@ -58,6 +58,15 @@ valgrind --tool=callgrind build/src/hworld
 kcachegrind callgrind.out.*
 ~~~~~~~~~~~~~~~~~~~~~
 
+ * OpenGL profiling
+
+~~~~~~~~~~~~~~~~~~~~~
+apitrace trace --api gl src/hworld ../data/config.json
+apitrace dump hworld.trace
+qapitrace hworld.tracex
+~~~~~~~~~~~~~~~~~~~~~
+
+
  * Export 3DS from blender
 
 Forward: Z Forward
