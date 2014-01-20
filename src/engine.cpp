@@ -145,8 +145,18 @@ void Engine::draw(){
         auto ccam = m_camera->getComponent<CCamera>();
         if( ctrans and ccam ){
             auto eye = ctrans->getGlobalPosition();
-            m_renderer.view = glm::lookAt( eye, glm::vec3(0,0,0), glm::vec3(0,1,0) );
-            m_renderer.proj = ccam->getProjection();
+            auto obj = glm::vec3(0,0,0);
+            auto tmp = eye - obj;
+            auto dist = glm::dot( tmp, tmp );
+            // if eye and obj are the same point, we get division by zero
+            if( dist > 0.001 ){
+                m_renderer.view = glm::lookAt( eye, obj,
+                                           glm::vec3(0,1,0) );
+                auto fov = ccam->getFov();
+                m_renderer.proj = glm::perspective( fov,
+                                                    m_renderer.aspectRatio(),
+                                                    0.1f, 100.0f );
+            }
         }
     }
 

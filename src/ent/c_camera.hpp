@@ -16,7 +16,6 @@ public:
 
     ComponentType getType() const override;
 
-    glm::mat4 getProjection() const;
     float getFov() const;
     void setFov( float f );
 
@@ -30,12 +29,6 @@ private:
 inline
 ComponentType CCamera::getType() const{
     return type;
-}
-
-//------------------------------------------------------------------------------
-inline
-glm::mat4 CCamera::getProjection() const{
-    return glm::perspective( m_fov, 4.0f / 3.0f, 0.1f, 100.0f );
 }
 
 //------------------------------------------------------------------------------
