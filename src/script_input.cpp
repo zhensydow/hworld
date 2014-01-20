@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 #include "script.hpp"
 #include <SFML/Graphics.hpp>
+#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -15,7 +16,27 @@ static int input_isKeyPressed( lua_State *lua ){
 }
 
 //------------------------------------------------------------------------------
-int input_isButtonPressed( lua_State *lua ){
+static int input_isKeyDown( lua_State *lua ){
+    auto val = luaL_checkint( lua, 1 );
+    auto & engine = Engine::instance();
+    auto & input = engine.getInput();
+    auto ret = input.isKeyDown(val);
+    lua_pushboolean( lua, ret );
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+static int input_isKeyUp( lua_State *lua ){
+    auto val = luaL_checkint( lua, 1 );
+    auto & engine = Engine::instance();
+    auto & input = engine.getInput();
+    auto ret = input.isKeyUp(val);
+    lua_pushboolean( lua, ret );
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+static int input_isButtonPressed( lua_State *lua ){
     auto val = luaL_checkint( lua, 1 );
     auto ret = Mouse::isButtonPressed(static_cast<Mouse::Button>(val));
     lua_pushboolean( lua, ret );
@@ -157,23 +178,16 @@ static vector< pair<string, Mouse::Button> > s_buttons = {
 */
 static const luaL_Reg inputlib[] = {
     {"isKeyPressed",  input_isKeyPressed},
+    {"isKeyDown",  input_isKeyDown},
+    {"isKeyUp",  input_isKeyUp},
     {"isButtonPressed",  input_isButtonPressed},
     {nullptr, nullptr}
 };
 
 //------------------------------------------------------------------------------
 void openInput( lua_State * lua ){
-    // set engine functions
+    // set input functions
     luaL_register( lua, "input", inputlib );
-    // set input
-    // lua_newtable( lua );                            // 1
-    // lua_pushstring( lua, "isKeyPressed");           // 2
-    // lua_pushcfunction( lua, isKeyPressed );         // 3
-    // lua_settable( lua, -3 );                        // 1
-    // lua_pushstring( lua, "isButtonPressed");        // 2
-    // lua_pushcfunction( lua, isButtonPressed );      // 3
-    // lua_settable( lua, -3 );                        // 1
-    // lua_setglobal( lua, "input" );                  // 0
 
     for( auto & k: s_keys ){
         addKey( lua, get<0>(k).data(), get<1>(k) );
