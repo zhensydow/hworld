@@ -74,6 +74,7 @@ void Renderer::setup(){
     m_guiView.setSize( {DESIRED_WIDTH, DESIRED_HEIGHT} );
 
     m_window->setVerticalSyncEnabled( true );
+    m_window->setKeyRepeatEnabled( false );
 
     auto settings = m_window->getSettings();
     std::cout << "OpenGL version: " << settings.majorVersion << "."
