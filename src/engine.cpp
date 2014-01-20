@@ -107,6 +107,8 @@ void Engine::update(){
         frameTime = MAX_FRAME_TIME;
     }
 
+    m_input.beginFrame();
+
     auto window = m_renderer.getWindow();
     sf::Event event;
     while( window->pollEvent(event) ){
@@ -119,6 +121,9 @@ void Engine::update(){
             if( event.key.code == sf::Keyboard::Tab ){
                 m_terminal.setVisible( not m_terminal.isVisible() );
             }
+            m_input.setKeyReleased( event.key.code );
+        }else if( event.type == sf::Event::KeyPressed ){
+            m_input.setKeyPressed( event.key.code );
         }
     }
 

@@ -17,6 +17,7 @@
 #include "terrainprop.hpp"
 #include "terminal.hpp"
 #include "renderer.hpp"
+#include "input.hpp"
 #include "resourcefactory.hpp"
 
 //------------------------------------------------------------------------------
@@ -43,6 +44,7 @@ public:
 
     World & getWorld();
     Renderer & getRenderer();
+    Input & getInput();
     Terminal & getTerminal();
     ResourceFactory & getResourceFactory();
 
@@ -75,6 +77,7 @@ private:
     std::unique_ptr<GameState> m_nextState = nullptr;
 
     Renderer m_renderer;
+    Input m_input;
     World m_world;
     Terminal m_terminal;
     ResourceFactory m_resourceFactory;
@@ -125,6 +128,12 @@ World & Engine::getWorld(){
 inline
 Renderer & Engine::getRenderer(){
     return m_renderer;
+}
+
+//------------------------------------------------------------------------------
+inline
+Input & Engine::getInput(){
+    return m_input;
 }
 
 //------------------------------------------------------------------------------
