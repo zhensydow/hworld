@@ -48,6 +48,7 @@ valgrind -v --leak-check=full --show-reachable=yes build/src/hworld
 ~~~~~~~~~~~~~~~~~~~~~
 valgrind -v --tool=massif build/src/hworld
 ms_print massif.out.*
+massif-visualizer massif.out.*
 ~~~~~~~~~~~~~~~~~~~~~
 
  * Call profiling
