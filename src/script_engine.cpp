@@ -1,4 +1,4 @@
-/** @file engine_script.cpp
+/** @file script_engine.cpp
     @brief Engine script functions.
     @author Luis Cabellos
     @date 2014-01-20
@@ -73,7 +73,7 @@ int engine_saveWorld( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
-/** List of functions of AgentClass lua library for Agent files.
+/** List of functions of engine lua library.
 */
 const luaL_Reg enginelib[] = {
     {"newState",  engine_newState},
