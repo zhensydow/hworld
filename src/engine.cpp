@@ -5,18 +5,13 @@
 */
 //------------------------------------------------------------------------------
 #include "engine.hpp"
-#include <iostream>
-#include <SFML/System/Sleep.hpp>
-#include "lua.hpp"
 #include "util.hpp"
-#include "gamestate.hpp"
 #include "entity.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
 #include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
-#include "filedata.hpp"
 #include "config.hpp"
 
 //------------------------------------------------------------------------------
@@ -199,77 +194,6 @@ void Engine::yield(){
     sf::sleep( sf::milliseconds(1) );
 }
 
-//--------------------------------------------------------------------------
-int engine_newState( lua_State *ls ){
-    auto str = luaL_checkstring( ls, 1 );
-    auto & engine = Engine::instance();
-    auto state = engine.makeGameState( str );
-    engine.setState( std::move(state) );
-
-    return 0;
-}
-
-//--------------------------------------------------------------------------
-int engine_newEntity( lua_State *ls ){
-    auto str = std::string( luaL_checkstring( ls, 1 ) );
-
-    auto n = str.rfind( ".json" );
-    if( n == std::string::npos ){
-        str += ".json";
-    }else{
-        if( str.substr(n) != ".json" ){
-            str += ".json";
-        }
-    }
-
-    auto & engine = Engine::instance();
-    auto entity = makeEntity( engine.getDataFilename( str ) );
-    if( entity ){
-        engine.addEntity( entity );
-        lua_pushEntity( ls, *entity );
-
-        return 1;
-    }
-
-    return 0;
-}
-
-//--------------------------------------------------------------------------
-int engine_setCamera( lua_State *ls ){
-    auto ent = lua_checkEntity( ls, 1 );
-    if( ent ){
-        auto & engine = Engine::instance();
-        auto entity = engine.getEntity( ent );
-        if( entity ){
-            engine.setCamera( entity );
-        }
-    }
-
-    return 0;
-}
-
-//--------------------------------------------------------------------------
-int engine_saveWorld( lua_State *ls ){
-    auto str = luaL_checkstring( ls, 1 );
-    auto & engine = Engine::instance();
-    auto & world = engine.getWorld();
-    auto & terminal = engine.getTerminal();
-    terminal.newLine( "Saving..." );
-    saveWorld( world, str );
-    return 0;
-}
-
-//--------------------------------------------------------------------------
-/** List of functions of AgentClass lua library for Agent files.
-*/
-const luaL_Reg enginelib[] = {
-    {"newState",  engine_newState},
-    {"newEntity", engine_newEntity},
-    {"setCamera", engine_setCamera},
-    {"saveWorld", engine_saveWorld},
-    {nullptr, nullptr}
-};
-
 //------------------------------------------------------------------------------
 unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto statedir = path(m_datadir) /= "state";
@@ -291,10 +215,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     luaL_openlibs( ls );
     openInput( ls );
     openTerminal( ls );
-    // set engine functions
-    luaL_register( ls, "engine", enginelib );
-    // removes table
-    lua_pop( ls, 1 );
+    openEngine( ls );
     lua_gc( ls, LUA_GCRESTART, 0 );
 
     // create Lua Game State

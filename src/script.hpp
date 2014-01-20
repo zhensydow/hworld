@@ -9,6 +9,7 @@
 class Entity;
 
 //------------------------------------------------------------------------------
+void openEngine( lua_State * lua );
 void openInput( lua_State * lua );
 void openTerminal( lua_State * lua );
 void openGLM( lua_State * lua );
