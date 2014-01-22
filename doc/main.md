@@ -30,11 +30,12 @@ make doc
 Libraries
 ---------
 
- * SFML 2.0 [->](http://www.sfml-dev.org/index.php)
- * GLM 0.9.4 [->](http://glm.g-truc.net/api-0.9.4/index.html)
- * SOIL (Simple OpenGL Image Library) [->](http://lonesock.net/soil.html)
- * jsoncpp [->](http://jsoncpp.sourceforge.net)
- * LuaJIT [->](http://luajit.org)
+ * SFML 2.0 [www.sfml-dev.org](http://www.sfml-dev.org/index.php)
+ * GLM 0.9.4 [glm.g-truc.net](http://glm.g-truc.net/api-0.9.4/index.html)
+ * SOIL (Simple OpenGL Image Library) [lonesock.net](http://lonesock.net/soil.html)
+ * jsoncpp [jsoncpp.sourceforge.net](http://jsoncpp.sourceforge.net)
+ * LuaJIT [luajit.org](http://luajit.org)
+ * Assimp [assimp.sourceforge.net](http://assimp.sourceforge.net/lib_html/index.html)
 
 How to
 ------
@@ -86,3 +87,4 @@ Links
  * [Hexagonal Grids](http://www.redblobgames.com/grids/hexagons/)
  * [Entity Component Systems]()
  * [Memory Debug](https://techtalk.intersec.com/2013/12/memory-part-5-debugging-tools/)
+ * [Shadow Mapping](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/)
