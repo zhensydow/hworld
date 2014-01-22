@@ -227,6 +227,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     openTerminal( ls );
     openEngine( ls );
     openGame( ls );
+    openGLM( ls );
     lua_gc( ls, LUA_GCRESTART, 0 );
 
     // create Lua Game State
