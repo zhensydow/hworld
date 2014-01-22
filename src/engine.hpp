@@ -54,6 +54,7 @@ public:
 
     std::shared_ptr<Entity> getEntity( const Entity * const ent ) noexcept;
     void addEntity( std::shared_ptr<Entity> entity );
+    bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 
 private:
@@ -152,6 +153,12 @@ ResourceFactory & Engine::getResourceFactory(){
 inline
 void Engine::setCamera( std::shared_ptr<Entity> cam ) noexcept {
     m_camera = cam;
+}
+
+//------------------------------------------------------------------------------
+inline
+bool Engine::hasCamera() noexcept {
+    return m_camera != nullptr;
 }
 
 //------------------------------------------------------------------------------

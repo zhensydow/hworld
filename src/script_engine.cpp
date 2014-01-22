@@ -62,6 +62,13 @@ int engine_setCamera( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
+static int engine_hasCamera( lua_State *ls ){
+    auto & engine = Engine::instance();
+    lua_pushboolean( ls, engine.hasCamera() );
+    return 1;
+}
+
+//------------------------------------------------------------------------------
 int engine_saveWorld( lua_State *ls ){
     auto str = luaL_checkstring( ls, 1 );
     auto & engine = Engine::instance();
@@ -78,6 +85,7 @@ int engine_saveWorld( lua_State *ls ){
 const luaL_Reg enginelib[] = {
     {"newState",  engine_newState},
     {"newEntity", engine_newEntity},
+    {"hasCamera", engine_hasCamera},
     {"setCamera", engine_setCamera},
     {"saveWorld", engine_saveWorld},
     {nullptr, nullptr}
