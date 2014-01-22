@@ -135,10 +135,15 @@ void Renderer::destroy(){
 //------------------------------------------------------------------------------
 void Renderer::render( const ChunkProp & chunkprop ){
     auto matrix_id = glGetUniformLocation( m_chk_tile_prg , "MVP");
+    auto matrix_M_id = glGetUniformLocation( m_chk_tile_prg, "M");
+    auto matrix_V_id = glGetUniformLocation( m_chk_tile_prg, "V");
+    auto lightDir_id = glGetUniformLocation( m_chk_tile_prg, "lightDir");
     auto offset_id = glGetUniformLocation( m_chk_tile_prg , "offset");
     auto texture_id = glGetUniformLocation( m_chk_tile_prg , "texSampler");
 
     glUseProgram( m_chk_tile_prg );
+
+    glUniform3fv( lightDir_id, 1, &m_sundir[0] );
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d0 );
@@ -157,20 +162,23 @@ void Renderer::render( const ChunkProp & chunkprop ){
     auto chunkPos = chunkprop.getPosition();
     auto model = glm::mat4(1.0f);
 
+    glUniformMatrix4fv( matrix_V_id, 1, GL_FALSE, &view[0][0] );
+
     for( unsigned i = 0 ; i < Chunk::NTILES ; ++i ){
         auto pos = chunkprop.tilePos( i );
         model = glm::translate( pos + chunkPos );
         m_mvp = proj * view * model;
         glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+        glUniformMatrix4fv( matrix_M_id, 1, GL_FALSE, &model[0][0] );
         glUniform2f( offset_id, pos.x, pos.z );
         glDrawElements( GL_TRIANGLES, chunkprop.tileTrisSize(),
                         GL_UNSIGNED_SHORT, nullptr);
     }
 
     matrix_id = glGetUniformLocation( m_chk_wall_prg, "MVP");
-    auto matrix_M_id = glGetUniformLocation( m_chk_wall_prg, "M");
-    auto matrix_V_id = glGetUniformLocation( m_chk_wall_prg, "V");
-    auto lightDir_id = glGetUniformLocation( m_chk_wall_prg, "lightDir");
+    matrix_M_id = glGetUniformLocation( m_chk_wall_prg, "M");
+    matrix_V_id = glGetUniformLocation( m_chk_wall_prg, "V");
+    lightDir_id = glGetUniformLocation( m_chk_wall_prg, "lightDir");
     texture_id = glGetUniformLocation( m_chk_wall_prg, "texSampler");
     glUseProgram( m_chk_wall_prg );
 
