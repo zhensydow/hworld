@@ -168,6 +168,8 @@ void Renderer::render( const ChunkProp & chunkprop ){
     }
 
     matrix_id = glGetUniformLocation( m_chk_wall_prg, "MVP");
+    auto matrix_M_id = glGetUniformLocation( m_chk_wall_prg, "M");
+    auto matrix_V_id = glGetUniformLocation( m_chk_wall_prg, "V");
     texture_id = glGetUniformLocation( m_chk_wall_prg, "texSampler");
     glUseProgram( m_chk_wall_prg );
 
@@ -184,14 +186,21 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glBindBuffer( GL_ARRAY_BUFFER, chunkprop.faceUVBuff() );
     glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
+    glEnableVertexAttribArray( 2 );
+    glBindBuffer( GL_ARRAY_BUFFER, chunkprop.faceNormsBuff() );
+    glVertexAttribPointer( 2, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, chunkprop.faceTrisBuff() );
 
     model = glm::translate( chunkPos );
     m_mvp = proj * view * model;
     glUniformMatrix4fv( matrix_id, 1, GL_FALSE, &m_mvp[0][0] );
+    glUniformMatrix4fv( matrix_M_id, 1, GL_FALSE, &model[0][0] );
+    glUniformMatrix4fv( matrix_V_id, 1, GL_FALSE, &view[0][0] );
     glDrawElements( GL_TRIANGLES, chunkprop.faceTrisSize(),
                     GL_UNSIGNED_SHORT, nullptr);
 
+    glDisableVertexAttribArray( 3 );
     glBindTexture( GL_TEXTURE_2D, 0 );
 
     matrix_id = glGetUniformLocation( m_chk_floor_prg, "MVP");
