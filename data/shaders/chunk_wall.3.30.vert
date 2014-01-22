@@ -6,6 +6,7 @@ layout(location = 2) in vec3 normal;
 uniform mat4 MVP;
 uniform mat4 M;
 uniform mat4 V;
+uniform vec3 lightDir;
 
 out vec3 normalCam;
 out vec3 lightDirCam;
@@ -13,9 +14,7 @@ out vec2 UV;
 
 void main(){
     normalCam = ( V*M*vec4(normal,0.0) ).xyz;
-    vec3 positionCam = ( V*M*vec4(vertexPosition, 1.0) ).xyz;
-    vec3 lightPos = vec3( 1.0f, 10.0f, 1.0f );
-    lightDirCam = ( V*vec4(lightPos, 1.0) ).xyz - positionCam;
+    lightDirCam = ( V*vec4(-lightDir, 0.0) ).xyz;
     vec4 v = vec4( vertexPosition, 1 );
     gl_Position = MVP * v;
     UV = vertexUV;

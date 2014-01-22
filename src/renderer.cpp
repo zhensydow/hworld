@@ -170,8 +170,11 @@ void Renderer::render( const ChunkProp & chunkprop ){
     matrix_id = glGetUniformLocation( m_chk_wall_prg, "MVP");
     auto matrix_M_id = glGetUniformLocation( m_chk_wall_prg, "M");
     auto matrix_V_id = glGetUniformLocation( m_chk_wall_prg, "V");
+    auto lightDir_id = glGetUniformLocation( m_chk_wall_prg, "lightDir");
     texture_id = glGetUniformLocation( m_chk_wall_prg, "texSampler");
     glUseProgram( m_chk_wall_prg );
+
+    glUniform3fv( lightDir_id, 1, &m_sundir[0] );
 
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, m_tex_2d1 );
