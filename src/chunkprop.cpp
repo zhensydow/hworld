@@ -202,6 +202,24 @@ void ChunkProp::setup( const Chunk & chunk ){
             m_faceVerts[ dst + 10 ] = minh;
             m_faceVerts[ dst + 11 ] = TilePos[ src1 + 1 ] + offset.y;
 
+            auto p0 = glm::vec3( m_faceVerts[ dst + 0 ],
+                                 m_faceVerts[ dst + 1 ],
+                                 m_faceVerts[ dst + 2 ] );
+            auto p1 = glm::vec3( m_faceVerts[ dst + 3 ],
+                                 m_faceVerts[ dst + 4 ],
+                                 m_faceVerts[ dst + 5 ] );
+            auto p2 = glm::vec3( m_faceVerts[ dst + 6 ],
+                                 m_faceVerts[ dst + 7 ],
+                                 m_faceVerts[ dst + 8 ] );
+
+            auto n = glm::normalize(glm::cross(p0 - p2, p1 - p2));
+
+            for( unsigned int k = 0 ; k < VERTS_FACE ; ++k ){
+                m_faceNorms[ dst + k*3 + 0 ] = n.x;
+                m_faceNorms[ dst + k*3 + 1 ] = n.y;
+                m_faceNorms[ dst + k*3 + 2 ] = n.z;
+            }
+
             dst = pface*VERTS_FACE*2;
 
             m_faceUVs[ dst + 0 ] = 0.0f;
@@ -221,6 +239,10 @@ void ChunkProp::setup( const Chunk & chunk ){
                   &m_faceVerts[0], GL_STATIC_DRAW );
 
     glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[1] );
+    glBufferData( GL_ARRAY_BUFFER, m_faceNorms.size()*sizeof(GLfloat),
+                  &m_faceNorms[0], GL_STATIC_DRAW );
+
+    glBindBuffer( GL_ARRAY_BUFFER, m_faceBuffers[2] );
     glBufferData( GL_ARRAY_BUFFER, m_faceUVs.size()*sizeof(GLfloat),
                   &m_faceUVs[0], GL_STATIC_DRAW );
 

@@ -35,6 +35,7 @@ public:
     const glm::vec3 & tilePos( unsigned int i ) const;
 
     GLuint faceVertsBuff() const;
+    GLuint faceNormsBuff() const;
     GLuint faceUVBuff() const;
     GLuint faceTrisBuff() const;
     unsigned int faceTrisSize() const;
@@ -71,8 +72,9 @@ private:
     static std::array< GLushort, m_numFaceTris*3 > s_faceTris;
     static GLuint s_faceTrisBuffer;
 
-    std::array< GLuint, 2 > m_faceBuffers;
+    std::array< GLuint, 3 > m_faceBuffers;
     std::array< GLfloat, m_numFaceVerts*3 > m_faceVerts;
+    std::array< GLfloat, m_numFaceVerts*3 > m_faceNorms;
     std::array< GLfloat, m_numFaceVerts*2 > m_faceUVs;
 
     std::array< glm::vec3, Chunk::NTILES > m_tilePos;
@@ -130,8 +132,14 @@ GLuint ChunkProp::faceVertsBuff() const{
 
 //------------------------------------------------------------------------------
 inline
-GLuint ChunkProp::faceUVBuff() const{
+GLuint ChunkProp::faceNormsBuff() const{
     return m_faceBuffers[1];
+}
+
+//------------------------------------------------------------------------------
+inline
+GLuint ChunkProp::faceUVBuff() const{
+    return m_faceBuffers[2];
 }
 
 //------------------------------------------------------------------------------
