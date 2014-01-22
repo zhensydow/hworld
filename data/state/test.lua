@@ -3,8 +3,10 @@ dtime = 0
 function start()
    terminal.newLine( 'Start state test' )
 
-   camera = engine.newEntity( 'simple_cam' )
-   engine.setCamera( camera )
+   if not engine.hasCamera() then
+      camera = engine.newEntity( 'simple_cam' )
+      engine.setCamera( camera )
+   end
 
    tree = engine.newEntity( 'tree01' )
    tree.transform:setPosition( 0, 1, 2 )
