@@ -31,6 +31,8 @@ public:
     glm::vec4 getViewport() const;
     float aspectRatio() const;
 
+    void setSunDir( glm::vec3 && dir ) noexcept ;
+
     Ray getMouseRay() const;
 
     void render( const ChunkProp & chunkprop );
@@ -57,6 +59,8 @@ private:
     std::stack<glm::mat4> m_modelStack;
 
     glm::mat4 m_mvp;
+
+    glm::vec3 m_sundir = glm::vec3( 0.0f, -1.0f, 0.0f );
 
     float m_width;
     float m_height;
@@ -118,6 +122,14 @@ glm::vec4 Renderer::getViewport() const {
 inline
 sf::RenderWindow * Renderer::getWindow(){
     return m_window;
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::setSunDir( glm::vec3 && dir ) noexcept {
+    if( glm::any( glm::notEqual( dir, glm::vec3(0.0f) ) ) ){
+        m_sundir = std::move(dir);
+    }
 }
 
 //------------------------------------------------------------------------------
