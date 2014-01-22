@@ -244,11 +244,13 @@ void Renderer::render( const Material & material, const StaticMesh & mesh ){
     auto matrix_M_id = glGetUniformLocation( m_objmat_prg, "M");
     auto matrix_V_id = glGetUniformLocation( m_objmat_prg, "V");
     auto diffuse_id = glGetUniformLocation( m_objmat_prg, "diffuse");
+    auto lightDir_id = glGetUniformLocation( m_objmat_prg, "lightDir");
 
     glUseProgram( m_objmat_prg );
 
     const auto & difc = material.getDiffuse();
     glUniform3fv( diffuse_id, 1, &difc[0] );
+    glUniform3fv( lightDir_id, 1, &m_sundir[0] );
 
     auto & mod = getModel();
     m_mvp = proj * view * mod;
