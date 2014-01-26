@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
 #include "renderer.hpp"
+#include "renderer2d.hpp"
 #include "chunkprop.hpp"
 #include "shader.hpp"
 #include "terminal.hpp"
@@ -47,17 +48,21 @@ void Gfx::setup(){
     m_window = new sf::RenderWindow{
         sf::VideoMode( DESIRED_WIDTH, DESIRED_HEIGHT ),
         "HexWorld", sf::Style::Default, desired };
-    m_height = DESIRED_HEIGHT;
-    m_width = DESIRED_WIDTH;
-    m_guiView.setCenter( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0} );
-    m_guiView.setSize( {DESIRED_WIDTH, DESIRED_HEIGHT} );
-
     m_window->setVerticalSyncEnabled( true );
     m_window->setKeyRepeatEnabled( false );
 
     auto settings = m_window->getSettings();
     std::cout << "OpenGL version: " << settings.majorVersion << "."
               << settings.minorVersion << std::endl;
+
+    m_renderer2D = std::make_shared<Renderer2D>( m_window );
+    if( m_renderer2D ){
+        auto & guiView = m_renderer2D->getGuiView();
+        guiView.setCenter( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0} );
+        guiView.setSize( {DESIRED_WIDTH, DESIRED_HEIGHT} );
+    }
+
+    setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
 
     clearModelStack();
 
@@ -122,18 +127,18 @@ void Gfx::setViewport( GLsizei width, GLsizei height ){
 
     if( height > 0 ){
         auto newFactor = float(width)/float(height);
-        if( newFactor > 0 ){
+        if( newFactor > 0 and m_renderer2D ){
+            auto & guiView = m_renderer2D->getGuiView();
             if( newFactor > SCR_FACTOR ){
                 auto size = SCR_FACTOR/newFactor;
                 auto offset = (1.0f - size) / 2.0f;
-                m_guiView.setViewport( {offset, 0.0f, size , 1.0f } );
+                guiView.setViewport( {offset, 0.0f, size , 1.0f } );
             }else{
                 auto size = newFactor/SCR_FACTOR;
                 auto offset = (1.0f - size) / 2.0f;
-                m_guiView.setViewport( {0.0f, offset, 1.0f, size } );
+                guiView.setViewport( {0.0f, offset, 1.0f, size } );
             }
-
-            m_window->setView( m_guiView );
+            m_renderer2D->resetGuiView();
         }
     }
 }
@@ -152,4 +157,9 @@ Ray Gfx::getMouseRay() const{
 }
 
 //------------------------------------------------------------------------------
+void Gfx::startGUI(){
+    m_window->pushGLStates();
+    m_currentRenderer = m_renderer2D;
+}
 
+//------------------------------------------------------------------------------

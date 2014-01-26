@@ -29,12 +29,11 @@
 #include <stack>
 #include "gfxinc.hpp"
 #include "ray.hpp"
+#include <memory>
 
 //------------------------------------------------------------------------------
-class ChunkProp;
-class Terminal;
-class StaticMesh;
-class Material;
+class Renderer;
+class Renderer2D;
 
 //------------------------------------------------------------------------------
 class Gfx {
@@ -55,6 +54,8 @@ public:
 
     sf::RenderWindow * getWindow();
 
+    std::shared_ptr<Renderer> getCurrentRenderer() const;
+
     void clearModelStack();
     void pushModel( const glm::mat4 & model );
     glm::mat4 & getModel();
@@ -68,13 +69,15 @@ private:
     constexpr static unsigned int DESIRED_HEIGHT = 600;
 
     sf::RenderWindow * m_window;
-    sf::View m_guiView;
 
     std::stack<glm::mat4> m_modelStack;
 
     glm::mat4 m_mvp;
 
     glm::vec3 m_sundir = glm::vec3( 0.0f, -1.0f, 0.0f );
+
+    std::shared_ptr<Renderer> m_currentRenderer = nullptr;
+    std::shared_ptr<Renderer2D> m_renderer2D = nullptr;
 
     float m_width;
     float m_height;
@@ -95,12 +98,6 @@ private:
 inline
 void Gfx::startFrame() const{
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-}
-
-//------------------------------------------------------------------------------
-inline
-void Gfx::startGUI(){
-    m_window->pushGLStates();
 }
 
 //------------------------------------------------------------------------------
@@ -163,6 +160,12 @@ glm::vec4 Gfx::getViewport() const {
 inline
 sf::RenderWindow * Gfx::getWindow(){
     return m_window;
+}
+
+//------------------------------------------------------------------------------
+inline
+std::shared_ptr<Renderer> Gfx::getCurrentRenderer() const {
+    return m_currentRenderer;
 }
 
 //------------------------------------------------------------------------------

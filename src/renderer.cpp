@@ -31,7 +31,7 @@
 #include "engine.hpp"
 
 //------------------------------------------------------------------------------
-void Renderer::render( const ChunkProp & chunkprop ){
+//void Renderer::render( const ChunkProp & chunkprop ){
     // auto matrix_id = glGetUniformLocation( m_chk_tile_prg , "MVP");
     // auto matrix_M_id = glGetUniformLocation( m_chk_tile_prg, "M");
     // auto matrix_V_id = glGetUniformLocation( m_chk_tile_prg, "V");
@@ -135,20 +135,10 @@ void Renderer::render( const ChunkProp & chunkprop ){
     // glDisableVertexAttribArray( 0 );
     // glDisableVertexAttribArray( 1 );
     // glUseProgram( 0 );
-}
+    //}
 
 //------------------------------------------------------------------------------
-void Renderer::render( const Terminal & terminal ){
-    // m_window->setView( terminal.getView() );
-    // auto texts = terminal.getTexts();
-    // for( const auto t: texts ){
-    //     m_window->draw( (*t) );
-    // }
-    // m_window->setView( m_guiView );
-}
-
-//------------------------------------------------------------------------------
-void Renderer::render( const Material & material, const StaticMesh & mesh ){
+//void Renderer::render( const Material & material, const StaticMesh & mesh ){
     // auto matrix_id = glGetUniformLocation( m_objmat_prg, "MVP");
     // auto matrix_M_id = glGetUniformLocation( m_objmat_prg, "M");
     // auto matrix_V_id = glGetUniformLocation( m_objmat_prg, "V");
@@ -187,6 +177,6 @@ void Renderer::render( const Material & material, const StaticMesh & mesh ){
     // glDisableVertexAttribArray( 1 );
 
     // glUseProgram( 0 );
-}
+//}
 
 //------------------------------------------------------------------------------

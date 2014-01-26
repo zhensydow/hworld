@@ -16,50 +16,56 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file renderer.hpp
-    @brief Renderer declaration.
+/** @file renderer2d.hpp
+    @brief Renderer 2d for Gui.
     @author Luis Cabellos
-    @date 2013-08-19
+    @date 2014-01-26
 */
 //------------------------------------------------------------------------------
-#ifndef RENDERER_HPP_
-#define RENDERER_HPP_
+#ifndef RENDERER2D_HPP_
+#define RENDERER2D_HPP_
 
 //------------------------------------------------------------------------------
-class ChunkProp;
-class Terminal;
-class StaticMesh;
-class Material;
+#include "renderer.hpp"
+#include "gfxinc.hpp"
 
 //------------------------------------------------------------------------------
-class Renderer {
+class Renderer2D : public Renderer {
 public:
-    virtual void render( const ChunkProp & chunkprop );
-    virtual void render( const Terminal & terminal );
-    virtual void render( const Material & material, const StaticMesh & mesh );
+    Renderer2D( sf::RenderWindow * window );
+
+    sf::View & getGuiView();
+    void resetGuiView();
+
+    void render( const Terminal & terminal ) override;
 
 private:
+    sf::RenderWindow * m_window;
+    sf::View m_guiView;
+
 };
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::render( const ChunkProp & ){
+Renderer2D::Renderer2D( sf::RenderWindow * window ) : m_window(window) {
     // empty
 }
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::render( const Terminal & ){
-    // empty
+sf::View & Renderer2D::getGuiView(){
+    return m_guiView;
 }
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::render( const Material &, const StaticMesh & ){
-    // empty
+void Renderer2D::resetGuiView(){
+    if( m_window ){
+        m_window->setView( m_guiView );
+    }
 }
 
 //------------------------------------------------------------------------------
-#endif//RENDERER_HPP_
+#endif//RENDERER2D_HPP_
 
 //------------------------------------------------------------------------------

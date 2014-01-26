@@ -188,7 +188,10 @@ void Engine::draw(){
 
     m_gfx.startGUI();
 
-    //m_terminal.draw( m_gfx );
+    auto renderer = m_gfx.getCurrentRenderer();
+    if( renderer ){
+        m_terminal.draw( *renderer );
+    }
 
     auto window = m_gfx.getWindow();
     window->draw( spr );
