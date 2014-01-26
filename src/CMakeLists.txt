@@ -12,7 +12,7 @@ link_directories( ${Boost_LIBRARY_DIRS} )
 
 add_executable( hworld ${SRC_SOURCES} )
 
-add_definitions( -Wall -Wextra -std=c++11 )
+add_definitions( -Wall -Wextra -std=c++11 -flto )
 
 target_link_libraries( hworld ${OPENGL_LIBRARIES} )
 target_link_libraries( hworld ${SFML_LIBRARIES} )
