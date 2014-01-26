@@ -34,9 +34,9 @@ static int game_setSunDir( lua_State *ls ){
     auto y = luaL_checknumber( ls, 2 );
     auto z = luaL_checknumber( ls, 3 );
     auto & engine = Engine::instance();
-    auto & renderer = engine.getRenderer();
+    auto & gfx = engine.getGfx();
 
-    renderer.setSunDir( glm::vec3( x, y, z ) );
+    gfx.setSunDir( glm::vec3( x, y, z ) );
 
     return 0;
 }

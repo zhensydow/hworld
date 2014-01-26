@@ -54,7 +54,7 @@ Engine::Engine() : m_nextState{nullptr} {
 void Engine::setup( const Config & config ){
     m_datadir = config.datadir;
 
-    m_renderer.setup();
+    m_gfx.setup();
 
     m_terminal.initialize();
 
@@ -74,7 +74,7 @@ void Engine::setup( const Config & config ){
 
 //------------------------------------------------------------------------------
 void Engine::destroy(){
-    m_renderer.destroy();
+    m_gfx.destroy();
 }
 
 //------------------------------------------------------------------------------
@@ -122,13 +122,13 @@ void Engine::update(){
 
     m_input.beginFrame();
 
-    auto window = m_renderer.getWindow();
+    auto window = m_gfx.getWindow();
     sf::Event event;
     while( window->pollEvent(event) ){
         if( event.type == sf::Event::Closed ){
             stop();
         }else if( event.type == sf::Event::Resized ){
-            m_renderer.setViewport( event.size.width, event.size.height );
+            m_gfx.setViewport( event.size.width, event.size.height );
             m_terminal.resize( event.size.width, event.size.height );
         }else if( event.type == sf::Event::KeyReleased ){
             if( event.key.code == sf::Keyboard::Tab ){
@@ -168,32 +168,32 @@ void Engine::draw(){
             auto dist = glm::dot( tmp, tmp );
             // if eye and obj are the same point, we get division by zero
             if( dist > 0.001 ){
-                m_renderer.view = glm::lookAt( eye, obj,
+                m_gfx.view = glm::lookAt( eye, obj,
                                            glm::vec3(0,1,0) );
                 auto fov = ccam->getFov();
-                m_renderer.proj = glm::perspective( fov,
-                                                    m_renderer.aspectRatio(),
-                                                    0.1f, 100.0f );
+                m_gfx.proj = glm::perspective( fov,
+                                               m_gfx.aspectRatio(),
+                                               0.1f, 100.0f );
             }
         }
     }
 
-    m_renderer.startFrame();
+    m_gfx.startFrame();
 
-    m_terrain->draw( m_renderer );
+    //m_terrain->draw( m_gfx );
 
     for( auto & comp: m_drawableList ){
-        comp->draw( m_renderer );
+        //comp->draw( m_gfx );
     }
 
-    m_renderer.startGUI();
+    m_gfx.startGUI();
 
-    m_terminal.draw( m_renderer );
+    //m_terminal.draw( m_gfx );
 
-    auto window = m_renderer.getWindow();
+    auto window = m_gfx.getWindow();
     window->draw( spr );
 
-    m_renderer.endFrame();
+    m_gfx.endFrame();
 }
 
 //------------------------------------------------------------------------------

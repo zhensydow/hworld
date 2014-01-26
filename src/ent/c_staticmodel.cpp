@@ -22,13 +22,13 @@ void CStaticModel::draw( Renderer & renderer ){
     if( m_model ){
         auto tcomp = getComponent<CTransform>( *this );
         if( tcomp ){
-            renderer.pushModel( glm::translate( tcomp->getGlobalPosition() ) );
+            //renderer.pushModel( glm::translate( tcomp->getGlobalPosition() ) );
         }
 
-        m_model->draw( renderer );
+        //m_model->draw( renderer );
 
         if( tcomp ){
-            renderer.popModel();
+            //renderer.popModel();
         }
     }
 }

@@ -34,7 +34,7 @@
 #include "world.hpp"
 #include "terrainprop.hpp"
 #include "terminal.hpp"
-#include "renderer.hpp"
+#include "gfx.hpp"
 #include "input.hpp"
 #include "resourcefactory.hpp"
 
@@ -61,7 +61,7 @@ public:
     void stop();
 
     World & getWorld();
-    Renderer & getRenderer();
+    Gfx & getGfx();
     Input & getInput();
     Terminal & getTerminal();
     ResourceFactory & getResourceFactory();
@@ -95,7 +95,7 @@ private:
     NextState m_nextStateType = NextState::NOTHING;
     std::unique_ptr<GameState> m_nextState = nullptr;
 
-    Renderer m_renderer;
+    Gfx m_gfx;
     Input m_input;
     World m_world;
     Terminal m_terminal;
@@ -145,8 +145,8 @@ World & Engine::getWorld(){
 
 //------------------------------------------------------------------------------
 inline
-Renderer & Engine::getRenderer(){
-    return m_renderer;
+Gfx & Engine::getGfx(){
+    return m_gfx;
 }
 
 //------------------------------------------------------------------------------
