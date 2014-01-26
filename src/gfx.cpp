@@ -37,8 +37,6 @@ void Gfx::setup(){
     static_assert( DESIRED_HEIGHT > 0 and DESIRED_WIDTH > 0
                    , "Screen size must be > 0" );
 
-    auto & engine = Engine::instance();
-
     sf::ContextSettings desired;
     desired.depthBits = 24;
 
@@ -65,44 +63,6 @@ void Gfx::setup(){
     setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
 
     m_renderer3D = std::make_shared<Renderer3D>();
-
-    // load texture
-    auto tex_filename = engine.getDataFilename( "gfx/tile01.png" );
-    m_tex_2d0 = SOIL_load_OGL_texture( tex_filename.data(),
-                                       SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                       SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                       | SOIL_FLAG_NTSC_SAFE_RGB
-                                       | SOIL_FLAG_COMPRESS_TO_DXT );
-    if( 0 == m_tex_2d0 ){
-        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
-        std::cout << " at file " << tex_filename << "'\n";
-        std::terminate();
-    }
-
-    tex_filename = engine.getDataFilename( "gfx/tile03.png" );
-    m_tex_2d1 = SOIL_load_OGL_texture( tex_filename.data(),
-                                       SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                       SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                       | SOIL_FLAG_NTSC_SAFE_RGB
-                                       | SOIL_FLAG_COMPRESS_TO_DXT );
-    if( 0 == m_tex_2d1 ){
-        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
-        std::cout << " at file " << tex_filename << "'\n";
-        std::terminate();
-    }
-
-    glBindTexture( GL_TEXTURE_2D, m_tex_2d0 );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    glBindTexture( GL_TEXTURE_2D, 0 );
-
-    glBindTexture( GL_TEXTURE_2D, m_tex_2d1 );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-    glBindTexture( GL_TEXTURE_2D, 0 );
-
-    m_chk_wall_prg = loadProgram( engine.getDataFilename( "shaders/chunk_wall" ) );
-    m_chk_tile_prg = loadProgram( engine.getDataFilename( "shaders/chunk_tile" ) );
-    m_chk_floor_prg = loadProgram( engine.getDataFilename( "shaders/chunk_floor" ) );
 }
 
 //------------------------------------------------------------------------------

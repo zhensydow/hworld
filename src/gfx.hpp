@@ -78,13 +78,6 @@ private:
     float m_height;
 
     GLuint m_vertexArrayID;
-
-    GLuint m_tex_2d0;
-    GLuint m_tex_2d1;
-
-    GLuint m_chk_wall_prg;
-    GLuint m_chk_tile_prg;
-    GLuint m_chk_floor_prg;
 };
 
 //------------------------------------------------------------------------------
