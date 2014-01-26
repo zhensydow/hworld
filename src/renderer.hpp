@@ -26,6 +26,10 @@
 #define RENDERER_HPP_
 
 //------------------------------------------------------------------------------
+#include <stack>
+#include "gfxinc.hpp"
+
+//------------------------------------------------------------------------------
 class ChunkProp;
 class Terminal;
 class StaticMesh;
@@ -38,7 +42,14 @@ public:
     virtual void render( const Terminal & terminal );
     virtual void render( const Material & material, const StaticMesh & mesh );
 
+    void clearModelStack();
+    void pushModel( const glm::mat4 & model );
+    glm::mat4 & getModel();
+    void popModel();
+
 private:
+    std::stack<glm::mat4> m_modelStack;
+
 };
 
 //------------------------------------------------------------------------------
@@ -57,6 +68,35 @@ void Renderer::render( const Terminal & ){
 inline
 void Renderer::render( const Material &, const StaticMesh & ){
     // empty
+}
+
+//------------------------------------------------------------------------------
+inline
+glm::mat4 & Renderer::getModel(){
+    return m_modelStack.top();
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::clearModelStack(){
+    while( not m_modelStack.empty() ){
+        m_modelStack.pop();
+    }
+    m_modelStack.emplace( glm::mat4(1.0f) );
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::popModel(){
+    if( m_modelStack.size() > 1 ){
+        m_modelStack.pop();
+    }
+}
+
+//------------------------------------------------------------------------------
+inline
+void Renderer::pushModel( const glm::mat4 & mat ){
+    m_modelStack.emplace( mat*getModel() );
 }
 
 //------------------------------------------------------------------------------

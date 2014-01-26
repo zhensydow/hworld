@@ -180,15 +180,18 @@ void Engine::draw(){
 
     m_gfx.startFrame();
 
-    //m_terrain->draw( m_gfx );
+    auto renderer = m_gfx.getCurrentRenderer();
+    if( renderer ){
+        m_terrain->draw( *renderer );
 
-    for( auto & comp: m_drawableList ){
-        //comp->draw( m_gfx );
+        for( auto & comp: m_drawableList ){
+            comp->draw( *renderer );
+        }
     }
 
     m_gfx.startGUI();
 
-    auto renderer = m_gfx.getCurrentRenderer();
+    renderer = m_gfx.getCurrentRenderer();
     if( renderer ){
         m_terminal.draw( *renderer );
     }

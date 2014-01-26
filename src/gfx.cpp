@@ -23,8 +23,8 @@
 */
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
-#include "renderer.hpp"
 #include "renderer2d.hpp"
+#include "renderer3d.hpp"
 #include "chunkprop.hpp"
 #include "shader.hpp"
 #include "terminal.hpp"
@@ -64,11 +64,7 @@ void Gfx::setup(){
 
     setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
 
-    clearModelStack();
-
-    glEnable( GL_DEPTH_TEST );
-    glDepthFunc( GL_LESS );
-    glEnable( GL_CULL_FACE );
+    m_renderer3D = std::make_shared<Renderer3D>();
 
     // load texture
     auto tex_filename = engine.getDataFilename( "gfx/tile01.png" );
@@ -107,8 +103,6 @@ void Gfx::setup(){
     m_chk_wall_prg = loadProgram( engine.getDataFilename( "shaders/chunk_wall" ) );
     m_chk_tile_prg = loadProgram( engine.getDataFilename( "shaders/chunk_tile" ) );
     m_chk_floor_prg = loadProgram( engine.getDataFilename( "shaders/chunk_floor" ) );
-
-    m_objmat_prg = loadProgram( engine.getDataFilename( "shaders/objmat" ) );
 }
 
 //------------------------------------------------------------------------------
@@ -154,6 +148,24 @@ Ray Gfx::getMouseRay() const{
                                     view, proj, viewport );
     ray.direction = glm::normalize( ray.direction );
     return ray;
+}
+
+//------------------------------------------------------------------------------
+void Gfx::startFrame() {
+    m_currentRenderer = m_renderer3D;
+    if( m_currentRenderer ){
+        m_currentRenderer->clearModelStack();
+
+        m_renderer3D->view = view;
+        m_renderer3D->proj = proj;
+        m_renderer3D->sundir = m_sundir;
+    }
+
+    glEnable( GL_DEPTH_TEST );
+    glDepthFunc( GL_LESS );
+    glEnable( GL_CULL_FACE );
+
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
 //------------------------------------------------------------------------------
