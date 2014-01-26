@@ -25,12 +25,6 @@
 #include "gfx.hpp"
 #include "renderer2d.hpp"
 #include "renderer3d.hpp"
-#include "chunkprop.hpp"
-#include "shader.hpp"
-#include "terminal.hpp"
-#include "staticmesh.hpp"
-#include "material.hpp"
-#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 void Gfx::setup(){

@@ -26,10 +26,9 @@
 #define GFX_HPP_
 
 //------------------------------------------------------------------------------
-#include <stack>
+#include <memory>
 #include "gfxinc.hpp"
 #include "ray.hpp"
-#include <memory>
 
 //------------------------------------------------------------------------------
 class Renderer;
