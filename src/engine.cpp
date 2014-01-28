@@ -157,7 +157,7 @@ void Engine::update(){
 }
 
 //------------------------------------------------------------------------------
-void Engine::draw(){
+void Engine::updateCamera() {
     if( m_camera ){
         auto ctrans = m_camera->getComponent<CTransform>();
         auto ccam = m_camera->getComponent<CCamera>();
@@ -177,6 +177,11 @@ void Engine::draw(){
             }
         }
     }
+}
+
+//------------------------------------------------------------------------------
+void Engine::draw(){
+    updateCamera();
 
     m_gfx.startFrame();
 

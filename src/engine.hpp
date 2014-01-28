@@ -78,6 +78,8 @@ public:
 private:
     Engine();
 
+    void updateCamera();
+
     enum class NextState{
         NEW_STATE,
             PUSH_STATE,
