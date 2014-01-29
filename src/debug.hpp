@@ -16,24 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file memory.cpp
-    @brief Memory util definitions.
+/** @file debug.hpp
+    @brief Debug functions.
     @author Luis Cabellos
-    @date 2013-09-22
+    @date 2014-01-29
 */
 //------------------------------------------------------------------------------
-#include "memory.hpp"
-#include "chunk.hpp"
-#include "chunkprop.hpp"
-#include "terrainprop.hpp"
-#include "world.hpp"
+#ifndef DEBUG_HPP_
+#define DEBUG_HPP_
 
 //------------------------------------------------------------------------------
-void outMemoryInfo(){
-    std::cout << "Chunk size: " << sizeof(Chunk) << std::endl;
-    std::cout << "ChunkProp size: " << sizeof(ChunkProp) << std::endl;
-    std::cout << "TerrainProp size: " << sizeof(TerrainProp) << std::endl;
-    std::cout << "World size: " << sizeof(World) << std::endl;
-}
+void outMemoryInfo();
+
+//------------------------------------------------------------------------------
+#endif//DEBUG_HPP_
 
 //------------------------------------------------------------------------------
