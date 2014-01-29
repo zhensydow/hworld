@@ -22,7 +22,7 @@
     @date 2014-01-29
 */
 //------------------------------------------------------------------------------
-#include "memory.hpp"
+#include "debug.hpp"
 #include "chunk.hpp"
 #include "chunkprop.hpp"
 #include "terrainprop.hpp"
