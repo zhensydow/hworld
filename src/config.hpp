@@ -28,12 +28,14 @@
 //------------------------------------------------------------------------------
 #include <memory>
 #include <string>
+#include "debug.hpp"
 
 //------------------------------------------------------------------------------
 class Config{
 public:
     std::string datadir = "";
     std::string initialState = "";
+    LogLevel loglevel = LogLevel::LL_WARNING;
 };
 
 //------------------------------------------------------------------------------

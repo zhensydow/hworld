@@ -66,11 +66,22 @@ unique_ptr<Config> loadConfig( const string & filename ){
         config->datadir = path(filename).parent_path().string();
 
         for( auto it = root.begin() ; it != root.end() ; ++it ){
-            auto name = string(it.memberName());
+            auto name = string{ it.memberName() };
             const auto & value = *it;
             if( name == "initialState" ){
                 if( value.isString() ){
                     config->initialState = value.asString();
+                }
+            }else if( name == "logLevel" ){
+                if( value.isString() ){
+                    auto level = value.asString();
+                    if( level == "info" ){
+                        config->loglevel = LogLevel::LL_INFO;
+                    }else if( level == "warning" ){
+                        config->loglevel = LogLevel::LL_WARNING;
+                    }else if( level == "error" ){
+                        config->loglevel = LogLevel::LL_ERROR;
+                    }
                 }
             }else{
                 cout << "WARNING: unknown config value :'" << name << "'"
