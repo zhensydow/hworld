@@ -41,6 +41,8 @@ public:
     void setup();
     void destroy();
     void startFrame();
+    void startShadowMappingPass();
+    void startColorPass();
     void startGUI();
     void endFrame();
 

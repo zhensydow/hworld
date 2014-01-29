@@ -106,6 +106,15 @@ Ray Gfx::getMouseRay() const{
 
 //------------------------------------------------------------------------------
 void Gfx::startFrame() {
+}
+
+//------------------------------------------------------------------------------
+void Gfx::startShadowMappingPass(){
+    m_currentRenderer = nullptr;
+}
+
+//------------------------------------------------------------------------------
+void Gfx::startColorPass(){
     m_currentRenderer = m_renderer3D;
     if( m_currentRenderer ){
         m_currentRenderer->clearModelStack();

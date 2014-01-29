@@ -185,7 +185,20 @@ void Engine::draw(){
 
     m_gfx.startFrame();
 
+    m_gfx.startShadowMappingPass();
+
     auto renderer = m_gfx.getCurrentRenderer();
+    if( renderer ){
+        m_terrain->draw( *renderer );
+
+        for( auto & comp: m_drawableList ){
+            comp->draw( *renderer );
+        }
+    }
+
+    m_gfx.startColorPass();
+
+    renderer = m_gfx.getCurrentRenderer();
     if( renderer ){
         m_terrain->draw( *renderer );
 
