@@ -28,6 +28,30 @@
 #include "terrainprop.hpp"
 #include "world.hpp"
 
+static LogLevel s_loglevel = LogLevel::LL_ERROR;
+
+static std::unordered_map<unsigned int,std::string> s_logNames = {
+    {static_cast<unsigned int>(LogLevel::LL_ERROR), "ERROR"},
+    {static_cast<unsigned int>(LogLevel::LL_WARNING), "WARNING"},
+    {static_cast<unsigned int>(LogLevel::LL_INFO), "INFO"},
+};
+
+//------------------------------------------------------------------------------
+void setLogLevel( LogLevel ll ){
+    s_loglevel = ll;
+}
+
+//------------------------------------------------------------------------------
+void printLogTag( LogLevel ll ){
+    std::cout << s_logNames[static_cast<unsigned int>(ll)];
+}
+
+//------------------------------------------------------------------------------
+bool logEnabled( LogLevel ll ){
+    auto val_ll = static_cast<unsigned int>(ll);
+    return val_ll <= static_cast<unsigned int>(s_loglevel);
+}
+
 //------------------------------------------------------------------------------
 void outMemoryInfo(){
     std::cout << "Chunk size: " << sizeof(Chunk) << std::endl;

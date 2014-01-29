@@ -26,6 +26,9 @@
 #define DEBUG_HPP_
 
 //------------------------------------------------------------------------------
+#include <iostream>
+
+//------------------------------------------------------------------------------
 enum class LogLevel{
     LL_ERROR = 0,
         LL_WARNING = 1,
@@ -34,6 +37,25 @@ enum class LogLevel{
 
 //------------------------------------------------------------------------------
 void outMemoryInfo();
+
+//------------------------------------------------------------------------------
+void setLogLevel( LogLevel ll );
+void printLogTag( LogLevel ll );
+bool logEnabled( LogLevel ll );
+
+//------------------------------------------------------------------------------
+inline
+void log( LogLevel ll, ... ){
+    if( logEnabled( ll ) ){
+        printLogTag(ll);
+        std::cout << std::endl;
+    }
+}
+
+inline
+void logE( ... ){
+    log( LogLevel::LL_ERROR );
+}
 
 //------------------------------------------------------------------------------
 #endif//DEBUG_HPP_

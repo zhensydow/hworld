@@ -43,6 +43,7 @@ int main( int argc, char *argv[] ){
         return EXIT_FAILURE;
     }
 
+    setLogLevel( config->loglevel );
     outMemoryInfo();
 
     auto & engine = Engine::instance();
