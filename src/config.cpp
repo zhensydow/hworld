@@ -65,10 +65,16 @@ unique_ptr<Config> loadConfig( const string & filename ){
     if( config ){
         config->datadir = path(filename).parent_path().string();
 
-        if( root.isMember( "initialState" ) ){
-            auto & value = root["initialState"];
-            if( value.isString() ){
-                config->initialState = value.asString();
+        for( auto it = root.begin() ; it != root.end() ; ++it ){
+            auto name = string(it.memberName());
+            const auto & value = *it;
+            if( name == "initialState" ){
+                if( value.isString() ){
+                    config->initialState = value.asString();
+                }
+            }else{
+                cout << "WARNING: unknown config value :'" << name << "'"
+                     << endl;
             }
         }
     }
