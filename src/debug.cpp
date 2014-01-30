@@ -58,8 +58,7 @@ void printLogTag( LogLevel ll ){
 
 //------------------------------------------------------------------------------
 bool logEnabled( LogLevel ll ){
-    auto val_ll = static_cast<unsigned int>(ll);
-    return val_ll <= static_cast<unsigned int>(s_loglevel);
+    return ll <= s_loglevel;
 }
 
 //------------------------------------------------------------------------------
