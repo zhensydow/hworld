@@ -45,7 +45,15 @@ void setLogLevel( LogLevel ll ){
 
 //------------------------------------------------------------------------------
 void printLogTag( LogLevel ll ){
-    std::cout << s_logNames[static_cast<unsigned int>(ll)];
+    time_t rawtime;
+    tm * timeinfo;
+
+    time( &rawtime );
+    timeinfo = localtime( &rawtime );
+
+    std::cout << timeinfo->tm_hour << ":"
+              << timeinfo->tm_min << ":" << timeinfo->tm_sec
+              << s_logNames[static_cast<unsigned int>(ll)];
 }
 
 //------------------------------------------------------------------------------
