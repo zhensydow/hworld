@@ -8,6 +8,7 @@
 #include "staticmodel.hpp"
 #include "engine.hpp"
 #include "c_transform.hpp"
+#include "renderer.hpp"
 
 //------------------------------------------------------------------------------
 constexpr ComponentType CStaticModel::type;

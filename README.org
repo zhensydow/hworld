@@ -1,0 +1,22 @@
+* Introduction
+
+Hex World Pet Project is a personal project to:
+
+ - [ ] refresh game programming
+ - [ ] refresh C++, learn C++11
+ - [ ] refresh OpenGL, learn Modern OpenGL
+ - [ ] have fun
+
+* Generate Documentation
+
+Generate the Doxygen documentation to get a better introdution.
+
+Prerequisites: CMake, Doxygen
+
+#+BEGIN_SRC bash
+mkdir build
+cd build
+cmake ..
+make doc
+firefox html/index.html
+#+END_SRC

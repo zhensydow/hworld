@@ -16,46 +16,42 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file material.hpp
-    @brief Material declarations.
+/** @file renderer3d.hpp
+    @brief Renderer 3D definition.
     @author Luis Cabellos
-    @date 2014-01-07
+    @date 2014-01-26
 */
 //------------------------------------------------------------------------------
-#ifndef MATERIAL_HPP_
-#define MATERIAL_HPP_
+#ifndef RENDERER3D_HPP_
+#define RENDERER3D_HPP_
 
 //------------------------------------------------------------------------------
-class Material{
-public:
-    void setDiffuse( const glm::vec3 & col ) noexcept;
-    void setDiffuse( glm::vec3 && col ) noexcept;
+#include "renderer.hpp"
 
-    const glm::vec3 & getDiffuse() const noexcept;
+//------------------------------------------------------------------------------
+class Renderer3D : public Renderer{
+public:
+    Renderer3D();
+
+    void render( const ChunkProp & chunkprop ) override;
+    void render( const Material & material, const StaticMesh & mesh ) override;
+
+    glm::mat4 view;
+    glm::mat4 proj;
+    glm::vec3 sundir;
 
 private:
-    glm::vec3 m_diffuse;
+    GLuint m_tex_2d0;
+    GLuint m_tex_2d1;
+
+    GLuint m_chk_wall_prg;
+    GLuint m_chk_tile_prg;
+    GLuint m_chk_floor_prg;
+
+    GLuint m_objmat_prg;
 };
 
 //------------------------------------------------------------------------------
-inline
-void Material::setDiffuse( const glm::vec3 & col ) noexcept {
-    m_diffuse = col;
-}
-
-//------------------------------------------------------------------------------
-inline
-void Material::setDiffuse( glm::vec3 && col ) noexcept {
-    m_diffuse = std::move(col);
-}
-
-//------------------------------------------------------------------------------
-inline
-const glm::vec3 & Material::getDiffuse() const noexcept {
-    return m_diffuse;
-}
-
-//------------------------------------------------------------------------------
-#endif//MATERIAL_HPP_
+#endif//RENDERER3D_HPP_
 
 //------------------------------------------------------------------------------

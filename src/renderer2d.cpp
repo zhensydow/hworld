@@ -16,46 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file material.hpp
-    @brief Material declarations.
+/** @file renderer2d.cpp
+    @brief Renderer 2D definitions.
     @author Luis Cabellos
-    @date 2014-01-07
+    @date 2014-01-26
 */
 //------------------------------------------------------------------------------
-#ifndef MATERIAL_HPP_
-#define MATERIAL_HPP_
+#include "renderer2d.hpp"
+#include "terminal.hpp"
 
 //------------------------------------------------------------------------------
-class Material{
-public:
-    void setDiffuse( const glm::vec3 & col ) noexcept;
-    void setDiffuse( glm::vec3 && col ) noexcept;
-
-    const glm::vec3 & getDiffuse() const noexcept;
-
-private:
-    glm::vec3 m_diffuse;
-};
-
-//------------------------------------------------------------------------------
-inline
-void Material::setDiffuse( const glm::vec3 & col ) noexcept {
-    m_diffuse = col;
+void Renderer2D::render( const Terminal & terminal ){
+    m_window->setView( terminal.getView() );
+    auto & texts = terminal.getTexts();
+    for( const auto t: texts ){
+        m_window->draw( (*t) );
+    }
+    m_window->setView( m_guiView );
 }
-
-//------------------------------------------------------------------------------
-inline
-void Material::setDiffuse( glm::vec3 && col ) noexcept {
-    m_diffuse = std::move(col);
-}
-
-//------------------------------------------------------------------------------
-inline
-const glm::vec3 & Material::getDiffuse() const noexcept {
-    return m_diffuse;
-}
-
-//------------------------------------------------------------------------------
-#endif//MATERIAL_HPP_
 
 //------------------------------------------------------------------------------

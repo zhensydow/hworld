@@ -1,3 +1,21 @@
+/**
+    Copyright 2014, HexWorld Authors.
+
+    This file is part of HexWorld.
+
+    HexWorld is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    HexWorld is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
+**/
 /** @file engine.cpp
     @brief Engine definitions.
     @author Luis Cabellos
@@ -36,7 +54,7 @@ Engine::Engine() : m_nextState{nullptr} {
 void Engine::setup( const Config & config ){
     m_datadir = config.datadir;
 
-    m_renderer.setup();
+    m_gfx.setup();
 
     m_terminal.initialize();
 
@@ -56,7 +74,7 @@ void Engine::setup( const Config & config ){
 
 //------------------------------------------------------------------------------
 void Engine::destroy(){
-    m_renderer.destroy();
+    m_gfx.destroy();
 }
 
 //------------------------------------------------------------------------------
@@ -104,13 +122,13 @@ void Engine::update(){
 
     m_input.beginFrame();
 
-    auto window = m_renderer.getWindow();
+    auto window = m_gfx.getWindow();
     sf::Event event;
     while( window->pollEvent(event) ){
         if( event.type == sf::Event::Closed ){
             stop();
         }else if( event.type == sf::Event::Resized ){
-            m_renderer.setViewport( event.size.width, event.size.height );
+            m_gfx.setViewport( event.size.width, event.size.height );
             m_terminal.resize( event.size.width, event.size.height );
         }else if( event.type == sf::Event::KeyReleased ){
             if( event.key.code == sf::Keyboard::Tab ){
@@ -150,32 +168,38 @@ void Engine::draw(){
             auto dist = glm::dot( tmp, tmp );
             // if eye and obj are the same point, we get division by zero
             if( dist > 0.001 ){
-                m_renderer.view = glm::lookAt( eye, obj,
+                m_gfx.view = glm::lookAt( eye, obj,
                                            glm::vec3(0,1,0) );
                 auto fov = ccam->getFov();
-                m_renderer.proj = glm::perspective( fov,
-                                                    m_renderer.aspectRatio(),
-                                                    0.1f, 100.0f );
+                m_gfx.proj = glm::perspective( fov,
+                                               m_gfx.aspectRatio(),
+                                               0.1f, 100.0f );
             }
         }
     }
 
-    m_renderer.startFrame();
+    m_gfx.startFrame();
 
-    m_terrain->draw( m_renderer );
+    auto renderer = m_gfx.getCurrentRenderer();
+    if( renderer ){
+        m_terrain->draw( *renderer );
 
-    for( auto & comp: m_drawableList ){
-        comp->draw( m_renderer );
+        for( auto & comp: m_drawableList ){
+            comp->draw( *renderer );
+        }
     }
 
-    m_renderer.startGUI();
+    m_gfx.startGUI();
 
-    m_terminal.draw( m_renderer );
+    renderer = m_gfx.getCurrentRenderer();
+    if( renderer ){
+        m_terminal.draw( *renderer );
+    }
 
-    auto window = m_renderer.getWindow();
+    auto window = m_gfx.getWindow();
     window->draw( spr );
 
-    m_renderer.endFrame();
+    m_gfx.endFrame();
 }
 
 //------------------------------------------------------------------------------

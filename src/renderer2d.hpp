@@ -16,46 +16,56 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file material.hpp
-    @brief Material declarations.
+/** @file renderer2d.hpp
+    @brief Renderer 2d for Gui.
     @author Luis Cabellos
-    @date 2014-01-07
+    @date 2014-01-26
 */
 //------------------------------------------------------------------------------
-#ifndef MATERIAL_HPP_
-#define MATERIAL_HPP_
+#ifndef RENDERER2D_HPP_
+#define RENDERER2D_HPP_
 
 //------------------------------------------------------------------------------
-class Material{
-public:
-    void setDiffuse( const glm::vec3 & col ) noexcept;
-    void setDiffuse( glm::vec3 && col ) noexcept;
+#include "renderer.hpp"
+#include "gfxinc.hpp"
 
-    const glm::vec3 & getDiffuse() const noexcept;
+//------------------------------------------------------------------------------
+class Renderer2D : public Renderer {
+public:
+    Renderer2D( sf::RenderWindow * window );
+
+    sf::View & getGuiView();
+    void resetGuiView();
+
+    void render( const Terminal & terminal ) override;
 
 private:
-    glm::vec3 m_diffuse;
+    sf::RenderWindow * m_window;
+    sf::View m_guiView;
+
 };
 
 //------------------------------------------------------------------------------
 inline
-void Material::setDiffuse( const glm::vec3 & col ) noexcept {
-    m_diffuse = col;
+Renderer2D::Renderer2D( sf::RenderWindow * window ) : m_window(window) {
+    // empty
 }
 
 //------------------------------------------------------------------------------
 inline
-void Material::setDiffuse( glm::vec3 && col ) noexcept {
-    m_diffuse = std::move(col);
+sf::View & Renderer2D::getGuiView(){
+    return m_guiView;
 }
 
 //------------------------------------------------------------------------------
 inline
-const glm::vec3 & Material::getDiffuse() const noexcept {
-    return m_diffuse;
+void Renderer2D::resetGuiView(){
+    if( m_window ){
+        m_window->setView( m_guiView );
+    }
 }
 
 //------------------------------------------------------------------------------
-#endif//MATERIAL_HPP_
+#endif//RENDERER2D_HPP_
 
 //------------------------------------------------------------------------------

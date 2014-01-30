@@ -16,90 +16,109 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file renderer.hpp
-    @brief Renderer declaration.
+/** @file gfx.hpp
+    @brief Graphics Class.
     @author Luis Cabellos
-    @date 2013-08-19
+    @date 2014-01-26
 */
 //------------------------------------------------------------------------------
-#ifndef RENDERER_HPP_
-#define RENDERER_HPP_
+#ifndef GFX_HPP_
+#define GFX_HPP_
 
 //------------------------------------------------------------------------------
-#include <stack>
+#include <memory>
 #include "gfxinc.hpp"
+#include "ray.hpp"
 
 //------------------------------------------------------------------------------
-class ChunkProp;
-class Terminal;
-class StaticMesh;
-class Material;
+class Renderer;
+class Renderer2D;
+class Renderer3D;
 
 //------------------------------------------------------------------------------
-class Renderer {
+class Gfx {
 public:
-    virtual void render( const ChunkProp & chunkprop );
-    virtual void render( const Terminal & terminal );
-    virtual void render( const Material & material, const StaticMesh & mesh );
+    void setup();
+    void destroy();
+    void startFrame();
+    void startGUI();
+    void endFrame();
 
-    void clearModelStack();
-    void pushModel( const glm::mat4 & model );
-    glm::mat4 & getModel();
-    void popModel();
+    void setSunDir( glm::vec3 && dir ) noexcept ;
+
+    void setViewport( GLsizei width, GLsizei height );
+    glm::vec4 getViewport() const;
+    float aspectRatio() const;
+
+    Ray getMouseRay() const;
+
+    sf::RenderWindow * getWindow();
+
+    std::shared_ptr<Renderer> getCurrentRenderer() const;
+
+    glm::mat4 view;
+    glm::mat4 proj;
 
 private:
-    std::stack<glm::mat4> m_modelStack;
+    constexpr static unsigned int DESIRED_WIDTH = 800;
+    constexpr static unsigned int DESIRED_HEIGHT = 600;
 
+    sf::RenderWindow * m_window;
+
+    glm::mat4 m_mvp;
+
+    glm::vec3 m_sundir = glm::vec3( 0.0f, -1.0f, 0.0f );
+
+    std::shared_ptr<Renderer> m_currentRenderer = nullptr;
+    std::shared_ptr<Renderer2D> m_renderer2D = nullptr;
+    std::shared_ptr<Renderer3D> m_renderer3D = nullptr;
+
+    float m_width;
+    float m_height;
+
+    GLuint m_vertexArrayID;
 };
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::render( const ChunkProp & ){
-    // empty
+void Gfx::endFrame(){
+    m_window->popGLStates();
+    m_window->display();
 }
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::render( const Terminal & ){
-    // empty
-}
-
-//------------------------------------------------------------------------------
-inline
-void Renderer::render( const Material &, const StaticMesh & ){
-    // empty
-}
-
-//------------------------------------------------------------------------------
-inline
-glm::mat4 & Renderer::getModel(){
-    return m_modelStack.top();
-}
-
-//------------------------------------------------------------------------------
-inline
-void Renderer::clearModelStack(){
-    while( not m_modelStack.empty() ){
-        m_modelStack.pop();
-    }
-    m_modelStack.emplace( glm::mat4(1.0f) );
-}
-
-//------------------------------------------------------------------------------
-inline
-void Renderer::popModel(){
-    if( m_modelStack.size() > 1 ){
-        m_modelStack.pop();
+void Gfx::setSunDir( glm::vec3 && dir ) noexcept {
+    if( glm::any( glm::notEqual( dir, glm::vec3(0.0f) ) ) ){
+        m_sundir = std::move(dir);
     }
 }
 
 //------------------------------------------------------------------------------
 inline
-void Renderer::pushModel( const glm::mat4 & mat ){
-    m_modelStack.emplace( mat*getModel() );
+float Gfx::aspectRatio() const {
+    return m_width / m_height;
 }
 
 //------------------------------------------------------------------------------
-#endif//RENDERER_HPP_
+inline
+glm::vec4 Gfx::getViewport() const {
+    return glm::vec4( 0, 0, m_width, m_height );
+}
+
+//------------------------------------------------------------------------------
+inline
+sf::RenderWindow * Gfx::getWindow(){
+    return m_window;
+}
+
+//------------------------------------------------------------------------------
+inline
+std::shared_ptr<Renderer> Gfx::getCurrentRenderer() const {
+    return m_currentRenderer;
+}
+
+//------------------------------------------------------------------------------
+#endif//GFX_HPP_
 
 //------------------------------------------------------------------------------
