@@ -28,12 +28,14 @@
 #include "terrainprop.hpp"
 #include "world.hpp"
 
+//------------------------------------------------------------------------------
 static LogLevel s_loglevel = LogLevel::LL_ERROR;
 
 static std::unordered_map<unsigned int,std::string> s_logNames = {
-    {static_cast<unsigned int>(LogLevel::LL_ERROR), "ERROR"},
-    {static_cast<unsigned int>(LogLevel::LL_WARNING), "WARNING"},
-    {static_cast<unsigned int>(LogLevel::LL_INFO), "INFO"},
+    {static_cast<unsigned int>(LogLevel::LL_ERROR), " [E] "},
+    {static_cast<unsigned int>(LogLevel::LL_WARNING), " [W] "},
+    {static_cast<unsigned int>(LogLevel::LL_INFO), " [I] "},
+    {static_cast<unsigned int>(LogLevel::LL_DEBUG), " [D] "},
 };
 
 //------------------------------------------------------------------------------

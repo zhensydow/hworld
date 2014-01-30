@@ -32,7 +32,8 @@
 enum class LogLevel{
     LL_ERROR = 0,
         LL_WARNING = 1,
-        LL_INFO = 2
+        LL_INFO = 2,
+        LL_DEBUG = 3
 };
 
 //------------------------------------------------------------------------------
@@ -44,17 +45,50 @@ void printLogTag( LogLevel ll );
 bool logEnabled( LogLevel ll );
 
 //------------------------------------------------------------------------------
-inline
-void log( LogLevel ll, ... ){
+template<typename X>
+void printLog( const X & x ){
+    std::cout << x << std::endl;
+}
+
+template<typename X, typename... XS>
+void printLog( const X & x, XS... xs ){
+    std::cout << x; printLog( xs... );
+}
+
+//------------------------------------------------------------------------------
+template<typename... XS>
+void log( LogLevel ll, XS... xs ){
     if( logEnabled( ll ) ){
-        printLogTag(ll);
-        std::cout << std::endl;
+        printLogTag(ll); printLog( xs... );
     }
 }
 
+//------------------------------------------------------------------------------
+template<typename... XS>
 inline
-void logE( ... ){
-    log( LogLevel::LL_ERROR );
+void logE( XS... xs ){
+    log( LogLevel::LL_ERROR, xs... );
+}
+
+//------------------------------------------------------------------------------
+template<typename... XS>
+inline
+void logW( XS... xs ){
+    log( LogLevel::LL_WARNING, xs... );
+}
+
+//------------------------------------------------------------------------------
+template<typename... XS>
+inline
+void logI( XS... xs ){
+    log( LogLevel::LL_INFO, xs... );
+}
+
+//------------------------------------------------------------------------------
+template<typename... XS>
+inline
+void logD( XS... xs ){
+    log( LogLevel::LL_DEBUG, xs... );
 }
 
 //------------------------------------------------------------------------------

@@ -75,7 +75,9 @@ unique_ptr<Config> loadConfig( const string & filename ){
             }else if( name == "logLevel" ){
                 if( value.isString() ){
                     auto level = value.asString();
-                    if( level == "info" ){
+                    if( level == "debug" ){
+                        config->loglevel = LogLevel::LL_DEBUG;
+                    }else if( level == "info" ){
                         config->loglevel = LogLevel::LL_INFO;
                     }else if( level == "warning" ){
                         config->loglevel = LogLevel::LL_WARNING;
