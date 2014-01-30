@@ -25,9 +25,9 @@
 #include "shader.hpp"
 #include <string>
 #include <list>
-#include <iostream>
 #include <algorithm>
 #include <fstream>
+#include "debug.hpp"
 
 //------------------------------------------------------------------------------
 void readFileData( const std::string &str, std::string &data ){
@@ -41,7 +41,7 @@ void readFileData( const std::string &str, std::string &data ){
         data.assign( std::istreambuf_iterator<char>(t),
                      std::istreambuf_iterator<char>());
     }else{
-        std::cerr << "File '" << str << "' doesn't exist\n";
+        logE( "File '", str, "' doesn't exist" );
         std::terminate();
     }
 }
@@ -78,9 +78,9 @@ GLuint createShader(GLenum shaderType, const std::string &filename ){
             break;
         }
 
-        std::cerr << "Compile failure in " << strShaderType << " shader: \n"
-                  << "  " << filename << std::endl
-                  << strInfoLog << std::endl;
+        logE( "Compile failure in ", strShaderType, " shader:" );
+        logE( "  ", filename );
+        logE( strInfoLog );
         delete[] strInfoLog;
     }
 
@@ -105,7 +105,7 @@ GLuint createProgram( const std::vector<GLuint> &shaders ){
 
         auto strInfoLog = new GLchar[infoLogLength + 1];
         glGetProgramInfoLog( program, infoLogLength, 0, strInfoLog );
-        std::cerr << "Linker failure: " << strInfoLog << std::endl;
+        logE( "Linker failure: ", strInfoLog );
         delete[] strInfoLog;
     }
 
@@ -136,8 +136,8 @@ GLuint loadProgram( const std::string &name ){
     }
 
     if( "" == glslv ){
-        std::cout << "Invalid shader version: " << sv.c_str() << std::endl;
-        exit(EXIT_FAILURE);
+        logE( "Invalid shader version: ", sv.c_str() );
+        std::terminate();
     }
 
     std::string strVertexShader = name+"."+glslv+".vert";

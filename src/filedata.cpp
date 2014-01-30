@@ -25,6 +25,7 @@
 #include "filedata.hpp"
 #include <fstream>
 #include "json/json.h"
+#include "debug.hpp"
 #include "entity.hpp"
 #include "engine.hpp"
 #include "c_camera.hpp"
@@ -123,7 +124,7 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
     auto cfun = s_componentTable.find( name );
 
     if( cfun == s_componentTable.end() ){
-        cout << "ERROR: Unknown component in JSON '" << name << "'\n";
+        logE( "Unknown component in JSON '", name, "'" );
         return;
     }
 
@@ -135,13 +136,13 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
 //------------------------------------------------------------------------------
 std::shared_ptr<Entity> makeEntity( const string  & filename ){
     if( !is_regular_file(filename) ){
-        cout << "ERROR: Not file '" << filename << "'" << endl;
+        logE( "Not file '", filename, "'" );
         return nullptr;
     }
 
     ifstream ifs( filename, ifstream::binary );
     if( !ifs ){
-        cout << "ERROR: Could not open " << filename << endl;
+        logE( "Could not open ", filename );
         return nullptr;
     }
 
@@ -161,8 +162,8 @@ std::shared_ptr<Entity> makeEntity( const string  & filename ){
 
     auto parsingRet = reader.parse( entityJson, root );
     if( ! parsingRet ){
-        cout << "ERROR: invalid entity JSON parsing" << endl;
-        cout << reader.getFormattedErrorMessages();
+        logE( "Invalid entity JSON parsing : ",
+              reader.getFormattedErrorMessages() );
         return nullptr;
     }
 

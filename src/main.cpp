@@ -39,7 +39,7 @@ int main( int argc, char *argv[] ){
 
     auto config = loadConfig( argv[1] );
     if( not config ){
-        std::cout << "can't load config file " << argv[1] << std::endl;
+        logE( "Can't load config file ", argv[1] );
         return EXIT_FAILURE;
     }
 

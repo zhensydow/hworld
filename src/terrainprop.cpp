@@ -28,6 +28,7 @@
 #include "world.hpp"
 #include "util.hpp"
 #include "renderer.hpp"
+#include "debug.hpp"
 
 //------------------------------------------------------------------------------
 TerrainProp::TerrainProp( World & world ) : m_world(world) {
@@ -46,8 +47,8 @@ void TerrainProp::setFocus( unsigned int center ){
     glm::vec3 pos;
     while( not queue.empty() and m_chunks.size() < 10 ){
         std::tie( idx, pos ) = queue.front();
-        std::cout << "Inserted element: " << idx << " at ("
-                  << pos.x << ", " << pos.y << ", " << pos.z << ")\n";
+        logI( "Inserted element: ", idx, " at (",
+              pos.x, ", ", pos.y, ", ", pos.z, ")" );
         queue.pop();
 
         auto cit = m_chunks.find( idx );

@@ -224,7 +224,7 @@ void Engine::draw(){
 void Engine::yield(){
     switch( m_nextStateType ){
     case NextState::NEW_STATE:
-        cout << " new state " << m_t << endl;
+        logI( "New state ", m_t );
         if( not m_states.empty() ){
             auto old = std::move(m_states.top());
             m_states.pop();
@@ -252,14 +252,14 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto filename = statedir /= (name + ".lua");
 
     if( !is_regular_file( filename ) ){
-        cout << "Not file for class '" <<  name << "'" << endl;
+        logE( "Not file for class '", name, "'" );
         return nullptr;
     }
 
     // Lua Initialization
     auto ls = luaL_newstate();
     if( !ls ){
-        cout << "Can't create Lua State" << endl;
+        logE( "Can't create Lua State" );
         return nullptr;
     }
 
@@ -276,7 +276,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto state = std::unique_ptr<GameState>(new GameState( ls ) );
     if( !state ){
         lua_close( ls );
-        cout << "Can't create agent class '" << name << "' instance" << endl;
+        logE( "Can't create agent class '", name, "' instance" );
         return nullptr;
     }
 

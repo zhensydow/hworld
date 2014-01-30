@@ -35,7 +35,7 @@ using namespace boost::filesystem;
 unique_ptr<Config> loadConfig( const string & filename ){
     ifstream ifs( filename, ifstream::binary );
     if( !ifs ){
-        cout << "ERROR: Could not open " << filename << endl;
+        logE( "Could not open ", filename );
         return nullptr;
     }
 
@@ -55,8 +55,8 @@ unique_ptr<Config> loadConfig( const string & filename ){
 
     auto parsingRet = reader.parse( entityJson, root );
     if( ! parsingRet ){
-        cout << "ERROR: invalid entity JSON parsing" << endl;
-        cout << reader.getFormattedErrorMessages();
+        logE( "Invalid entity JSON parsing: ",
+              reader.getFormattedErrorMessages() );
         return nullptr;
     }
 
@@ -86,8 +86,7 @@ unique_ptr<Config> loadConfig( const string & filename ){
                     }
                 }
             }else{
-                cout << "WARNING: unknown config value :'" << name << "'"
-                     << endl;
+                logW( "Unknown config value : '", name, "'" );
             }
         }
     }

@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
+#include "debug.hpp"
 #include "renderer2d.hpp"
 #include "renderer3d.hpp"
 
@@ -43,9 +44,8 @@ void Gfx::setup(){
     m_window->setVerticalSyncEnabled( true );
     m_window->setKeyRepeatEnabled( false );
 
-    auto settings = m_window->getSettings();
-    std::cout << "OpenGL version: " << settings.majorVersion << "."
-              << settings.minorVersion << std::endl;
+    auto sets = m_window->getSettings();
+    logI( "OpenGL version: ", sets.majorVersion, ".", sets.minorVersion );
 
     m_renderer2D = std::make_shared<Renderer2D>( m_window );
     if( m_renderer2D ){

@@ -29,13 +29,11 @@
 //------------------------------------------------------------------------------
 GameState::GameState() noexcept : m_ls{nullptr} {
     //empty
-    std::cout << "GameState empty constructor" << std::endl;
 }
 
 //------------------------------------------------------------------------------
 GameState::GameState( lua_State * ls ) noexcept : m_ls{ls} {
     //empty
-    std::cout << "GameState constructor" << std::endl;
 }
 
 GameState::GameState( GameState&& gs ) noexcept {
@@ -51,7 +49,6 @@ GameState& GameState::operator=( GameState&& gs ) noexcept {
 
 //------------------------------------------------------------------------------
 GameState::~GameState() noexcept{
-    std::cout << "GameState destructor" << std::endl;
     if( m_ls ){
         lua_close( m_ls );
     }

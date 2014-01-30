@@ -25,6 +25,7 @@
 #include "util.hpp"
 #include <random>
 #include "lua.hpp"
+#include "debug.hpp"
 
 //------------------------------------------------------------------------------
 Chunk createRandomChunk( int min, int max ){
@@ -53,9 +54,9 @@ bool checkLuaReturn( lua_State * const ls, const int ret ){
     if( ret != 0 ){
         auto msg = lua_tostring( ls, -1);
         if( msg == nullptr ){
-            std::cout << "Lua error object is not a string" << std::endl;
+            logE( "Lua error object is not a string" );
         }else{
-            std::cout << "Lua: " << msg << std::endl;
+            logE( "Lua: ", msg );
         }
         // remove error message from stack
         lua_pop( ls, 1 );

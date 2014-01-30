@@ -23,7 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "terminal.hpp"
-#include <iostream>
+#include "debug.hpp"
 #include "renderer.hpp"
 #include "engine.hpp"
 
@@ -31,7 +31,7 @@
 void Terminal::initialize(){
     auto filename = Engine::instance().getDataFilename( "GentiumPlus-R.ttf" );
     if( !m_font.loadFromFile( filename ) ){
-        std::cout << "Error loading Font\n";
+        logE( "Can't load font ", filename );
         std::terminate();
     }
 

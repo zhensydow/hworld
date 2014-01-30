@@ -63,10 +63,10 @@ bool logEnabled( LogLevel ll ){
 
 //------------------------------------------------------------------------------
 void outMemoryInfo(){
-    std::cout << "Chunk size: " << sizeof(Chunk) << std::endl;
-    std::cout << "ChunkProp size: " << sizeof(ChunkProp) << std::endl;
-    std::cout << "TerrainProp size: " << sizeof(TerrainProp) << std::endl;
-    std::cout << "World size: " << sizeof(World) << std::endl;
+    logI( "Chunk size: ", sizeof(Chunk) );
+    logI( "ChunkProp size: ", sizeof(ChunkProp) );
+    logI( "TerrainProp size: ", sizeof(TerrainProp) );
+    logI( "World size: ", sizeof(World) );
 }
 
 //------------------------------------------------------------------------------

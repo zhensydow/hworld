@@ -24,8 +24,8 @@
 //------------------------------------------------------------------------------
 #include "script.hpp"
 #include <string>
-#include <iostream>
 #include <memory>
+#include "debug.hpp"
 #include "entity.hpp"
 #include "component.hpp"
 
@@ -48,7 +48,7 @@ int component_index( lua_State *lua ){
 //------------------------------------------------------------------------------
 int component_newindex( lua_State *lua ){
     std::string name = luaL_checkstring( lua, 2 );
-    std::cout << "NEW COMP INDEX " << name << std::endl;
+    logI( "NEW COMP INDEX ", name );
     return 0;
 }
 
@@ -89,7 +89,7 @@ int entity_index( lua_State *lua ){
 //------------------------------------------------------------------------------
 int entity_newindex( lua_State *lua ){
     std::string name = luaL_checkstring( lua, 2 );
-    std::cout << "NEW INDEX " << name << std::endl;
+    logI( "NEW INDEX ", name );
     return 0;
 }
 
