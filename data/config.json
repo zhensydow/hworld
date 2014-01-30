@@ -1,4 +1,4 @@
 {
   "initialState": "test",
-  "loglevel": "info"
+  "logLevel": "info"
 }
