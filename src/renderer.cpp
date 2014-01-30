@@ -236,7 +236,6 @@ void Renderer::render( const ChunkProp & chunkprop ){
     glBindTexture( GL_TEXTURE_2D, 0 );
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );
-    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------
@@ -287,8 +286,6 @@ void Renderer::render( const Material & material, const StaticMesh & mesh ){
     glBindTexture( GL_TEXTURE_2D, 0 );
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );
-
-    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------
