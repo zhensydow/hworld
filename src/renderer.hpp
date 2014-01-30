@@ -38,6 +38,8 @@ class Material;
 //------------------------------------------------------------------------------
 class Renderer {
 public:
+    virtual ~Renderer();
+
     virtual void render( const ChunkProp & chunkprop );
     virtual void render( const Terminal & terminal );
     virtual void render( const Material & material, const StaticMesh & mesh );
