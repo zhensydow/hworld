@@ -29,7 +29,7 @@
 #include "world.hpp"
 
 //------------------------------------------------------------------------------
-static LogLevel s_loglevel = LogLevel::LL_ERROR;
+static LogLevel s_loglevel = LogLevel::LL_INFO;
 
 static std::unordered_map<unsigned int,std::string> s_logNames = {
     {static_cast<unsigned int>(LogLevel::LL_ERROR), " [E] "},
