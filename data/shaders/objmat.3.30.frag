@@ -5,7 +5,7 @@ uniform vec3 diffuse;
 in vec3 normalCam;
 in vec3 lightDirCam;
 
-out vec3 color;
+layout(location = 0) out vec3 color;
 
 void main(){
     vec3 n = normalize( normalCam );
