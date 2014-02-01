@@ -27,6 +27,7 @@
 
 //------------------------------------------------------------------------------
 #include <memory>
+#include <array>
 #include "gfxinc.hpp"
 #include "ray.hpp"
 
@@ -67,6 +68,8 @@ private:
     constexpr static unsigned int DESIRED_WIDTH = 800;
     constexpr static unsigned int DESIRED_HEIGHT = 600;
 
+    static std::array< GLfloat, 6*3 > s_quad_verts;
+
     sf::RenderWindow * m_window;
 
     glm::mat4 m_mvp;
@@ -77,10 +80,17 @@ private:
     std::shared_ptr<Renderer2D> m_renderer2D = nullptr;
     std::shared_ptr<Renderer3D> m_renderer3D = nullptr;
 
+
     float m_width;
     float m_height;
 
     GLuint m_vertexArrayID;
+    GLuint m_fbRendered;
+    GLuint m_renderedTex;
+    GLuint m_renderedDepth;
+    GLuint m_quad_prg;
+    GLuint m_rfx_tex_id;
+    GLuint m_quad_vertsbuff;
 
     bool m_rendereffects = false;
 };

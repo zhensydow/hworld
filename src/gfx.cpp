@@ -24,8 +24,20 @@
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
 #include "debug.hpp"
+#include "engine.hpp"
 #include "renderer2d.hpp"
 #include "renderer3d.hpp"
+#include "shader.hpp"
+
+//------------------------------------------------------------------------------
+std::array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
+    -1.0f, -1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    1.0f,  1.0f, 0.0f,
+    } };
 
 //------------------------------------------------------------------------------
 void Gfx::setup(){
@@ -37,6 +49,11 @@ void Gfx::setup(){
 
     glGenVertexArrays( 1, &m_vertexArrayID );
     glBindVertexArray( m_vertexArrayID );
+
+    // rendered framebuffer values
+    glGenFramebuffers( 1, &m_fbRendered );
+    glGenTextures( 1, &m_renderedTex );
+    glGenRenderbuffers( 1, &m_renderedDepth );
 
     m_window = new sf::RenderWindow{
         sf::VideoMode( DESIRED_WIDTH, DESIRED_HEIGHT ),
@@ -57,6 +74,17 @@ void Gfx::setup(){
     setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
 
     m_renderer3D = std::make_shared<Renderer3D>();
+
+    glGenBuffers( 1, &m_quad_vertsbuff );
+    glBindBuffer( GL_ARRAY_BUFFER, m_quad_vertsbuff );
+    glBufferData( GL_ARRAY_BUFFER, s_quad_verts.size()*sizeof(GLfloat),
+                  &s_quad_verts[0], GL_STATIC_DRAW );
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    auto & engine = Engine::instance();
+    m_quad_prg = loadProgram( engine.getDataFilename( "shaders/quad" ) );
+
+    m_rfx_tex_id = glGetUniformLocation( m_quad_prg , "rendererTexture" );
 }
 
 //------------------------------------------------------------------------------
@@ -68,10 +96,10 @@ void Gfx::destroy(){
 void Gfx::setViewport( GLsizei width, GLsizei height ){
     constexpr float SCR_FACTOR = float(DESIRED_WIDTH) / float(DESIRED_HEIGHT);
     static_assert( SCR_FACTOR > 0, "SCR_FACTOR must be > 0" );
+    logI( "Set Viewport to ", width, "x", height );
 
     m_width = width;
     m_height = height;
-    glViewport(0, 0, width, height);
 
     if( height > 0 ){
         auto newFactor = float(width)/float(height);
@@ -88,6 +116,41 @@ void Gfx::setViewport( GLsizei width, GLsizei height ){
             }
             m_renderer2D->resetGuiView();
         }
+    }
+
+    // create the rendered framebuffer
+    glBindFramebuffer( GL_FRAMEBUFFER, m_fbRendered );
+    // setup the rendered texture
+    glBindTexture( GL_TEXTURE_2D, m_renderedTex );
+    glTexImage2D( GL_TEXTURE_2D, 0,GL_RGB, m_width, m_height, 0,
+                  GL_RGB, GL_UNSIGNED_BYTE, 0 );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    // setup the depth buffer
+    glBindRenderbuffer( GL_RENDERBUFFER, m_renderedDepth );
+    glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height );
+    glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                               GL_RENDERBUFFER, m_renderedDepth );
+    //// Alternative : Depth texture. Slower, but you can sample it later in your shader
+    // glBindTexture( GL_TEXTURE_2D, m_renderedDepthTex );
+    // glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24,
+    //              m_width, m_height, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0 );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    // glFramebufferTexture( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_renderedDepthTex, 0 );
+    // link with framebuffer
+    glFramebufferTexture( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_renderedTex, 0 );
+    GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers( 1, DrawBuffers );
+
+    auto ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if( ret != GL_FRAMEBUFFER_COMPLETE ){
+        logW( "Can't generate Render FrameBuffer :", ret );
+        std::terminate();
     }
 }
 
@@ -124,6 +187,13 @@ void Gfx::startColorPass(){
         m_renderer3D->sundir = m_sundir;
     }
 
+    if( m_rendereffects ){
+        glBindFramebuffer( GL_FRAMEBUFFER, m_fbRendered );
+    }else{
+        glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+    }
+    glViewport( 0, 0, m_width, m_height );
+
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LESS );
     glEnable( GL_CULL_FACE );
@@ -133,6 +203,32 @@ void Gfx::startColorPass(){
 
 //------------------------------------------------------------------------------
 void Gfx::startGUI(){
+    if( m_rendereffects ){
+        // render texture to screen
+        glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+        glViewport( 0, 0, m_width, m_height );
+
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glUseProgram( m_quad_prg );
+
+        // Bind our texture in Texture Unit 0
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( GL_TEXTURE_2D, m_renderedTex );
+        glUniform1i( m_rfx_tex_id, 0 );
+        // //glUniform1f(timeID, (float)(glfwGetTime()*10.0f) );
+
+        glEnableVertexAttribArray( 0 );
+        glBindBuffer( GL_ARRAY_BUFFER, m_quad_vertsbuff );
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+        glDrawArrays( GL_TRIANGLES, 0, 6 );
+
+        glDisableVertexAttribArray( 0 );
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        glBindTexture( GL_TEXTURE_2D, 0 );
+    }
+
     m_window->pushGLStates();
     m_currentRenderer = m_renderer2D;
 }
