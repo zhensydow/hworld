@@ -75,6 +75,8 @@ public:
     bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 
+    double getTime() const noexcept;
+
 private:
     Engine();
 
@@ -179,6 +181,12 @@ void Engine::setCamera( std::shared_ptr<Entity> cam ) noexcept {
 inline
 bool Engine::hasCamera() noexcept {
     return m_camera != nullptr;
+}
+
+//------------------------------------------------------------------------------
+inline
+double Engine::getTime() const noexcept{
+    return m_accum;
 }
 
 //------------------------------------------------------------------------------
