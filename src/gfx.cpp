@@ -85,6 +85,8 @@ void Gfx::setup(){
     m_quad_prg = loadProgram( engine.getDataFilename( "shaders/quad" ) );
 
     m_rfx_tex_id = glGetUniformLocation( m_quad_prg , "rendererTexture" );
+    m_rfx_w_id = glGetUniformLocation( m_quad_prg , "width" );
+    m_rfx_h_id = glGetUniformLocation( m_quad_prg , "height" );
 }
 
 //------------------------------------------------------------------------------
@@ -146,6 +148,12 @@ void Gfx::setViewport( GLsizei width, GLsizei height ){
     glFramebufferTexture( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_renderedTex, 0 );
     GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers( 1, DrawBuffers );
+
+    // set shader constants
+    glUseProgram( m_quad_prg );
+    glUniform1f( m_rfx_w_id, m_width );
+    glUniform1f( m_rfx_h_id, m_height );
+    glUseProgram( 0 );
 
     auto ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if( ret != GL_FRAMEBUFFER_COMPLETE ){
