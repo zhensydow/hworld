@@ -98,6 +98,15 @@ int engine_saveWorld( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
+int engine_enableRenderEffects( lua_State *ls ){
+    auto v = lua_toboolean( ls, 1 ) == 1;
+    auto & engine = Engine::instance();
+    auto & gfx = engine.getGfx();
+    gfx.enableRenderEffects( v );
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 /** List of functions of engine lua library.
 */
 const luaL_Reg enginelib[] = {
@@ -106,6 +115,7 @@ const luaL_Reg enginelib[] = {
     {"hasCamera", engine_hasCamera},
     {"setCamera", engine_setCamera},
     {"saveWorld", engine_saveWorld},
+    {"enableRenderEffects", engine_enableRenderEffects},
     {nullptr, nullptr}
 };
 

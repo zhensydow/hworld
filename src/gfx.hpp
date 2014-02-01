@@ -46,6 +46,8 @@ public:
     void startGUI();
     void endFrame();
 
+    void enableRenderEffects( bool v = true ) noexcept;
+
     void setSunDir( glm::vec3 && dir ) noexcept ;
 
     void setViewport( GLsizei width, GLsizei height );
@@ -79,6 +81,8 @@ private:
     float m_height;
 
     GLuint m_vertexArrayID;
+
+    bool m_rendereffects = false;
 };
 
 //------------------------------------------------------------------------------
@@ -94,6 +98,12 @@ void Gfx::setSunDir( glm::vec3 && dir ) noexcept {
     if( glm::any( glm::notEqual( dir, glm::vec3(0.0f) ) ) ){
         m_sundir = std::move(dir);
     }
+}
+
+//------------------------------------------------------------------------------
+inline
+void Gfx::enableRenderEffects( bool v ) noexcept {
+    m_rendereffects = v;
 }
 
 //------------------------------------------------------------------------------
