@@ -85,6 +85,7 @@ void Gfx::setup(){
     m_quad_prg = loadProgram( engine.getDataFilename( "shaders/quad" ) );
 
     m_rfx_tex_id = glGetUniformLocation( m_quad_prg , "rendererTexture" );
+    m_rfx_time_id = glGetUniformLocation( m_quad_prg , "time" );
     m_rfx_w_id = glGetUniformLocation( m_quad_prg , "width" );
     m_rfx_h_id = glGetUniformLocation( m_quad_prg , "height" );
 }
@@ -224,7 +225,8 @@ void Gfx::startGUI(){
         glActiveTexture( GL_TEXTURE0 );
         glBindTexture( GL_TEXTURE_2D, m_renderedTex );
         glUniform1i( m_rfx_tex_id, 0 );
-        // //glUniform1f(timeID, (float)(glfwGetTime()*10.0f) );
+        auto & engine = Engine::instance();
+        glUniform1f( m_rfx_time_id, static_cast<float>(engine.getTime()) );
 
         glEnableVertexAttribArray( 0 );
         glBindBuffer( GL_ARRAY_BUFFER, m_quad_vertsbuff );

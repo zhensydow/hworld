@@ -90,6 +90,7 @@ private:
     GLuint m_renderedDepth;
     GLuint m_quad_prg;
     GLuint m_rfx_tex_id;
+    GLuint m_rfx_time_id;
     GLuint m_rfx_w_id;
     GLuint m_rfx_h_id;
     GLuint m_quad_vertsbuff;
