@@ -83,6 +83,7 @@ private:
     std::shared_ptr<Renderer2D> m_renderer2D = nullptr;
     std::shared_ptr<Renderer3D> m_renderer3D = nullptr;
 
+    std::string m_glslVersion = "";
 
     float m_width;
     float m_height;

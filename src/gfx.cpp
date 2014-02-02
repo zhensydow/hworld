@@ -31,6 +31,9 @@
 #include "shader.hpp"
 
 //------------------------------------------------------------------------------
+using namespace std;
+
+//------------------------------------------------------------------------------
 std::array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
@@ -42,6 +45,47 @@ std::array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
 
 //------------------------------------------------------------------------------
 void Gfx::setGLSLVersion( const std::string & version ){
+    auto ot = 0;
+    auto searching = true;
+    std::vector<int> numbers;
+
+    while( searching ){
+        auto it = version.find( '.', ot );
+        if( it == std::string::npos ){
+            it = version.find( ' ', ot );
+            auto nstr = version.substr( ot, it );
+            numbers.push_back( std::atoi(nstr.data()) );
+            searching = false;
+        }else{
+            auto nstr = version.substr( ot, it );
+            numbers.push_back( std::atoi(nstr.data()) );
+            ot = ++it;
+        }
+    }
+
+    if( numbers.size() < 2 ){
+        return;
+    }
+
+    static std::array<std::vector<int>,2> available = { {
+        std::vector<int>{ {1, 20} },
+        std::vector<int>{ {3, 30} } } };
+
+    unsigned pos = 0;
+    while( pos < available.size() and numbers > available[pos] ){
+        ++pos;
+    }
+
+    if( pos >= available.size() ){
+        pos = available.size() - 1;
+    }
+
+    if( numbers < available[pos] ){
+        return;
+    }
+
+    m_glslVersion = to_string(available[pos][0]) + "." +
+        to_string(available[pos][1]);
 }
 
 //------------------------------------------------------------------------------
@@ -68,6 +112,19 @@ void Gfx::setup( const Config & config ){
 
     auto sets = m_window->getSettings();
     logI( "OpenGL version: ", sets.majorVersion, ".", sets.minorVersion );
+
+    if( config.glslVersion != "" ){
+        setGLSLVersion( config.glslVersion );
+    }
+    if( m_glslVersion == "" ){
+        const auto glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
+        setGLSLVersion( reinterpret_cast<const char*>(glslVersion) );
+    }
+    if( m_glslVersion == "" ){
+        logE( "Can't set GLSL version" );
+        std::terminate();
+    }
+    logI( "GLSL version: ", m_glslVersion );
 
     m_renderer2D = std::make_shared<Renderer2D>( m_window );
     if( m_renderer2D ){
