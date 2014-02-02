@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <fstream>
 #include "debug.hpp"
+#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 void readFileData( const std::string &str, std::string &data ){
@@ -118,27 +119,14 @@ GLuint createProgram( const std::vector<GLuint> &shaders ){
 
 //------------------------------------------------------------------------------
 GLuint loadProgram( const std::string &name ){
+    logI( "Loading shader program ", name );
     GLuint program{0};
 
     std::vector<GLuint> shaders;
-    std::list<std::string> available = {"1.20","3.30"};
 
-    std::string glslv;
-
-    const auto glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
-    std::string sv( reinterpret_cast<const char*>(glslVersion) );
-
-    for( auto i = available.begin(); i != available.end() ; ++i ){
-        if( 0 == sv.find(*i) ){
-            glslv = *i;
-            break;
-        }
-    }
-
-    if( "" == glslv ){
-        logE( "Invalid shader version: ", sv.c_str() );
-        std::terminate();
-    }
+    auto & engine = Engine::instance();
+    auto & gfx = engine.getGfx();
+    auto glslv = gfx.getGLSLVersion();
 
     std::string strVertexShader = name+"."+glslv+".vert";
     std::string strFragmentShader = name+"."+glslv+".frag";
