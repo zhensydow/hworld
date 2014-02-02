@@ -63,13 +63,12 @@ void Gfx::setGLSLVersion( const string & version ){
         }
     }
 
-    if( numbers.size() < 2 ){
+    static array<vector<int>,2> available = { {
+            { {1, 20} }, { {3, 30} } } };
+
+    if( numbers < available[0] ){
         return;
     }
-
-    static std::array<std::vector<int>,2> available = { {
-        std::vector<int>{ {1, 20} },
-        std::vector<int>{ {3, 30} } } };
 
     unsigned pos = 0;
     while( pos < available.size() and numbers > available[pos] ){
@@ -81,7 +80,7 @@ void Gfx::setGLSLVersion( const string & version ){
     }
 
     if( numbers < available[pos] ){
-        return;
+        --pos;
     }
 
     m_glslVersion = to_string(available[pos][0]) + "." +
