@@ -103,6 +103,9 @@ void Gfx::setup( const Config & config ){
     glGenTextures( 1, &m_renderedTex );
     glGenRenderbuffers( 1, &m_renderedDepth );
 
+    m_width = DESIRED_WIDTH;
+    m_height = DESIRED_HEIGHT;
+
     m_window = new sf::RenderWindow{
         sf::VideoMode( DESIRED_WIDTH, DESIRED_HEIGHT ),
         "HexWorld", sf::Style::Default, desired };
@@ -131,8 +134,6 @@ void Gfx::setup( const Config & config ){
         guiView.setCenter( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0} );
         guiView.setSize( {DESIRED_WIDTH, DESIRED_HEIGHT} );
     }
-
-    setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
 
     m_renderer3D = make_shared<Renderer3D>();
 
