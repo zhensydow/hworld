@@ -48,6 +48,8 @@ public:
     void startGUI();
     void endFrame();
 
+    std::string getGLSLVersion() const noexcept;
+
     void enableRenderEffects( bool v = true ) noexcept;
 
     void setSunDir( glm::vec3 && dir ) noexcept ;
@@ -101,6 +103,12 @@ private:
 
     bool m_rendereffects = false;
 };
+
+//------------------------------------------------------------------------------
+inline
+std::string Gfx::getGLSLVersion() const noexcept{
+    return m_glslVersion;
+}
 
 //------------------------------------------------------------------------------
 inline
