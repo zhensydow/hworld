@@ -34,7 +34,7 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
-std::array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
+array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
     -1.0f,  1.0f, 0.0f,
@@ -44,21 +44,21 @@ std::array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
     } };
 
 //------------------------------------------------------------------------------
-void Gfx::setGLSLVersion( const std::string & version ){
+void Gfx::setGLSLVersion( const string & version ){
     auto ot = 0;
     auto searching = true;
-    std::vector<int> numbers;
+    vector<int> numbers;
 
     while( searching ){
         auto it = version.find( '.', ot );
-        if( it == std::string::npos ){
+        if( it == string::npos ){
             it = version.find( ' ', ot );
             auto nstr = version.substr( ot, it );
-            numbers.push_back( std::atoi(nstr.data()) );
+            numbers.push_back( atoi(nstr.data()) );
             searching = false;
         }else{
             auto nstr = version.substr( ot, it );
-            numbers.push_back( std::atoi(nstr.data()) );
+            numbers.push_back( atoi(nstr.data()) );
             ot = ++it;
         }
     }
@@ -122,11 +122,11 @@ void Gfx::setup( const Config & config ){
     }
     if( m_glslVersion == "" ){
         logE( "Can't set GLSL version" );
-        std::terminate();
+        terminate();
     }
     logI( "GLSL version: ", m_glslVersion );
 
-    m_renderer2D = std::make_shared<Renderer2D>( m_window );
+    m_renderer2D = make_shared<Renderer2D>( m_window );
     if( m_renderer2D ){
         auto & guiView = m_renderer2D->getGuiView();
         guiView.setCenter( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0} );
@@ -135,7 +135,7 @@ void Gfx::setup( const Config & config ){
 
     setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
 
-    m_renderer3D = std::make_shared<Renderer3D>();
+    m_renderer3D = make_shared<Renderer3D>();
 
     glGenBuffers( 1, &m_quad_vertsbuff );
     glBindBuffer( GL_ARRAY_BUFFER, m_quad_vertsbuff );
@@ -221,7 +221,7 @@ void Gfx::setViewport( GLsizei width, GLsizei height ){
     auto ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if( ret != GL_FRAMEBUFFER_COMPLETE ){
         logW( "Can't generate Render FrameBuffer :", ret );
-        std::terminate();
+        terminate();
     }
 }
 
