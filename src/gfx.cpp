@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
 #include "debug.hpp"
+#include "config.hpp"
 #include "engine.hpp"
 #include "renderer2d.hpp"
 #include "renderer3d.hpp"
@@ -40,7 +41,11 @@ std::array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
     } };
 
 //------------------------------------------------------------------------------
-void Gfx::setup(){
+void Gfx::setGLSLVersion( const std::string & version ){
+}
+
+//------------------------------------------------------------------------------
+void Gfx::setup( const Config & config ){
     static_assert( DESIRED_HEIGHT > 0 and DESIRED_WIDTH > 0
                    , "Screen size must be > 0" );
 

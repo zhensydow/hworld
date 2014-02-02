@@ -54,7 +54,7 @@ Engine::Engine() : m_nextState{nullptr} {
 void Engine::setup( const Config & config ){
     m_datadir = config.datadir;
 
-    m_gfx.setup();
+    m_gfx.setup( config );
 
     m_terminal.initialize();
 

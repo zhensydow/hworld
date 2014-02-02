@@ -32,6 +32,7 @@
 #include "ray.hpp"
 
 //------------------------------------------------------------------------------
+class Config;
 class Renderer;
 class Renderer2D;
 class Renderer3D;
@@ -39,7 +40,7 @@ class Renderer3D;
 //------------------------------------------------------------------------------
 class Gfx {
 public:
-    void setup();
+    void setup( const Config & config );
     void destroy();
     void startFrame();
     void startShadowMappingPass();
@@ -67,6 +68,8 @@ public:
 private:
     constexpr static unsigned int DESIRED_WIDTH = 800;
     constexpr static unsigned int DESIRED_HEIGHT = 600;
+
+    void setGLSLVersion( const std::string & version );
 
     static std::array< GLfloat, 6*3 > s_quad_verts;
 
