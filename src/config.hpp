@@ -36,6 +36,7 @@ public:
     std::string datadir = "";
     std::string initialState = "";
     LogLevel loglevel = LogLevel::LL_WARNING;
+    std::string glslVersion = "";
 };
 
 //------------------------------------------------------------------------------

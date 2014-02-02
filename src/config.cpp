@@ -85,6 +85,10 @@ unique_ptr<Config> loadConfig( const string & filename ){
                         config->loglevel = LogLevel::LL_ERROR;
                     }
                 }
+            }else if( name == "glslVersion" ){
+                if( value.isString() ){
+                    config->glslVersion = value.asString();
+                }
             }else{
                 logW( "Unknown config value : '", name, "'" );
             }
