@@ -208,7 +208,8 @@ void Gfx::setViewport( GLsizei width, GLsizei height ){
     // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     // glFramebufferTexture( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_renderedDepthTex, 0 );
     // link with framebuffer
-    glFramebufferTexture( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_renderedTex, 0 );
+    glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                            GL_TEXTURE_2D, m_renderedTex, 0 );
     GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers( 1, DrawBuffers );
 
