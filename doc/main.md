@@ -82,7 +82,7 @@ Up: Y Up
 Other Resources
 ---------------
 
- * GentiumPlus [->](http://scripts.sil.org/cms/scripts/page.php?item_id=Gentium)
+ * GentiumPlus [http://scripts.sil.org/cms/scripts/page.php?item_id=Gentium](http://scripts.sil.org/cms/scripts/page.php?item_id=Gentium)
 
 Links
 -----
@@ -94,3 +94,4 @@ Links
  * [Entity Component Systems]()
  * [Memory Debug](https://techtalk.intersec.com/2013/12/memory-part-5-debugging-tools/)
  * [Shadow Mapping](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/)
+ * [Polygonal Map Generation](http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/)
