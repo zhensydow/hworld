@@ -73,6 +73,11 @@ apitrace dump hworld.trace
 qapitrace hworld.tracex
 ~~~~~~~~~~~~~~~~~~~~~
 
+ * Static Code Analysis
+
+~~~~~~~~~~~~~~~~~~~~~
+cppcheck src src/ent --enable=all -v -DGLM_FORCE_CXX11 | tee cppcheck.log
+~~~~~~~~~~~~~~~~~~~~~
 
  * Export 3DS from blender
 
