@@ -92,8 +92,8 @@ GLuint createShader(GLenum shaderType, const std::string &filename ){
 GLuint createProgram( const std::vector<GLuint> &shaders ){
     auto program = glCreateProgram();
 
-    for( size_t i = 0; i < shaders.size(); i++ ){
-        glAttachShader( program, shaders[i] );
+    for( const auto shader: shaders ){
+        glAttachShader( program, shader );
     }
 
     glLinkProgram( program );
@@ -110,8 +110,8 @@ GLuint createProgram( const std::vector<GLuint> &shaders ){
         delete[] strInfoLog;
     }
 
-    for( size_t i = 0; i < shaders.size(); i++ ){
-        glDetachShader( program, shaders[i] );
+    for( const auto shader: shaders ){
+        glDetachShader( program, shader );
     }
 
     return program;
