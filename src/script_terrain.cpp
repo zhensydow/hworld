@@ -23,14 +23,32 @@
 */
 //------------------------------------------------------------------------------
 #include "script.hpp"
+#include "debug.hpp"
+#include "engine.hpp"
 
 //------------------------------------------------------------------------------
 int terrain_hasEntity( lua_State *ls ){
+    auto chunk_id = float( luaL_checkint( ls, 1 ) );
+    auto tile_pos = float( luaL_checkint( ls, 2 ) );
+
+    logI( "Has Entity ", chunk_id, ", ", tile_pos, " ?" );
+
     return 0;
 }
 
 //------------------------------------------------------------------------------
 int terrain_addEntity( lua_State *ls ){
+    auto chunk_id = float( luaL_checknumber( ls, 1 ) );
+    auto tile_pos = float( luaL_checknumber( ls, 2 ) );
+    auto ent = lua_checkEntity( ls, 3 );
+    if( ent ){
+        auto & engine = Engine::instance();
+        auto entity = engine.getEntity( ent );
+        if( entity ){
+            logI( "Add Entity ", chunk_id, ", ", tile_pos );
+        }
+    }
+
     return 0;
 }
 
