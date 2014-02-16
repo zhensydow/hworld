@@ -25,9 +25,21 @@
 #include "script.hpp"
 
 //------------------------------------------------------------------------------
+int terrain_hasEntity( lua_State *ls ){
+    return 0;
+}
+
+//------------------------------------------------------------------------------
+int terrain_addEntity( lua_State *ls ){
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 /** List of functions of terrain lua library.
 */
 const luaL_Reg terrainlib[] = {
+    {"hasEntity", terrain_hasEntity},
+    {"addEntity", terrain_addEntity},
     {nullptr, nullptr}
 };
 
