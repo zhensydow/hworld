@@ -16,32 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file script.hpp
-    @brief Script open functions.
+/** @file script_terrain.cpp
+    @brief Script functions for terrain.
     @author Luis Cabellos
-    @date 2014-01-23
+    @date 2014-02-16
 */
 //------------------------------------------------------------------------------
-#ifndef SCRIPT_HPP_
-#define SCRIPT_HPP_
+#include "script.hpp"
 
 //------------------------------------------------------------------------------
-#include "lua.hpp"
+/** List of functions of terrain lua library.
+*/
+const luaL_Reg terrainlib[] = {
+    {nullptr, nullptr}
+};
 
 //------------------------------------------------------------------------------
-class Entity;
-
-//------------------------------------------------------------------------------
-void openEngine( lua_State * lua );
-void openTerrain( lua_State * lua );
-void openGame( lua_State * lua );
-void openInput( lua_State * lua );
-void openTerminal( lua_State * lua );
-void openGLM( lua_State * lua );
-void lua_pushEntity( lua_State * lua, Entity & entity );
-Entity * lua_checkEntity( lua_State * lua, int index );
-
-//------------------------------------------------------------------------------
-#endif//SCRIPT_HPP_
+void openTerrain( lua_State * lua ){
+    // set terrain functions
+    luaL_register( lua, "terrain", terrainlib );
+    // removes table
+    lua_pop( lua, 1 );
+}
 
 //------------------------------------------------------------------------------
