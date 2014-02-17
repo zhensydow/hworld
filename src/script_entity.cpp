@@ -94,10 +94,25 @@ int entity_newindex( lua_State *lua ){
 }
 
 //------------------------------------------------------------------------------
+int entity_printDebug( lua_State *ls ){
+    lua_pushstring( ls, "_ent" );                   // 1
+    lua_rawget( ls, -2 );                           // 1
+    auto entity = static_cast<Entity*>( lua_touserdata( ls, -1 ) );
+    if( entity ){
+        entity->printDebug();
+    }
+    lua_pop( ls, 1 );                               // 0
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 void lua_pushEntity( lua_State * lua, Entity & entity ){
     lua_newtable( lua );                             // 1
     lua_pushstring( lua, "_ent" );                   // 2
     lua_pushlightuserdata( lua, &entity );           // 3
+    lua_settable( lua, -3 );                         // 1
+    lua_pushstring( lua, "printDebug" );             // 2
+    lua_pushcfunction( lua, entity_printDebug );     // 3
     lua_settable( lua, -3 );                         // 1
     lua_newtable( lua );                             // 2
     lua_pushstring( lua, "__newindex");              // 3
@@ -115,7 +130,7 @@ Entity * lua_checkEntity( lua_State * lua, int index ){
     lua_pushstring( lua, "_ent" );  // 2
     lua_rawget( lua, -2 );          // 2
     auto entity = static_cast<Entity*>( lua_touserdata( lua, -1 ) );
-    lua_pop( lua, 2 );
+    lua_pop( lua, 2 );              // 0
     if( not entity ){
         luaL_error( lua, "invalid entity" );
     }
