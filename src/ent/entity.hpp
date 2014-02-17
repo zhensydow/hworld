@@ -11,13 +11,20 @@
 #include <unordered_map>
 #include <memory>
 #include "components.hpp"
+#include <cassert>
 
 //------------------------------------------------------------------------------
 class Component;
 
 //------------------------------------------------------------------------------
+constexpr unsigned int ENTITY_NULL_ID {0};
+
+//------------------------------------------------------------------------------
 class Entity final {
 public:
+    static unsigned int nextID();
+
+    Entity( unsigned int id );
     bool hasComponent( ComponentType ct ) const;
     template<typename T> std::shared_ptr<T> getComponent();
     template<typename T=Component> std::shared_ptr<T> getComponent( ComponentType type );
@@ -26,8 +33,24 @@ public:
     void printDebug() const;
 
 private:
+    static unsigned int s_lastID;
+
+    unsigned int m_id;
+
     std::unordered_map< ComponentType, std::shared_ptr<Component>, ComponentType_hash > m_components;
 };
+
+//------------------------------------------------------------------------------
+inline
+unsigned int Entity::nextID(){
+    return ++s_lastID;
+}
+
+//------------------------------------------------------------------------------
+inline
+Entity::Entity( unsigned int id ) : m_id(id) {
+    assert( m_id != ENTITY_NULL_ID && "Bad Entity ID" );
+}
 
 //------------------------------------------------------------------------------
 template<typename T>

@@ -134,7 +134,12 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
 }
 
 //------------------------------------------------------------------------------
-std::shared_ptr<Entity> makeEntity( const string  & filename ){
+std::shared_ptr<Entity> makeEntity( unsigned int id, const string & filename ){
+    if( id == ENTITY_NULL_ID ){
+        logE( "Bad Entity ID" );
+        return nullptr;
+    }
+
     if( !is_regular_file(filename) ){
         logE( "Not file '", filename, "'" );
         return nullptr;
@@ -167,7 +172,7 @@ std::shared_ptr<Entity> makeEntity( const string  & filename ){
         return nullptr;
     }
 
-    auto entity = std::make_shared<Entity>();
+    auto entity = std::make_shared<Entity>( id );
     if( entity ){
         newComponent<CTransform>( *entity );
 

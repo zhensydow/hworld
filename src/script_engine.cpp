@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 #include "engine.hpp"
 #include "lua.hpp"
+#include "entity.hpp"
 #include "script.hpp"
 #include "filedata.hpp"
 
@@ -54,7 +55,8 @@ int engine_newEntity( lua_State *ls ){
     }
 
     auto & engine = Engine::instance();
-    auto entity = makeEntity( engine.getDataFilename( str ) );
+    auto id = Entity::nextID();
+    auto entity = makeEntity( id, engine.getDataFilename( str ) );
     if( entity ){
         engine.addEntity( entity );
         lua_pushEntity( ls, *entity );
