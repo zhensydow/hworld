@@ -30,6 +30,7 @@
 #include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
+#include "terrainprop.hpp"
 #include "config.hpp"
 
 //------------------------------------------------------------------------------

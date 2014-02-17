@@ -32,7 +32,6 @@
 #include <boost/filesystem.hpp>
 #include "gamestate.hpp"
 #include "world.hpp"
-#include "terrainprop.hpp"
 #include "terminal.hpp"
 #include "gfx.hpp"
 #include "input.hpp"
@@ -43,6 +42,7 @@ class Entity;
 class IUpdate;
 class IDrawable;
 class Config;
+class TerrainProp;
 
 //------------------------------------------------------------------------------
 class Engine {
