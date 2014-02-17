@@ -30,6 +30,8 @@ public:
     template<typename T=Component> std::shared_ptr<T> getComponent( ComponentType type );
     void insertComponent( std::shared_ptr<Component> c );
 
+    unsigned int id() const;
+
     void printDebug() const;
 
 private:
@@ -93,6 +95,12 @@ std::shared_ptr<C> getMakeComponent( Entity & entity, Args&&... args ){
         entity.insertComponent( comp );
     }
     return comp;
+}
+
+//------------------------------------------------------------------------------
+inline
+unsigned int Entity::id() const{
+    return m_id;
 }
 
 //------------------------------------------------------------------------------

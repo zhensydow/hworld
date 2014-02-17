@@ -25,6 +25,7 @@
 #include "script.hpp"
 #include "debug.hpp"
 #include "engine.hpp"
+#include "entity.hpp"
 
 //------------------------------------------------------------------------------
 int terrain_hasEntity( lua_State *ls ){
@@ -43,7 +44,7 @@ int terrain_addEntity( lua_State *ls ){
     auto ent = lua_checkEntity( ls, 3 );
     if( ent ){
         auto & engine = Engine::instance();
-        auto entity = engine.getEntity( ent );
+        auto entity = engine.getEntity( ent->id() );
         if( entity ){
             logI( "Add Entity ", chunk_id, ", ", tile_pos );
         }

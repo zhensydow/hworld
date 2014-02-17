@@ -72,7 +72,7 @@ int engine_setCamera( lua_State *ls ){
     auto ent = lua_checkEntity( ls, 1 );
     if( ent ){
         auto & engine = Engine::instance();
-        auto entity = engine.getEntity( ent );
+        auto entity = engine.getEntity( ent->id() );
         if( entity ){
             engine.setCamera( entity );
         }

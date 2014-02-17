@@ -70,7 +70,7 @@ public:
 
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
-    std::shared_ptr<Entity> getEntity( const Entity * const ent ) noexcept;
+    std::shared_ptr<Entity> getEntity( const unsigned int id ) noexcept;
     void addEntity( std::shared_ptr<Entity> entity );
     bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
