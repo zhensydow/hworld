@@ -32,9 +32,12 @@ int terrain_hasEntity( lua_State *ls ){
     auto chunk_id = float( luaL_checkint( ls, 1 ) );
     auto tile_pos = float( luaL_checkint( ls, 2 ) );
 
-    logI( "Has Entity ", chunk_id, ", ", tile_pos, " ?" );
+    auto & engine = Engine::instance();
+    auto & world = engine.getWorld();
 
-    return 0;
+    lua_pushboolean( ls, world.hasEntity( chunk_id, tile_pos ) ? 1 : 0 );
+
+    return 1;
 }
 
 //------------------------------------------------------------------------------
