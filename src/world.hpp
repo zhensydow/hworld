@@ -34,7 +34,10 @@ class World{
 public:
     World();
 
+    bool hasChunk( unsigned int ) const;
     Chunk & getChunk( unsigned int );
+
+    bool hasEntity( unsigned int chunk, unsigned int tile ) const;
 
 private:
     std::unordered_map< unsigned int, Chunk>  m_terrain;

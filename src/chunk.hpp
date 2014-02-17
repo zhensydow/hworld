@@ -46,6 +46,8 @@ public:
 
     void setHeight( unsigned int i, const int val );
 
+    bool hasEntity( unsigned int tile ) const;
+
     std::array< int, NTILES > m_heights;
     std::array< unsigned int, NNEIGHBOURS > m_neighbours;
     std::vector< std::tuple<unsigned int, unsigned int> > m_entities;

@@ -30,3 +30,18 @@ Chunk::Chunk(){
 }
 
 //------------------------------------------------------------------------------
+bool Chunk::hasEntity( unsigned int tile ) const{
+    if( tile >= NTILES ){
+        return false;
+    }
+
+    for( const auto & p: m_entities ){
+        if( std::get<0>( p ) == tile ){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//------------------------------------------------------------------------------

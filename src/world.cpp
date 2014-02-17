@@ -32,8 +32,23 @@ World::World(){
 }
 
 //------------------------------------------------------------------------------
+bool World::hasChunk( unsigned int idx ) const{
+    return m_terrain.find( idx ) != m_terrain.end();
+}
+
+//------------------------------------------------------------------------------
 Chunk & World::getChunk( unsigned int idx ){
     return m_terrain[ idx ];
+}
+
+//------------------------------------------------------------------------------
+bool World::hasEntity( unsigned int idx, unsigned int tile ) const {
+    auto chunk = m_terrain.find( idx );
+    if( chunk != m_terrain.end() ){
+        return chunk->second.hasEntity( tile );
+    }
+
+    return false;
 }
 
 //------------------------------------------------------------------------------
