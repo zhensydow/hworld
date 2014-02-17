@@ -25,9 +25,20 @@
 #include "chunkprop.hpp"
 #include <algorithm>
 #include "renderer.hpp"
+#include "gfxinc.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
+
+//------------------------------------------------------------------------------
+constexpr GLfloat sqrt3 = sqrt( 3 );
+constexpr GLfloat TileCZ = 0.5 * sqrt3;
+constexpr GLfloat TileCX = 0.5;
+
+//------------------------------------------------------------------------------
+constexpr std::array< GLfloat, Chunk::VERTS_TILE*2 > TilePos{ {
+        -TileCX, -TileCZ, TileCX, -TileCZ, 1.0f, 0.0f,
+            TileCX, TileCZ, -TileCX, TileCZ, -1.0f, 0.0f } };
 
 //------------------------------------------------------------------------------
 std::array< GLuint, 2 > ChunkProp::s_floorBuffers;

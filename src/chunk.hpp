@@ -27,7 +27,9 @@
 
 //------------------------------------------------------------------------------
 #include <array>
-#include "gfxinc.hpp"
+#include <limits>
+#include <vector>
+#include <tuple>
 
 //------------------------------------------------------------------------------
 constexpr unsigned int CHUNK_NULL_IDX = std::numeric_limits<unsigned int>::max();
@@ -46,17 +48,8 @@ public:
 
     std::array< int, NTILES > m_heights;
     std::array< unsigned int, NNEIGHBOURS > m_neighbours;
+    std::vector< std::tuple<unsigned int, unsigned int> > m_entities;
 };
-
-//------------------------------------------------------------------------------
-constexpr GLfloat sqrt3 = sqrt( 3 );
-constexpr GLfloat TileCZ = 0.5 * sqrt3;
-constexpr GLfloat TileCX = 0.5;
-
-//------------------------------------------------------------------------------
-constexpr std::array< GLfloat, Chunk::VERTS_TILE*2 > TilePos{ {
-        -TileCX, -TileCZ, TileCX, -TileCZ, 1.0f, 0.0f,
-            TileCX, TileCZ, -TileCX, TileCZ, -1.0f, 0.0f } };
 
 //------------------------------------------------------------------------------
 inline
