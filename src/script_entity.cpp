@@ -125,14 +125,16 @@ void lua_pushEntity( lua_State * lua, Entity & entity ){
 }
 
 //------------------------------------------------------------------------------
-Entity * lua_checkEntity( lua_State * lua, int index ){
-    lua_pushvalue( lua, index );    // 1
-    lua_pushstring( lua, "_ent" );  // 2
-    lua_rawget( lua, -2 );          // 2
-    auto entity = static_cast<Entity*>( lua_touserdata( lua, -1 ) );
-    lua_pop( lua, 2 );              // 0
+Entity * lua_checkEntity( lua_State * ls, int index ){
+    luaL_checktype( ls, index, LUA_TTABLE );  // 0
+    lua_pushvalue( ls, index );    // 1
+    lua_pushstring( ls, "_ent" );  // 2
+    lua_rawget( ls, -2 );          // 2
+    luaL_checktype( ls, -1, LUA_TLIGHTUSERDATA );  // 2
+    auto entity = static_cast<Entity*>( lua_touserdata( ls, -1 ) );
+    lua_pop( ls, 2 );              // 0
     if( not entity ){
-        luaL_error( lua, "invalid entity" );
+        luaL_error( ls, "null entity" );
     }
 
     return entity;
