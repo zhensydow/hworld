@@ -12,12 +12,13 @@
 #include <memory>
 #include "components.hpp"
 #include <cassert>
+#include <limits>
 
 //------------------------------------------------------------------------------
 class Component;
 
 //------------------------------------------------------------------------------
-constexpr unsigned int ENTITY_NULL_ID {0};
+constexpr unsigned int ENTITY_NULL_IDX = std::numeric_limits<unsigned int>::max();
 
 //------------------------------------------------------------------------------
 class Entity final {
@@ -51,7 +52,7 @@ unsigned int Entity::nextID(){
 //------------------------------------------------------------------------------
 inline
 Entity::Entity( unsigned int id ) : m_id(id) {
-    assert( m_id != ENTITY_NULL_ID && "Bad Entity ID" );
+    assert( m_id != ENTITY_NULL_IDX && "Bad Entity ID" );
 }
 
 //------------------------------------------------------------------------------

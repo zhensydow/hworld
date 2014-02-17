@@ -9,7 +9,7 @@
 #include "component.hpp"
 
 //------------------------------------------------------------------------------
-unsigned int Entity::s_lastID {ENTITY_NULL_ID};
+unsigned int Entity::s_lastID {ENTITY_NULL_IDX};
 
 //------------------------------------------------------------------------------
 bool Entity::hasComponent( ComponentType ct ) const{
