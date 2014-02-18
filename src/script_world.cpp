@@ -40,6 +40,7 @@ int world_terrainFocus( lua_State *ls ){
 int world_setTerrainFocus( lua_State *ls ){
     auto chunk_id = luaL_checkint( ls, 1 );
 
+    logI( "Setting Terrain Focus ", chunk_id );
     auto & engine = Engine::instance();
     engine.setTerrainFocus( chunk_id );
 
@@ -76,6 +77,18 @@ int world_addEntity( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
+int world_hasChunk( lua_State *ls ){
+    auto chunk_id = luaL_checkint( ls, 1 );
+
+    auto & engine = Engine::instance();
+    auto & world = engine.getWorld();
+
+    lua_pushboolean( ls, world.hasChunk( chunk_id ) ? 1 : 0 );
+
+    return 1;
+}
+
+//------------------------------------------------------------------------------
 /** List of functions of world lua library.
 */
 const luaL_Reg terrainlib[] = {
@@ -83,6 +96,7 @@ const luaL_Reg terrainlib[] = {
     {"setTerrainFocus", world_setTerrainFocus},
     {"hasEntity", world_hasEntity},
     {"addEntity", world_addEntity},
+    {"hasChunk", world_hasChunk},
     {nullptr, nullptr}
 };
 
