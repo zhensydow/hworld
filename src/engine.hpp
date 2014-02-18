@@ -60,6 +60,8 @@ public:
     void yield();
     void stop();
 
+    void setTerrainFocus( unsigned int idx );
+
     World & getWorld();
     Gfx & getGfx();
     Input & getInput();

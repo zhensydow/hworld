@@ -60,7 +60,6 @@ void Engine::setup( const Config & config ){
     m_terminal.initialize();
 
     m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
-    m_terrain->setFocus( 0 );
 
     if( !tex.loadFromFile( getDataFilename( "gfx/template.png" ) ) ){
         std::terminate();
@@ -76,6 +75,11 @@ void Engine::setup( const Config & config ){
 //------------------------------------------------------------------------------
 void Engine::destroy(){
     m_gfx.destroy();
+}
+
+//------------------------------------------------------------------------------
+void Engine::setTerrainFocus( unsigned int idx ){
+    m_terrain->setFocus( idx );
 }
 
 //------------------------------------------------------------------------------
