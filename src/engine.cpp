@@ -267,7 +267,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
 
     lua_gc( ls, LUA_GCSTOP, 0 );
     luaL_openlibs( ls );
-    openTerrain( ls );
+    openWorld( ls );
     openInput( ls );
     openTerminal( ls );
     openEngine( ls );

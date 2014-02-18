@@ -16,8 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 **/
-/** @file script_terrain.cpp
-    @brief Script functions for terrain.
+/** @file script_world.cpp
+    @brief Script functions for the world.
     @author Luis Cabellos
     @date 2014-02-16
 */
@@ -28,7 +28,7 @@
 #include "entity.hpp"
 
 //------------------------------------------------------------------------------
-int terrain_hasEntity( lua_State *ls ){
+int world_hasEntity( lua_State *ls ){
     auto chunk_id = float( luaL_checkint( ls, 1 ) );
     auto tile_pos = float( luaL_checkint( ls, 2 ) );
 
@@ -41,7 +41,7 @@ int terrain_hasEntity( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
-int terrain_addEntity( lua_State *ls ){
+int world_addEntity( lua_State *ls ){
     auto chunk_id = float( luaL_checknumber( ls, 1 ) );
     auto tile_pos = float( luaL_checknumber( ls, 2 ) );
     auto ent = lua_checkEntity( ls, 3 );
@@ -57,18 +57,18 @@ int terrain_addEntity( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
-/** List of functions of terrain lua library.
+/** List of functions of world lua library.
 */
 const luaL_Reg terrainlib[] = {
-    {"hasEntity", terrain_hasEntity},
-    {"addEntity", terrain_addEntity},
+    {"hasEntity", world_hasEntity},
+    {"addEntity", world_addEntity},
     {nullptr, nullptr}
 };
 
 //------------------------------------------------------------------------------
-void openTerrain( lua_State * lua ){
-    // set terrain functions
-    luaL_register( lua, "terrain", terrainlib );
+void openWorld( lua_State * lua ){
+    // set world functions
+    luaL_register( lua, "world", terrainlib );
     // removes table
     lua_pop( lua, 1 );
 }
