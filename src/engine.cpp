@@ -78,6 +78,11 @@ void Engine::destroy(){
 }
 
 //------------------------------------------------------------------------------
+unsigned int Engine::terrainFocus() const{
+    return m_terrain->getFocus();
+}
+
+//------------------------------------------------------------------------------
 void Engine::setTerrainFocus( unsigned int idx ){
     m_terrain->setFocus( idx );
 }

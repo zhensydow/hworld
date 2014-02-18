@@ -60,6 +60,7 @@ public:
     void yield();
     void stop();
 
+    unsigned int terrainFocus() const;
     void setTerrainFocus( unsigned int idx );
 
     World & getWorld();

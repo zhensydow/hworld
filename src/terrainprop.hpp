@@ -28,6 +28,7 @@
 //------------------------------------------------------------------------------
 #include <unordered_map>
 #include <memory>
+#include "chunk.hpp"
 
 //------------------------------------------------------------------------------
 class World;
@@ -39,6 +40,7 @@ class TerrainProp{
 public:
     TerrainProp( World & world );
 
+    unsigned int getFocus() const;
     void setFocus( unsigned int index );
 
     void draw( Renderer & renderer );
@@ -46,8 +48,16 @@ public:
 private:
     World & m_world;
 
+    unsigned int m_focus {CHUNK_NULL_IDX};
+
     std::unordered_map< unsigned int, std::shared_ptr< ChunkProp > > m_chunks;
 };
+
+//------------------------------------------------------------------------------
+inline
+unsigned int TerrainProp::getFocus() const{
+    return m_focus;
+}
 
 //------------------------------------------------------------------------------
 #endif//TERRAINPROP_HPP_

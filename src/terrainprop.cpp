@@ -61,6 +61,8 @@ void TerrainProp::setFocus( unsigned int center ){
             m_chunks.emplace( std::make_pair( idx, cprop ) );
         }
     }
+
+    m_focus = center;
 }
 
 //------------------------------------------------------------------------------
