@@ -3,8 +3,11 @@ dtime = 0
 function start()
    terminal.newLine( 'Start state test' )
 
-   if not (world.terrainFocus() == 0) then
-      world.setTerrainFocus( 0 )
+   focus = 0
+   if not (world.terrainFocus() == focus) then
+      if world.hasChunk( focus ) then
+         world.setTerrainFocus( focus )
+      end
    end
 
    if not engine.hasCamera() then
