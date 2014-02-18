@@ -29,8 +29,8 @@
 
 //------------------------------------------------------------------------------
 int world_hasEntity( lua_State *ls ){
-    auto chunk_id = float( luaL_checkint( ls, 1 ) );
-    auto tile_pos = float( luaL_checkint( ls, 2 ) );
+    auto chunk_id = luaL_checkint( ls, 1 );
+    auto tile_pos = luaL_checkint( ls, 2 );
 
     auto & engine = Engine::instance();
     auto & world = engine.getWorld();
@@ -42,8 +42,8 @@ int world_hasEntity( lua_State *ls ){
 
 //------------------------------------------------------------------------------
 int world_addEntity( lua_State *ls ){
-    auto chunk_id = float( luaL_checknumber( ls, 1 ) );
-    auto tile_pos = float( luaL_checknumber( ls, 2 ) );
+    auto chunk_id = luaL_checkint( ls, 1 );
+    auto tile_pos = luaL_checkint( ls, 2 );
     auto ent = lua_checkEntity( ls, 3 );
     if( ent ){
         auto & engine = Engine::instance();
