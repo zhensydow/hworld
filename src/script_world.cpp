@@ -28,6 +28,25 @@
 #include "entity.hpp"
 
 //------------------------------------------------------------------------------
+int world_terrainFocus( lua_State *ls ){
+    auto & engine = Engine::instance();
+
+    lua_pushinteger( ls, engine.terrainFocus() ); // 1
+
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+int world_setTerrainFocus( lua_State *ls ){
+    auto chunk_id = luaL_checkint( ls, 1 );
+
+    auto & engine = Engine::instance();
+    engine.setTerrainFocus( chunk_id );
+
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 int world_hasEntity( lua_State *ls ){
     auto chunk_id = luaL_checkint( ls, 1 );
     auto tile_pos = luaL_checkint( ls, 2 );
@@ -60,6 +79,8 @@ int world_addEntity( lua_State *ls ){
 /** List of functions of world lua library.
 */
 const luaL_Reg terrainlib[] = {
+    {"terrainFocus", world_terrainFocus},
+    {"setTerrainFocus", world_setTerrainFocus},
     {"hasEntity", world_hasEntity},
     {"addEntity", world_addEntity},
     {nullptr, nullptr}
