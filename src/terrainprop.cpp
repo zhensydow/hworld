@@ -37,6 +37,11 @@ TerrainProp::TerrainProp( World & world ) : m_world(world) {
 
 //------------------------------------------------------------------------------
 void TerrainProp::setFocus( unsigned int center ){
+    if( not m_world.hasChunk( center ) ){
+        logE( "World has not chunk ", center );
+        return;
+    }
+
     auto queue = std::queue< std::pair< unsigned int, glm::vec3 > >();
 
     queue.emplace( std::make_pair( center, glm::vec3{0.0f, 0.0f, 0.0f} ) );
