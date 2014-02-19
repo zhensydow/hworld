@@ -125,6 +125,30 @@ void Engine::addEntity( shared_ptr<Entity> entity ){
 }
 
 //------------------------------------------------------------------------------
+void Engine::addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigned int id ){
+    auto entity = getEntity( id );
+    if( not entity ){
+        logW( "Entity ", id, " doesn't exists" );
+        return;
+    }
+
+    if( not m_world.hasChunk( chunk_id ) ){
+        logW( "Chunk ", chunk_id, " doesn't exists" );
+        return;
+    }
+
+    if( not m_world.insertEntity( chunk_id, tile, id ) ){
+        logW( "Can't insert entity ", id, " into chunk ", chunk_id, ", ", tile );
+        return;
+    }
+
+    auto chunkprop = m_terrain->getChunkProp( chunk_id );
+    if( chunkprop ){
+
+    }
+}
+
+//------------------------------------------------------------------------------
 void Engine::update(){
     double frameTime = m_clock.restart().asSeconds();
     if( frameTime > MAX_FRAME_TIME ){

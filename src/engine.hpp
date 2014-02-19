@@ -75,6 +75,7 @@ public:
 
     std::shared_ptr<Entity> getEntity( const unsigned int id ) noexcept;
     void addEntity( std::shared_ptr<Entity> entity );
+    void addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigned int id );
     bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 

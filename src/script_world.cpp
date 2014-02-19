@@ -67,10 +67,7 @@ int world_addEntity( lua_State *ls ){
     auto ent = lua_checkEntity( ls, 3 );
     if( ent ){
         auto & engine = Engine::instance();
-        auto entity = engine.getEntity( ent->id() );
-        if( entity ){
-            logI( "Add Entity ", chunk_id, ", ", tile_pos );
-        }
+        engine.addTerrainEntity( chunk_id, tile_pos, ent->id() );
     }
 
     return 0;
