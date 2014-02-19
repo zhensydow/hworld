@@ -29,6 +29,18 @@
 World::World(){
     // create a minimal world
     m_terrain[ 0 ] = createRandomChunk( -5, 5 );
+    m_terrain[ 1 ] = createRandomChunk( -3, 3 );
+    m_terrain[ 2 ] = createRandomChunk( -3, 3 );
+    m_terrain[ 3 ] = createRandomChunk( -3, 3 );
+    m_terrain[ 4 ] = createRandomChunk( -3, 3 );
+    m_terrain[ 5 ] = createRandomChunk( -3, 3 );
+    m_terrain[ 6 ] = createRandomChunk( -3, 3 );
+    m_terrain[ 0 ].m_neighbours[ 0 ] = 1;
+    m_terrain[ 0 ].m_neighbours[ 1 ] = 2;
+    m_terrain[ 0 ].m_neighbours[ 2 ] = 3;
+    m_terrain[ 0 ].m_neighbours[ 3 ] = 4;
+    m_terrain[ 0 ].m_neighbours[ 4 ] = 5;
+    m_terrain[ 0 ].m_neighbours[ 5 ] = 6;
 }
 
 //------------------------------------------------------------------------------

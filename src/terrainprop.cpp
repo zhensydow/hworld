@@ -50,6 +50,8 @@ void TerrainProp::setFocus( unsigned int center ){
 
     m_chunks.clear();
 
+    auto & engine = Engine::instance();
+
     unsigned int idx;
     glm::vec3 pos;
     while( not queue.empty() and m_chunks.size() < 10 ){
@@ -59,15 +61,13 @@ void TerrainProp::setFocus( unsigned int center ){
         queue.pop();
 
         auto cit = m_chunks.find( idx );
-        if( cit == m_chunks.end() and m_world.hasChunk( idx ) ){
+        if( cit == m_chunks.end() ){
             auto chunk = m_world.getChunk( idx );
             auto cprop = std::make_shared<ChunkProp>( createChunkProp( chunk ) );
 
             cprop->setPosition( pos );
 
             m_chunks.emplace( std::make_pair( idx, cprop ) );
-
-            auto & engine = Engine::instance();
 
             for( const auto & e: chunk.m_entities ){
                 auto tile = std::get<0>( e );
@@ -78,6 +78,18 @@ void TerrainProp::setFocus( unsigned int center ){
                     if( tcomp ){
                         tcomp->setParentPosition( parentPos );
                     }
+                }
+            }
+
+            constexpr GLfloat sqrt3 = sqrt( 3 );
+
+            for( unsigned int i = 0 ; i < chunk.m_neighbours.size() ; ++i ){
+                auto ns = chunk.m_neighbours[i];
+                if( ns != CHUNK_NULL_IDX and m_world.hasChunk(ns) ){
+                    auto offset = glm::rotate( glm::vec2( 0, -3*sqrt3 ),
+                                               60.0f * i );
+                    auto newPos = pos + glm::vec3{ offset.x, 0.0f, offset.y };
+                    queue.emplace( std::make_pair( ns, newPos ) );
                 }
             }
         }
