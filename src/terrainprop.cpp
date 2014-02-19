@@ -71,6 +71,16 @@ void TerrainProp::setFocus( unsigned int center ){
 }
 
 //------------------------------------------------------------------------------
+std::shared_ptr<ChunkProp> TerrainProp::getChunkProp( unsigned int idx ){
+    auto cit = m_chunks.find( idx );
+    if( cit != m_chunks.end() ){
+        return cit->second;
+    }
+
+    return nullptr;
+}
+
+//------------------------------------------------------------------------------
 void TerrainProp::draw( Renderer & renderer ){
     for( auto & chunk: m_chunks ){
         renderer.render( *chunk.second );

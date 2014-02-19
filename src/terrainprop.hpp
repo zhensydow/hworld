@@ -45,12 +45,14 @@ public:
 
     void draw( Renderer & renderer );
 
+    std::shared_ptr<ChunkProp> getChunkProp( unsigned int chunk );
+
 private:
     World & m_world;
 
     unsigned int m_focus {CHUNK_NULL_IDX};
 
-    std::unordered_map< unsigned int, std::shared_ptr< ChunkProp > > m_chunks;
+    std::unordered_map< unsigned int, std::shared_ptr<ChunkProp> > m_chunks;
 };
 
 //------------------------------------------------------------------------------
