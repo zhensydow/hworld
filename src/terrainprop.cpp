@@ -24,11 +24,13 @@
 //------------------------------------------------------------------------------
 #include "terrainprop.hpp"
 #include <queue>
+#include "engine.hpp"
 #include "chunkprop.hpp"
 #include "world.hpp"
 #include "util.hpp"
 #include "renderer.hpp"
 #include "debug.hpp"
+#include "c_transform.hpp"
 
 //------------------------------------------------------------------------------
 TerrainProp::TerrainProp( World & world ) : m_world(world) {
@@ -57,13 +59,27 @@ void TerrainProp::setFocus( unsigned int center ){
         queue.pop();
 
         auto cit = m_chunks.find( idx );
-        if( cit == m_chunks.end() ){
+        if( cit == m_chunks.end() and m_world.hasChunk( idx ) ){
             auto chunk = m_world.getChunk( idx );
             auto cprop = std::make_shared<ChunkProp>( createChunkProp( chunk ) );
 
             cprop->setPosition( pos );
 
             m_chunks.emplace( std::make_pair( idx, cprop ) );
+
+            auto & engine = Engine::instance();
+
+            for( const auto & e: chunk.m_entities ){
+                auto tile = std::get<0>( e );
+                auto entity = engine.getEntity( std::get<1>(e) );
+                if( entity and tile < Chunk::NTILES ){
+                    auto parentPos = pos + cprop->tilePos( tile );
+                    auto tcomp = entity->getComponent<CTransform>();
+                    if( tcomp ){
+                        tcomp->setParentPosition( parentPos );
+                    }
+                }
+            }
         }
     }
 

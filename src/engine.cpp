@@ -142,9 +142,13 @@ void Engine::addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigne
         return;
     }
 
-    auto chunkprop = m_terrain->getChunkProp( chunk_id );
-    if( chunkprop ){
-
+    auto cprop = m_terrain->getChunkProp( chunk_id );
+    if( cprop and tile < Chunk::NTILES ){
+        auto parentPos = cprop->tilePos( tile ) + cprop->getPosition();
+        auto tcomp = entity->getComponent<CTransform>();
+        if( tcomp ){
+            tcomp->setParentPosition( parentPos );
+        }
     }
 }
 
