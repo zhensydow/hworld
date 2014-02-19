@@ -17,7 +17,11 @@ function start()
 
    if not world.hasEntity( 0, 0 ) then
       tree = engine.newEntity( 'tree01' )
-      world.addEntity( 0, 0, tree )
+      world.addEntity( 0, 4, tree )
+      tree = engine.newEntity( 'tree01' )
+      world.addEntity( 0, 2, tree )
+      tree = engine.newEntity( 'tree01' )
+      world.addEntity( 1, 3, tree )
       tree:printDebug()
       --tree.transform:setPosition( 0, 0, 0 )
    end
