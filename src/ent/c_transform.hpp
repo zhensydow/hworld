@@ -20,13 +20,16 @@ public:
 
     ComponentType getType() const override;
 
+    void setParentPosition( const glm::vec3 & pos );
     void setPosition( const glm::vec3 & pos );
     glm::vec3 getGlobalPosition() const;
 
 private:
     static Component::ScriptTable s_transformTable;
 
+    glm::vec3 m_parentPos = glm::vec3( 0.0, 0.0, 0.0 );
     glm::vec3 m_pos = glm::vec3( 0.0, 0.0, 0.0 );
+    glm::vec3 m_finalPos = glm::vec3( 0.0, 0.0, 0.0 );
     glm::vec3 m_rot;
 };
 
@@ -39,13 +42,21 @@ ComponentType CTransform::getType() const{
 //------------------------------------------------------------------------------
 inline
 glm::vec3 CTransform::getGlobalPosition() const{
-    return m_pos;
+    return m_finalPos;
 };
 
 //------------------------------------------------------------------------------
 inline
 void CTransform::setPosition( const glm::vec3 & pos ){
     m_pos = pos;
+    m_finalPos = m_pos + m_parentPos;
+};
+
+//------------------------------------------------------------------------------
+inline
+void CTransform::setParentPosition( const glm::vec3 & pos ){
+    m_parentPos = pos;
+    m_finalPos = m_pos + m_parentPos;
 };
 
 //------------------------------------------------------------------------------
