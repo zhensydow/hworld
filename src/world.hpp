@@ -38,6 +38,7 @@ public:
     Chunk & getChunk( unsigned int );
 
     bool hasEntity( unsigned int chunk, unsigned int tile ) const;
+    bool insertEntity( unsigned int chunk, unsigned int tile, unsigned int id );
 
 private:
     std::unordered_map< unsigned int, Chunk>  m_terrain;

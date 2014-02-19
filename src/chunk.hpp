@@ -46,6 +46,7 @@ public:
 
     void setHeight( unsigned int i, const int val );
 
+    bool insertEntity( unsigned int tile, unsigned int id );
     bool hasEntity( unsigned int tile ) const;
 
     std::array< int, NTILES > m_heights;

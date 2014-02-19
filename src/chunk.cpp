@@ -30,6 +30,17 @@ Chunk::Chunk(){
 }
 
 //------------------------------------------------------------------------------
+bool Chunk::insertEntity( unsigned int tile, unsigned int id ){
+    if( tile >= NTILES ){
+        return false;
+    }
+
+    m_entities.emplace_back( std::make_pair(tile,id) );
+
+    return true;
+}
+
+//------------------------------------------------------------------------------
 bool Chunk::hasEntity( unsigned int tile ) const{
     if( tile >= NTILES ){
         return false;

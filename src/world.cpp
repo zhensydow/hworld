@@ -42,6 +42,16 @@ Chunk & World::getChunk( unsigned int idx ){
 }
 
 //------------------------------------------------------------------------------
+bool World::insertEntity( unsigned int idx, unsigned int tile, unsigned int id ){
+    auto chunk = m_terrain.find( idx );
+    if( chunk != m_terrain.end() ){
+        return chunk->second.insertEntity( tile, id );
+    }
+
+    return false;
+}
+
+//------------------------------------------------------------------------------
 bool World::hasEntity( unsigned int idx, unsigned int tile ) const {
     auto chunk = m_terrain.find( idx );
     if( chunk != m_terrain.end() ){
