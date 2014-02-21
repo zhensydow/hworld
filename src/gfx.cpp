@@ -270,6 +270,7 @@ void Gfx::startColorPass(){
     glDepthFunc( GL_LESS );
     glEnable( GL_CULL_FACE );
 
+    glClearColor( 0.0, 0.746, 1.0, 0.0 );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
