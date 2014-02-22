@@ -54,7 +54,7 @@ void TerrainProp::setFocus( unsigned int center ){
 
     unsigned int idx;
     glm::vec3 pos;
-    while( not queue.empty() and m_chunks.size() < 10 ){
+    while( not queue.empty() and m_chunks.size() < 20 ){
         std::tie( idx, pos ) = queue.front();
         logI( "Inserted element: ", idx, " at (",
               pos.x, ", ", pos.y, ", ", pos.z, ")" );
