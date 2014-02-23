@@ -30,7 +30,7 @@ Chunk::Chunk(){
 }
 
 //------------------------------------------------------------------------------
-bool Chunk::insertEntity( unsigned int tile, unsigned int id ){
+bool Chunk::insertEntity( uint8_t tile, unsigned int id ){
     if( tile >= NTILES ){
         return false;
     }
@@ -41,7 +41,7 @@ bool Chunk::insertEntity( unsigned int tile, unsigned int id ){
 }
 
 //------------------------------------------------------------------------------
-bool Chunk::hasEntity( unsigned int tile ) const{
+bool Chunk::hasEntity( uint8_t tile ) const{
     if( tile >= NTILES ){
         return false;
     }

@@ -46,13 +46,13 @@ public:
 
     void setHeight( const unsigned int i, const int16_t val );
 
-    bool insertEntity( unsigned int tile, unsigned int id );
-    bool hasEntity( unsigned int tile ) const;
+    bool insertEntity( uint8_t tile, unsigned int id );
+    bool hasEntity( uint8_t tile ) const;
 
     std::array< int16_t, NTILES > m_heights;
     std::array< int8_t, NTILES > m_tiles;
     std::array< unsigned int, NNEIGHBOURS > m_neighbours;
-    std::vector< std::tuple<unsigned int, unsigned int> > m_entities;
+    std::vector< std::tuple<uint8_t, unsigned int> > m_entities;
 
     int16_t m_minNeighHeight {0};
 };
