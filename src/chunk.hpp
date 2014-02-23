@@ -44,19 +44,22 @@ public:
 
     Chunk();
 
-    void setHeight( unsigned int i, const int val );
+    void setHeight( const unsigned int i, const int16_t val );
 
     bool insertEntity( unsigned int tile, unsigned int id );
     bool hasEntity( unsigned int tile ) const;
 
-    std::array< int, NTILES > m_heights;
+    std::array< int16_t, NTILES > m_heights;
+    std::array< int8_t, NTILES > m_tiles;
     std::array< unsigned int, NNEIGHBOURS > m_neighbours;
     std::vector< std::tuple<unsigned int, unsigned int> > m_entities;
+
+    int16_t m_minNeighHeight {0};
 };
 
 //------------------------------------------------------------------------------
 inline
-void Chunk::setHeight( unsigned int i, const int val ){
+void Chunk::setHeight( const unsigned int i, const int16_t val ){
     if( i < NTILES ){
         m_heights[ i ] = val;
     }
