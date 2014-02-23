@@ -13,6 +13,9 @@ function update( dt )
       fx_flag = not fx_flag
       engine.enableRenderEffects( fx_flag )
    end
+   if input.isKeyUp( input.S ) then
+      engine.saveWorld( '' )
+   end
    if input.isButtonPressed( input.MouseLeft )then
       print( "MOUSED" )
    end

@@ -40,19 +40,15 @@ function update( dt )
    --print( 'Update state ' .. dt .. ' and ' .. dtime )
    --tree.transform:setPosition( 0, dtime / 4.0, 0 )
 
-   angle1 = dtime*100
+   angle1 = dtime*200
    rot1 = glm.rotate( angle1, 0.0, 1.0, 0.0 )
    axis2 = rot1:mul( glm.vec4( 0, -1, -1, 0.0 ) )
 
    game.setSunDir( axis2:get(0), axis2:get(1), axis2:get(2) )
 
-   if dtime > 2 then
+   if dtime > 1 then
       engine.newState( 'test2' )
       dtime = 0
-   end
-
-   if input.isKeyUp( input.S ) then
-      engine.saveWorld( '' )
    end
 
 end
