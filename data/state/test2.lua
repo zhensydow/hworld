@@ -14,7 +14,7 @@ function update( dt )
       engine.enableRenderEffects( fx_flag )
    end
    if input.isKeyUp( input.S ) then
-      engine.saveWorld( '' )
+      engine.saveWorld( 'world0' )
    end
    if input.isButtonPressed( input.MouseLeft )then
       print( "MOUSED" )
