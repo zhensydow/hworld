@@ -6,8 +6,8 @@ end
 
 function update( dt )
    --print( 'Update state ' .. dt .. ' test2' )
-   if input.isKeyPressed( input.K )then
-      engine.newState( 'test' )
+   if input.isKeyUp( input.K )then
+      engine.newState( 'test1' )
    end
    if input.isKeyUp( input.R )then
       fx_flag = not fx_flag
