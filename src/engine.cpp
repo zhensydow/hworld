@@ -25,6 +25,7 @@
 #include "engine.hpp"
 #include "util.hpp"
 #include "entity.hpp"
+#include "terminal.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
 #include "c_staticmodel.hpp"
@@ -48,7 +49,8 @@ Engine & Engine::instance(){
 
 //------------------------------------------------------------------------------
 Engine::Engine() : m_nextState{nullptr} {
-    //empty
+    m_terminal = unique_ptr<Terminal>( new Terminal );
+    assert( m_terminal && "Error creating Terminal" );
 }
 
 //------------------------------------------------------------------------------
@@ -57,7 +59,7 @@ void Engine::setup( const Config & config ){
 
     m_gfx.setup( config );
 
-    m_terminal.initialize();
+    m_terminal->initialize();
 
     m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
 
@@ -168,10 +170,10 @@ void Engine::update(){
             stop();
         }else if( event.type == sf::Event::Resized ){
             m_gfx.setViewport( event.size.width, event.size.height );
-            m_terminal.resize( event.size.width, event.size.height );
+            m_terminal->resize( event.size.width, event.size.height );
         }else if( event.type == sf::Event::KeyReleased ){
             if( event.key.code == sf::Keyboard::Tab ){
-                m_terminal.setVisible( not m_terminal.isVisible() );
+                m_terminal->setVisible( not m_terminal->isVisible() );
             }
             m_input.setKeyReleased( event.key.code );
         }else if( event.type == sf::Event::KeyPressed ){
@@ -250,7 +252,7 @@ void Engine::draw(){
 
     renderer = m_gfx.getCurrentRenderer();
     if( renderer ){
-        m_terminal.draw( *renderer );
+        m_terminal->draw( *renderer );
     }
 
     auto window = m_gfx.getWindow();

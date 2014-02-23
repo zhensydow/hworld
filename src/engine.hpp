@@ -32,7 +32,6 @@
 #include <boost/filesystem.hpp>
 #include "gamestate.hpp"
 #include "world.hpp"
-#include "terminal.hpp"
 #include "gfx.hpp"
 #include "input.hpp"
 #include "resourcefactory.hpp"
@@ -43,6 +42,7 @@ class IUpdate;
 class IDrawable;
 class Config;
 class TerrainProp;
+class Terminal;
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -106,7 +106,7 @@ private:
     Gfx m_gfx;
     Input m_input;
     World m_world;
-    Terminal m_terminal;
+    std::unique_ptr<Terminal> m_terminal;
     ResourceFactory m_resourceFactory;
 
     std::unique_ptr<TerrainProp> m_terrain;
@@ -166,7 +166,7 @@ Input & Engine::getInput(){
 //------------------------------------------------------------------------------
 inline
 Terminal & Engine::getTerminal(){
-    return m_terminal;
+    return *m_terminal;
 }
 
 //------------------------------------------------------------------------------

@@ -27,6 +27,7 @@
 #include "entity.hpp"
 #include "script.hpp"
 #include "filedata.hpp"
+#include "terminal.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
