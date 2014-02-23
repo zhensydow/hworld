@@ -38,7 +38,58 @@ using namespace std;
 using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
-void saveWorld( const World & /*world*/, const path & /*folder*/ ){
+void saveWorld( const World & world, const path & folder ){
+    logI( "saving the world ... " );
+
+    auto & engine = Engine::instance();
+
+    logI( " saving the terrain .. " );
+
+    auto terrain_filename = path(folder) /= "terrain.dat";
+    std::ofstream fterrain( engine.getDataFilename(terrain_filename),
+                            std::ios::binary );
+
+    if( not fterrain ){
+        logE( "Can't open terrain file at: ", folder );
+        return;
+    }
+
+    const auto & terrain = world.getTerrain();
+
+    auto num_chunks = terrain.size();
+    fterrain.write( reinterpret_cast<char *>(&num_chunks), sizeof( num_chunks ) );
+
+    for( const auto & ci: terrain ){
+        auto cid = ci.first;
+        const auto & chunk = ci.second;
+        fterrain.write( reinterpret_cast<const char *>(&cid), sizeof( cid ) );
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_heights[0]),
+                        chunk.m_heights.size()*sizeof(chunk.m_heights[0]) );
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_tiles[0]),
+                        chunk.m_tiles.size()*sizeof(chunk.m_tiles[0]) );
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_neighbours[0]),
+                        chunk.m_neighbours.size()*sizeof(chunk.m_neighbours[0]) );
+
+        auto num_ents = chunk.m_entities.size();
+        fterrain.write( reinterpret_cast<char *>(&num_ents),
+                        sizeof( num_ents ) );
+        for( const auto & ce: chunk.m_entities ){
+            auto ent_tile = get<0>(ce);
+            auto ent_id = get<1>(ce);
+            fterrain.write( reinterpret_cast<const char *>(&ent_tile),
+                            sizeof( ent_tile ) );
+            fterrain.write( reinterpret_cast<const char *>(&ent_id),
+                            sizeof( ent_id ) );
+        }
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_minNeighHeight),
+                        sizeof(chunk.m_minNeighHeight) );
+    }
+
+    logI( ".. End saving" );
 }
 
 //------------------------------------------------------------------------------
