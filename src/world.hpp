@@ -40,9 +40,17 @@ public:
     bool hasEntity( unsigned int chunk, unsigned int tile ) const;
     bool insertEntity( unsigned int chunk, unsigned int tile, unsigned int id );
 
+    const std::unordered_map< unsigned int, Chunk> & getTerrain() const;
+
 private:
-    std::unordered_map< unsigned int, Chunk>  m_terrain;
+    std::unordered_map< unsigned int, Chunk> m_terrain;
 };
+
+//------------------------------------------------------------------------------
+inline
+const std::unordered_map< unsigned int, Chunk> & World::getTerrain() const{
+    return m_terrain;
+}
 
 //------------------------------------------------------------------------------
 #endif//WORLD_HPP_
