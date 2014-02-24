@@ -29,6 +29,7 @@
 #include <fstream>
 #include "debug.hpp"
 #include "engine.hpp"
+#include "gfx.hpp"
 
 //------------------------------------------------------------------------------
 void readFileData( const std::string &str, std::string &data ){

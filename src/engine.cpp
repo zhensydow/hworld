@@ -25,6 +25,7 @@
 #include "engine.hpp"
 #include "util.hpp"
 #include "entity.hpp"
+#include "gfx.hpp"
 #include "terminal.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
@@ -49,6 +50,8 @@ Engine & Engine::instance(){
 
 //------------------------------------------------------------------------------
 Engine::Engine() : m_nextState{nullptr} {
+    m_gfx = unique_ptr<Gfx>( new Gfx );
+    assert( m_gfx && "Error creating Gfx" );
     m_terminal = unique_ptr<Terminal>( new Terminal );
     assert( m_terminal && "Error creating Terminal" );
 }
@@ -57,7 +60,7 @@ Engine::Engine() : m_nextState{nullptr} {
 void Engine::setup( const Config & config ){
     m_datadir = config.datadir;
 
-    m_gfx.setup( config );
+    m_gfx->setup( config );
 
     m_terminal->initialize();
 
@@ -76,7 +79,7 @@ void Engine::setup( const Config & config ){
 
 //------------------------------------------------------------------------------
 void Engine::destroy(){
-    m_gfx.destroy();
+    m_gfx->destroy();
 }
 
 //------------------------------------------------------------------------------
@@ -163,13 +166,13 @@ void Engine::update(){
 
     m_input.beginFrame();
 
-    auto window = m_gfx.getWindow();
+    auto window = m_gfx->getWindow();
     sf::Event event;
     while( window->pollEvent(event) ){
         if( event.type == sf::Event::Closed ){
             stop();
         }else if( event.type == sf::Event::Resized ){
-            m_gfx.setViewport( event.size.width, event.size.height );
+            m_gfx->setViewport( event.size.width, event.size.height );
             m_terminal->resize( event.size.width, event.size.height );
         }else if( event.type == sf::Event::KeyReleased ){
             if( event.key.code == sf::Keyboard::Tab ){
@@ -209,12 +212,12 @@ void Engine::updateCamera() {
             auto dist = glm::dot( tmp, tmp );
             // if eye and obj are the same point, we get division by zero
             if( dist > 0.001 ){
-                m_gfx.view = glm::lookAt( eye, obj,
+                m_gfx->view = glm::lookAt( eye, obj,
                                            glm::vec3(0,1,0) );
                 auto fov = ccam->getFov();
-                m_gfx.proj = glm::perspective( fov,
-                                               m_gfx.aspectRatio(),
-                                               0.1f, 100.0f );
+                m_gfx->proj = glm::perspective( fov,
+                                                m_gfx->aspectRatio(),
+                                                0.1f, 100.0f );
             }
         }
     }
@@ -224,11 +227,11 @@ void Engine::updateCamera() {
 void Engine::draw(){
     updateCamera();
 
-    m_gfx.startFrame();
+    m_gfx->startFrame();
 
-    m_gfx.startShadowMappingPass();
+    m_gfx->startShadowMappingPass();
 
-    auto renderer = m_gfx.getCurrentRenderer();
+    auto renderer = m_gfx->getCurrentRenderer();
     if( renderer ){
         m_terrain->draw( *renderer );
 
@@ -237,9 +240,9 @@ void Engine::draw(){
         }
     }
 
-    m_gfx.startColorPass();
+    m_gfx->startColorPass();
 
-    renderer = m_gfx.getCurrentRenderer();
+    renderer = m_gfx->getCurrentRenderer();
     if( renderer ){
         m_terrain->draw( *renderer );
 
@@ -248,17 +251,17 @@ void Engine::draw(){
         }
     }
 
-    m_gfx.startGUI();
+    m_gfx->startGUI();
 
-    renderer = m_gfx.getCurrentRenderer();
+    renderer = m_gfx->getCurrentRenderer();
     if( renderer ){
         m_terminal->draw( *renderer );
     }
 
-    auto window = m_gfx.getWindow();
+    auto window = m_gfx->getWindow();
     window->draw( spr );
 
-    m_gfx.endFrame();
+    m_gfx->endFrame();
 }
 
 //------------------------------------------------------------------------------
