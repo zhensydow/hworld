@@ -26,6 +26,7 @@
 #include "util.hpp"
 #include "entity.hpp"
 #include "gfx.hpp"
+#include "input.hpp"
 #include "terminal.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
@@ -52,6 +53,8 @@ Engine & Engine::instance(){
 Engine::Engine() : m_nextState{nullptr} {
     m_gfx = unique_ptr<Gfx>( new Gfx );
     assert( m_gfx && "Error creating Gfx" );
+    m_input = unique_ptr<Input>( new Input );
+    assert( m_input && "Error creating Input" );
     m_terminal = unique_ptr<Terminal>( new Terminal );
     assert( m_terminal && "Error creating Terminal" );
 }
@@ -164,7 +167,7 @@ void Engine::update(){
         frameTime = MAX_FRAME_TIME;
     }
 
-    m_input.beginFrame();
+    m_input->beginFrame();
 
     auto window = m_gfx->getWindow();
     sf::Event event;
@@ -178,9 +181,9 @@ void Engine::update(){
             if( event.key.code == sf::Keyboard::Tab ){
                 m_terminal->setVisible( not m_terminal->isVisible() );
             }
-            m_input.setKeyReleased( event.key.code );
+            m_input->setKeyReleased( event.key.code );
         }else if( event.type == sf::Event::KeyPressed ){
-            m_input.setKeyPressed( event.key.code );
+            m_input->setKeyPressed( event.key.code );
         }
     }
 

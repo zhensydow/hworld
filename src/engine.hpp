@@ -32,7 +32,6 @@
 #include <boost/filesystem.hpp>
 #include "gamestate.hpp"
 #include "world.hpp"
-#include "input.hpp"
 #include "resourcefactory.hpp"
 
 //------------------------------------------------------------------------------
@@ -42,6 +41,7 @@ class IDrawable;
 class Gfx;
 class Config;
 class TerrainProp;
+class Input;
 class Terminal;
 
 //------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ private:
     std::unique_ptr<GameState> m_nextState = nullptr;
 
     std::unique_ptr<Gfx> m_gfx;
-    Input m_input;
+    std::unique_ptr<Input> m_input;
     World m_world;
     std::unique_ptr<Terminal> m_terminal;
     ResourceFactory m_resourceFactory;
@@ -160,7 +160,7 @@ Gfx & Engine::getGfx(){
 //------------------------------------------------------------------------------
 inline
 Input & Engine::getInput(){
-    return m_input;
+    return *m_input;
 }
 
 //------------------------------------------------------------------------------
