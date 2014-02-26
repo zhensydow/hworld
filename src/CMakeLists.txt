@@ -12,7 +12,12 @@ link_directories( ${Boost_LIBRARY_DIRS} )
 
 add_executable( hworld ${SRC_SOURCES} )
 
-add_definitions( -Wall -Wextra -std=c++11 -flto )
+add_definitions( -Wall -Wextra -std=c++11 )
+if( CMAKE_BUILD_TYPE MATCHES RELEASE )
+  add_definitions( -flto )
+endif( CMAKE_BUILD_TYPE MATCHES RELEASE )
+
+set_target_properties( hworld PROPERTIES LINK_FLAGS_RELEASE -flto )
 
 target_link_libraries( hworld ${OPENGL_LIBRARIES} )
 target_link_libraries( hworld ${SFML_LIBRARIES} )

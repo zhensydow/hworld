@@ -18,8 +18,10 @@ find_package( jsoncpp REQUIRED )
 find_package( assimp REQUIRED )
 
 add_definitions( -O3 )
-add_definitions( -march=native )
-add_definitions( -mtune=native )
+if( CMAKE_BUILD_TYPE MATCHES RELEASE )
+  add_definitions( -march=native )
+  add_definitions( -mtune=native )
+endif( CMAKE_BUILD_TYPE MATCHES RELEASE )
 
 add_subdirectory( soil )
 add_subdirectory( src )
