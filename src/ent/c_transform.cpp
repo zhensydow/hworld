@@ -7,6 +7,9 @@
 #include "c_transform.hpp"
 
 //------------------------------------------------------------------------------
+constexpr ComponentType CTransform::type;
+
+//------------------------------------------------------------------------------
 int ctransform_setPosition( lua_State * lua ){
     int n = lua_gettop( lua );
     if( n != 4 ){

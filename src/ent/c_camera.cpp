@@ -8,6 +8,9 @@
 #include <iostream>
 
 //------------------------------------------------------------------------------
+constexpr ComponentType CCamera::type;
+
+//------------------------------------------------------------------------------
 int ccamera_getFov( lua_State * lua ){
     int n = lua_gettop( lua );    
     if( n != 1 ){
