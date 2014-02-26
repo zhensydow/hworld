@@ -33,6 +33,7 @@
 #include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
+#include "resourcefactory.hpp"
 #include "terrainprop.hpp"
 #include "config.hpp"
 
@@ -53,6 +54,8 @@ Engine & Engine::instance(){
 Engine::Engine() : m_nextState{nullptr} {
     m_gfx = unique_ptr<Gfx>( new Gfx );
     assert( m_gfx && "Error creating Gfx" );
+    m_resourceFactory = unique_ptr<ResourceFactory>( new ResourceFactory );
+    assert( m_resourceFactory && "Error creating ResourceFactory" );
     m_input = unique_ptr<Input>( new Input );
     assert( m_input && "Error creating Input" );
     m_terminal = unique_ptr<Terminal>( new Terminal );

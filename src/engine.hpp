@@ -32,7 +32,6 @@
 #include <boost/filesystem.hpp>
 #include "gamestate.hpp"
 #include "world.hpp"
-#include "resourcefactory.hpp"
 
 //------------------------------------------------------------------------------
 class Entity;
@@ -41,6 +40,7 @@ class IDrawable;
 class Gfx;
 class Config;
 class TerrainProp;
+class ResourceFactory;
 class Input;
 class Terminal;
 
@@ -107,7 +107,7 @@ private:
     std::unique_ptr<Input> m_input;
     World m_world;
     std::unique_ptr<Terminal> m_terminal;
-    ResourceFactory m_resourceFactory;
+    std::unique_ptr<ResourceFactory> m_resourceFactory;
 
     std::unique_ptr<TerrainProp> m_terrain;
 
@@ -141,7 +141,7 @@ bool Engine::isRunning() const{
 
 //------------------------------------------------------------------------------
 inline
-void Engine::stop() {
+void Engine::stop(){
     m_running = false;
 }
 
@@ -172,7 +172,7 @@ Terminal & Engine::getTerminal(){
 //------------------------------------------------------------------------------
 inline
 ResourceFactory & Engine::getResourceFactory(){
-    return m_resourceFactory;
+    return *m_resourceFactory;
 }
 
 //------------------------------------------------------------------------------
