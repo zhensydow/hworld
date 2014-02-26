@@ -15,19 +15,21 @@ function start()
       engine.setCamera( camera )
    end
 
-   if not world.hasEntity( 0, 4 ) then
-      tree = engine.newEntity( 'tree01' )
-      world.addEntity( 0, 4, tree )
-      tree = engine.newEntity( 'tree01' )
-      world.addEntity( 0, 2, tree )
+   if not world.hasEntity( 0, 1 ) then
+      for i = 1,18 do
+         tree = engine.newEntity( 'tree01' )
+         world.addEntity( i, 1, tree )
+         tree = engine.newEntity( 'tree01' )
+         world.addEntity( i, 4, tree )
+      end
       tree = engine.newEntity( 'tree01' )
       world.addEntity( 1, 3, tree )
       tree:printDebug()
    end
 
-   if not world.hasEntity( 0, 1 ) then
+   if not world.hasEntity( 0, 0 ) then
       rock = engine.newEntity( 'rock01' )
-      world.addEntity( 0, 1, rock )
+      world.addEntity( 0, 0, rock )
    end
 
    game.setSunDir( 0, -1, -1 );
