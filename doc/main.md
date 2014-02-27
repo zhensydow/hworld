@@ -8,6 +8,7 @@ Hex World Pet Project is a personal project to:
 - refresh OpenGL, learn Modern OpenGL
 - have fun
 
+![Terrain Demo](@ref shot01.png)
 
 Compile with:
 ~~~~~~~~~~~~~~~~~~~~~
