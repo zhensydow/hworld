@@ -264,8 +264,8 @@ void Engine::draw(){
         m_terminal->draw( *renderer );
     }
 
-    auto window = m_gfx->getWindow();
-    window->draw( spr );
+    //auto window = m_gfx->getWindow();
+    //window->draw( spr );
 
     m_gfx->endFrame();
 }
