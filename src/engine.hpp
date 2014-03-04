@@ -30,6 +30,7 @@
 #include <stack>
 #include <SFML/System/Clock.hpp>
 #include <boost/filesystem.hpp>
+#include "types.hpp"
 #include "gamestate.hpp"
 
 //------------------------------------------------------------------------------
@@ -60,8 +61,8 @@ public:
     void yield();
     void stop();
 
-    unsigned int terrainFocus() const;
-    void setTerrainFocus( unsigned int idx );
+    ChunkID terrainFocus() const;
+    void setTerrainFocus( ChunkID idx );
 
     World & getWorld();
     Gfx & getGfx();
@@ -73,9 +74,9 @@ public:
 
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
-    std::shared_ptr<Entity> getEntity( const unsigned int id ) noexcept;
+    std::shared_ptr<Entity> getEntity( const EntityID id ) noexcept;
     void addEntity( std::shared_ptr<Entity> entity );
-    void addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigned int id );
+    void addTerrainEntity( ChunkID chunk_id, unsigned int tile, EntityID id );
     bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 
@@ -189,7 +190,7 @@ bool Engine::hasCamera() noexcept {
 
 //------------------------------------------------------------------------------
 inline
-double Engine::getTime() const noexcept{
+double Engine::getTime() const noexcept {
     return m_accum;
 }
 

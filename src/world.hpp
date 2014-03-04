@@ -34,21 +34,21 @@ class World{
 public:
     World();
 
-    bool hasChunk( unsigned int ) const;
-    Chunk & getChunk( unsigned int );
+    bool hasChunk( ChunkID ) const;
+    Chunk & getChunk( ChunkID );
 
-    bool hasEntity( unsigned int chunk, unsigned int tile ) const;
-    bool insertEntity( unsigned int chunk, unsigned int tile, unsigned int id );
+    bool hasEntity( ChunkID chunk, unsigned int tile ) const;
+    bool insertEntity( ChunkID chunk, unsigned int tile, EntityID id );
 
-    const std::unordered_map< unsigned int, Chunk> & getTerrain() const;
+    const std::unordered_map< ChunkID, Chunk> & getTerrain() const;
 
 private:
-    std::unordered_map< unsigned int, Chunk> m_terrain;
+    std::unordered_map< ChunkID, Chunk> m_terrain;
 };
 
 //------------------------------------------------------------------------------
 inline
-const std::unordered_map< unsigned int, Chunk> & World::getTerrain() const{
+const std::unordered_map< ChunkID, Chunk> & World::getTerrain() const{
     return m_terrain;
 }
 

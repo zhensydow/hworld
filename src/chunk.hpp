@@ -27,12 +27,9 @@
 
 //------------------------------------------------------------------------------
 #include <array>
-#include <limits>
 #include <vector>
 #include <tuple>
-
-//------------------------------------------------------------------------------
-constexpr unsigned int CHUNK_NULL_IDX = std::numeric_limits<unsigned int>::max();
+#include "types.hpp"
 
 //------------------------------------------------------------------------------
 class Chunk{
@@ -46,13 +43,13 @@ public:
 
     void setHeight( const unsigned int i, const int16_t val );
 
-    bool insertEntity( uint8_t tile, unsigned int id );
+    bool insertEntity( uint8_t tile, EntityID id );
     bool hasEntity( uint8_t tile ) const;
 
     std::array< int16_t, NTILES > m_heights;
     std::array< int8_t, NTILES > m_tiles;
-    std::array< unsigned int, NNEIGHBOURS > m_neighbours;
-    std::vector< std::tuple<uint8_t, unsigned int> > m_entities;
+    std::array< ChunkID, NNEIGHBOURS > m_neighbours;
+    std::vector< std::tuple<uint8_t, EntityID> > m_entities;
 
     int16_t m_minNeighHeight {0};
 };

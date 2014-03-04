@@ -92,12 +92,12 @@ void Engine::destroy(){
 }
 
 //------------------------------------------------------------------------------
-unsigned int Engine::terrainFocus() const{
+ChunkID Engine::terrainFocus() const{
     return m_terrain->getFocus();
 }
 
 //------------------------------------------------------------------------------
-void Engine::setTerrainFocus( unsigned int idx ){
+void Engine::setTerrainFocus( ChunkID idx ){
     m_terrain->setFocus( idx );
 }
 
@@ -110,7 +110,7 @@ void Engine::setState( unique_ptr<GameState> state ){
 }
 
 //------------------------------------------------------------------------------
-shared_ptr<Entity> Engine::getEntity( const unsigned int id ) noexcept{
+shared_ptr<Entity> Engine::getEntity( const EntityID id ) noexcept{
     auto it = find_if( begin(m_entities), end(m_entities),
                        [id]( shared_ptr<Entity> & e){ return e->id() == id; } );
 
@@ -139,7 +139,7 @@ void Engine::addEntity( shared_ptr<Entity> entity ){
 }
 
 //------------------------------------------------------------------------------
-void Engine::addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigned int id ){
+void Engine::addTerrainEntity( ChunkID chunk_id, unsigned int tile, EntityID id ){
     auto entity = getEntity( id );
     if( not entity ){
         logW( "Entity ", id, " doesn't exists" );

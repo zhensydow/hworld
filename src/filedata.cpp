@@ -186,7 +186,7 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
 }
 
 //------------------------------------------------------------------------------
-std::shared_ptr<Entity> makeEntity( unsigned int id, const string & filename ){
+std::shared_ptr<Entity> makeEntity( EntityID id, const string & filename ){
     if( id == ENTITY_NULL_IDX ){
         logE( "Bad Entity ID" );
         return nullptr;

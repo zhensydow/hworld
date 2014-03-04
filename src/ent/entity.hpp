@@ -10,48 +10,45 @@
 //------------------------------------------------------------------------------
 #include <unordered_map>
 #include <memory>
-#include "components.hpp"
 #include <cassert>
-#include <limits>
+#include "components.hpp"
+#include "types.hpp"
 
 //------------------------------------------------------------------------------
 class Component;
 
 //------------------------------------------------------------------------------
-constexpr unsigned int ENTITY_NULL_IDX = std::numeric_limits<unsigned int>::max();
-
-//------------------------------------------------------------------------------
 class Entity final {
 public:
-    static unsigned int nextID();
+    static EntityID nextID();
 
-    Entity( unsigned int id );
+    Entity( EntityID id );
     bool hasComponent( ComponentType ct ) const;
     template<typename T> std::shared_ptr<T> getComponent();
     template<typename T=Component> std::shared_ptr<T> getComponent( ComponentType type );
     void insertComponent( std::shared_ptr<Component> c );
 
-    unsigned int id() const;
+    EntityID id() const;
 
     void printDebug() const;
 
 private:
-    static unsigned int s_lastID;
+    static EntityID s_lastID;
 
-    unsigned int m_id;
+    EntityID m_id;
 
     std::unordered_map< ComponentType, std::shared_ptr<Component>, ComponentType_hash > m_components;
 };
 
 //------------------------------------------------------------------------------
 inline
-unsigned int Entity::nextID(){
+EntityID Entity::nextID(){
     return ++s_lastID;
 }
 
 //------------------------------------------------------------------------------
 inline
-Entity::Entity( unsigned int id ) : m_id(id) {
+Entity::Entity( EntityID id ) : m_id(id) {
     assert( m_id != ENTITY_NULL_IDX && "Bad Entity ID" );
 }
 
@@ -100,7 +97,7 @@ std::shared_ptr<C> getMakeComponent( Entity & entity, Args&&... args ){
 
 //------------------------------------------------------------------------------
 inline
-unsigned int Entity::id() const{
+EntityID Entity::id() const{
     return m_id;
 }
 

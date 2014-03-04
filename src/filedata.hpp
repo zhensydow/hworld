@@ -29,13 +29,15 @@
 //------------------------------------------------------------------------------
 #include <string>
 #include <boost/filesystem.hpp>
+#include "types.hpp"
 
 //------------------------------------------------------------------------------
 class World;
 class Entity;
+
 //------------------------------------------------------------------------------
 void saveWorld( const World & world, const boost::filesystem::path & folder );
-std::shared_ptr<Entity> makeEntity( unsigned int id, const std::string & filename );
+std::shared_ptr<Entity> makeEntity( EntityID id, const std::string & filename );
 
 //------------------------------------------------------------------------------
 #endif//FILEDATA_HPP_
