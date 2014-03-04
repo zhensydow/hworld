@@ -25,7 +25,6 @@
 #include "chunkprop.hpp"
 #include <algorithm>
 #include "renderer.hpp"
-#include "gfxinc.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
