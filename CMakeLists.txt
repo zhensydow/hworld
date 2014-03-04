@@ -32,7 +32,7 @@ find_package( Doxygen )
 if( DOXYGEN_FOUND )
   find_package( Perl )
   set( DOXYGEN_INPUTS
-    "${PROJECT_SOURCE_DIR}/doc ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}" )
+    "${PROJECT_SOURCE_DIR}/doc ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/src/ent " )
   set(DOXYGEN_DEFINES "")
   set(DOXYGEN_IMG_PATH "${PROJECT_SOURCE_DIR}/doc" )
 
