@@ -186,6 +186,12 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
 }
 
 //------------------------------------------------------------------------------
+/** Create a new entity using the template data of a Json file.
+
+    @param id id to set in new Entity
+    @param filename file with Json data to create the entity
+    @returns new entity created or nullptr
+*/
 std::shared_ptr<Entity> makeEntity( EntityID id, const string & filename ){
     if( id == ENTITY_NULL_IDX ){
         logE( "Bad Entity ID" );
