@@ -31,7 +31,6 @@
 #include <SFML/System/Clock.hpp>
 #include <boost/filesystem.hpp>
 #include "gamestate.hpp"
-#include "world.hpp"
 
 //------------------------------------------------------------------------------
 class Entity;
@@ -39,6 +38,7 @@ class IUpdate;
 class IDrawable;
 class Gfx;
 class Config;
+class World;
 class TerrainProp;
 class ResourceFactory;
 class Input;
@@ -105,7 +105,7 @@ private:
 
     std::unique_ptr<Gfx> m_gfx;
     std::unique_ptr<Input> m_input;
-    World m_world;
+    std::unique_ptr<World> m_world;
     std::unique_ptr<Terminal> m_terminal;
     std::unique_ptr<ResourceFactory> m_resourceFactory;
 
@@ -148,7 +148,7 @@ void Engine::stop(){
 //------------------------------------------------------------------------------
 inline
 World & Engine::getWorld(){
-    return m_world;
+    return *m_world;
 }
 
 //------------------------------------------------------------------------------

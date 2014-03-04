@@ -25,6 +25,7 @@
 #include "script.hpp"
 #include "debug.hpp"
 #include "engine.hpp"
+#include "world.hpp"
 #include "entity.hpp"
 
 //------------------------------------------------------------------------------

@@ -27,6 +27,7 @@
 #include "json/json.h"
 #include "debug.hpp"
 #include "entity.hpp"
+#include "world.hpp"
 #include "engine.hpp"
 #include "c_camera.hpp"
 #include "c_transform.hpp"
