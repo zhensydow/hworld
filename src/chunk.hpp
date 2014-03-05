@@ -51,6 +51,7 @@ public:
     std::array< ChunkID, NNEIGHBOURS > m_neighbours;
     std::vector< std::tuple<uint8_t, EntityID> > m_entities;
 
+    glm::vec2 m_pos {0};
     int16_t m_minNeighHeight {0};
 };
 
