@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file world.cpp
     @brief World Definition.
     @author Luis Cabellos
@@ -68,17 +68,17 @@ World::World(){
 }
 
 //------------------------------------------------------------------------------
-bool World::hasChunk( unsigned int idx ) const{
+bool World::hasChunk( ChunkID idx ) const{
     return m_terrain.find( idx ) != m_terrain.end();
 }
 
 //------------------------------------------------------------------------------
-Chunk & World::getChunk( unsigned int idx ){
+Chunk & World::getChunk( ChunkID idx ){
     return m_terrain[ idx ];
 }
 
 //------------------------------------------------------------------------------
-bool World::insertEntity( unsigned int idx, unsigned int tile, unsigned int id ){
+bool World::insertEntity( ChunkID idx, unsigned int tile, EntityID id ){
     auto chunk = m_terrain.find( idx );
     if( chunk != m_terrain.end() ){
         return chunk->second.insertEntity( tile, id );
@@ -88,7 +88,7 @@ bool World::insertEntity( unsigned int idx, unsigned int tile, unsigned int id )
 }
 
 //------------------------------------------------------------------------------
-bool World::hasEntity( unsigned int idx, unsigned int tile ) const {
+bool World::hasEntity( ChunkID idx, unsigned int tile ) const {
     auto chunk = m_terrain.find( idx );
     if( chunk != m_terrain.end() ){
         return chunk->second.hasEntity( tile );

@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file engine.cpp
     @brief Engine definitions.
     @author Luis Cabellos
@@ -33,6 +33,7 @@
 #include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
+#include "world.hpp"
 #include "resourcefactory.hpp"
 #include "terrainprop.hpp"
 #include "config.hpp"
@@ -60,6 +61,8 @@ Engine::Engine() : m_nextState{nullptr} {
     assert( m_input && "Error creating Input" );
     m_terminal = unique_ptr<Terminal>( new Terminal );
     assert( m_terminal && "Error creating Terminal" );
+    m_world = unique_ptr<World>( new World );
+    assert( m_world && "Error creating World" );
 }
 
 //------------------------------------------------------------------------------
@@ -70,7 +73,7 @@ void Engine::setup( const Config & config ){
 
     m_terminal->initialize();
 
-    m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
+    m_terrain = unique_ptr<TerrainProp>( new TerrainProp(*m_world) );
 
     if( !tex.loadFromFile( getDataFilename( "gfx/template.png" ) ) ){
         std::terminate();
@@ -89,12 +92,12 @@ void Engine::destroy(){
 }
 
 //------------------------------------------------------------------------------
-unsigned int Engine::terrainFocus() const{
+ChunkID Engine::terrainFocus() const{
     return m_terrain->getFocus();
 }
 
 //------------------------------------------------------------------------------
-void Engine::setTerrainFocus( unsigned int idx ){
+void Engine::setTerrainFocus( ChunkID idx ){
     m_terrain->setFocus( idx );
 }
 
@@ -107,7 +110,7 @@ void Engine::setState( unique_ptr<GameState> state ){
 }
 
 //------------------------------------------------------------------------------
-shared_ptr<Entity> Engine::getEntity( const unsigned int id ) noexcept{
+shared_ptr<Entity> Engine::getEntity( const EntityID id ) noexcept{
     auto it = find_if( begin(m_entities), end(m_entities),
                        [id]( shared_ptr<Entity> & e){ return e->id() == id; } );
 
@@ -136,19 +139,19 @@ void Engine::addEntity( shared_ptr<Entity> entity ){
 }
 
 //------------------------------------------------------------------------------
-void Engine::addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigned int id ){
+void Engine::addTerrainEntity( ChunkID chunk_id, unsigned int tile, EntityID id ){
     auto entity = getEntity( id );
     if( not entity ){
         logW( "Entity ", id, " doesn't exists" );
         return;
     }
 
-    if( not m_world.hasChunk( chunk_id ) ){
+    if( not m_world->hasChunk( chunk_id ) ){
         logW( "Chunk ", chunk_id, " doesn't exists" );
         return;
     }
 
-    if( not m_world.insertEntity( chunk_id, tile, id ) ){
+    if( not m_world->insertEntity( chunk_id, tile, id ) ){
         logW( "Can't insert entity ", id, " into chunk ", chunk_id, ", ", tile );
         return;
     }

@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file script_world.cpp
     @brief Script functions for the world.
     @author Luis Cabellos
@@ -25,6 +25,7 @@
 #include "script.hpp"
 #include "debug.hpp"
 #include "engine.hpp"
+#include "world.hpp"
 #include "entity.hpp"
 
 //------------------------------------------------------------------------------

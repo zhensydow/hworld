@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file filedata.cpp
     @brief File Data definitions.
     @author Luis Cabellos
@@ -27,6 +27,7 @@
 #include "json/json.h"
 #include "debug.hpp"
 #include "entity.hpp"
+#include "world.hpp"
 #include "engine.hpp"
 #include "c_camera.hpp"
 #include "c_transform.hpp"
@@ -185,7 +186,13 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
 }
 
 //------------------------------------------------------------------------------
-std::shared_ptr<Entity> makeEntity( unsigned int id, const string & filename ){
+/** Create a new entity using the template data of a Json file.
+
+    @param id id to set in new Entity
+    @param filename file with Json data to create the entity
+    @returns new entity created or nullptr
+*/
+std::shared_ptr<Entity> makeEntity( EntityID id, const string & filename ){
     if( id == ENTITY_NULL_IDX ){
         logE( "Bad Entity ID" );
         return nullptr;

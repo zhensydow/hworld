@@ -16,43 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file world.hpp
-    @brief World Declaration.
+/** @file types.hpp
+    @brief Basic Types definitions
     @author Luis Cabellos
-    @date 2013-09-01
+    @date 2014-03-04
 */
 //------------------------------------------------------------------------------
-#ifndef WORLD_HPP_
-#define WORLD_HPP_
+#ifndef TYPES_HPP_
+#define TYPES_HPP_
 
 //------------------------------------------------------------------------------
-#include <unordered_map>
-#include "chunk.hpp"
+#include <limits>
+
+#define GLM_FORCE_CXX11
+#include "glm/glm.hpp"
 
 //------------------------------------------------------------------------------
-class World{
-public:
-    World();
+using ChunkID = unsigned int;
 
-    bool hasChunk( ChunkID ) const;
-    Chunk & getChunk( ChunkID );
-
-    bool hasEntity( ChunkID chunk, unsigned int tile ) const;
-    bool insertEntity( ChunkID chunk, unsigned int tile, EntityID id );
-
-    const std::unordered_map< ChunkID, Chunk> & getTerrain() const;
-
-private:
-    std::unordered_map< ChunkID, Chunk> m_terrain;
-};
+constexpr ChunkID CHUNK_NULL_IDX = std::numeric_limits<ChunkID>::max();
 
 //------------------------------------------------------------------------------
-inline
-const std::unordered_map< ChunkID, Chunk> & World::getTerrain() const{
-    return m_terrain;
-}
+using EntityID = unsigned int;
+
+constexpr EntityID ENTITY_NULL_IDX = std::numeric_limits<EntityID>::max();
 
 //------------------------------------------------------------------------------
-#endif//WORLD_HPP_
+#endif//TYPES_HPP_
 
 //------------------------------------------------------------------------------
