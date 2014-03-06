@@ -111,6 +111,13 @@ int engine_enableRenderEffects( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
+int engine_stop( lua_State */*ls*/ ){
+    auto & engine = Engine::instance();
+    engine.stop();
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 /** List of functions of engine lua library.
 */
 const luaL_Reg enginelib[] = {
@@ -120,6 +127,7 @@ const luaL_Reg enginelib[] = {
     {"setCamera", engine_setCamera},
     {"saveWorld", engine_saveWorld},
     {"enableRenderEffects", engine_enableRenderEffects},
+    {"stop", engine_stop},
     {nullptr, nullptr}
 };
 
