@@ -39,6 +39,37 @@ void QuadNode::setChild( unsigned int idx, std::unique_ptr<QuadNode> && node ){
 }
 
 //------------------------------------------------------------------------------
+bool QuadNode::isLeaf() const{
+    for( const auto & child: m_children ){
+        if( child ){
+            return false;
+        }
+    }
+    return true;
+}
+
+//------------------------------------------------------------------------------
+bool QuadNode::addChunk( ChunkID idx, const glm::vec2 & pos ){
+    if( pos.x < m_minbound.x or pos.y < m_minbound.y or pos.x > m_maxbound.x or pos.y > m_maxbound.y ){
+        return false;
+    }
+
+    if( isLeaf() ){
+        m_chunks.emplace_back( idx );
+        return true;
+    }
+
+    for( const auto & child: m_children ){
+        if( child and child->addChunk( idx, pos ) ){
+            m_chunks.emplace_back( idx );
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//------------------------------------------------------------------------------
 void QuadNode::printDebug( unsigned int n ){
     std::string tabs = "";
 
@@ -48,6 +79,7 @@ void QuadNode::printDebug( unsigned int n ){
 
     std::cout << tabs << m_minbound.x << ", " << m_minbound.y << " -> "
               << m_maxbound.x << ", " << m_maxbound.y << std::endl;
+    std::cout << tabs << "NumChunks " << m_chunks.size() << std::endl;
 
     for( const auto & child: m_children ){
         if( child ){

@@ -27,7 +27,9 @@
 
 //------------------------------------------------------------------------------
 #include <array>
+#include <vector>
 #include <memory>
+#include "types.hpp"
 #include "glm/glm.hpp"
 
 //------------------------------------------------------------------------------
@@ -36,8 +38,12 @@ public:
     glm::vec2 minBound() const;
     glm::vec2 maxBound() const;
 
+    bool isLeaf() const;
+
     void setBound( glm::vec2 a, glm::vec2 b );
     void setChild( unsigned int idx, std::unique_ptr<QuadNode> && node );
+
+    bool addChunk( ChunkID idx, const glm::vec2 & pos );
 
     void printDebug( unsigned int n = 0 );
 
@@ -46,6 +52,8 @@ private:
     glm::vec2 m_maxbound;
 
     std::array<std::unique_ptr<QuadNode>, 4> m_children;
+
+    std::vector<ChunkID> m_chunks;
 };
 
 //------------------------------------------------------------------------------
