@@ -13,8 +13,12 @@ link_directories( ${Boost_LIBRARY_DIRS} )
 add_executable( hworld ${SRC_SOURCES} )
 
 add_definitions( -Wall -Wextra -std=c++11 )
+#add_definitions( -Weffc++ )
+
 if( CMAKE_BUILD_TYPE MATCHES RELEASE )
   add_definitions( -flto )
+  add_definitions( -fomit-frame-pointer )
+  add_definitions( -Wl,-O1 -Wl,--discard-all )
 endif( CMAKE_BUILD_TYPE MATCHES RELEASE )
 
 set_target_properties( hworld PROPERTIES LINK_FLAGS_RELEASE -flto )
