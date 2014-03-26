@@ -16,50 +16,59 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file world.hpp
-    @brief World Declaration.
+/** @file quadnode.hpp
+    @brief Quad Node
     @author Luis Cabellos
-    @date 2013-09-01
+    @date 2014-03-06
 */
 //------------------------------------------------------------------------------
-#ifndef WORLD_HPP_
-#define WORLD_HPP_
+#ifndef QUADNODE_HPP_
+#define QUADNODE_HPP_
 
 //------------------------------------------------------------------------------
+#include <array>
+#include <vector>
 #include <memory>
-#include <unordered_map>
-#include "quadnode.hpp"
-#include "chunk.hpp"
+#include "types.hpp"
+#include "glm/glm.hpp"
 
 //------------------------------------------------------------------------------
-class World{
+class QuadNode {
 public:
-    World();
+    glm::vec2 minBound() const;
+    glm::vec2 maxBound() const;
 
-    bool hasChunk( ChunkID ) const;
-    Chunk & getChunk( ChunkID );
+    bool isLeaf() const;
 
-    bool hasEntity( ChunkID chunk, unsigned int tile ) const;
-    bool insertEntity( ChunkID chunk, unsigned int tile, EntityID id );
+    void setBound( glm::vec2 a, glm::vec2 b );
+    void setChild( unsigned int idx, std::unique_ptr<QuadNode> && node );
 
-    const std::unordered_map< ChunkID, Chunk> & getTerrain() const;
+    bool addChunk( ChunkID idx, const glm::vec2 & pos );
+
+    void printDebug( unsigned int n = 0 );
 
 private:
-    void addChunk( ChunkID cid, Chunk chunk );
-    void linkChunks( ChunkID root, unsigned int tile, ChunkID branch );
+    glm::vec2 m_minbound;
+    glm::vec2 m_maxbound;
 
-    std::unique_ptr<QuadNode> m_quad;
+    std::array<std::unique_ptr<QuadNode>, 4> m_children;
 
-    std::unordered_map< ChunkID, Chunk> m_terrain;
+    std::vector<ChunkID> m_chunks;
 };
 
 //------------------------------------------------------------------------------
 inline
-const std::unordered_map< ChunkID, Chunk> & World::getTerrain() const{
-    return m_terrain;
+glm::vec2 QuadNode::minBound() const{
+    return m_minbound;
 }
 
 //------------------------------------------------------------------------------
-#endif//WORLD_HPP_
+inline
+glm::vec2 QuadNode::maxBound() const{
+    return m_maxbound;
+}
+
+//------------------------------------------------------------------------------
+#endif//QUADNODE_HPP_
 
 //------------------------------------------------------------------------------
