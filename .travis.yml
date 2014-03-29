@@ -1,6 +1,7 @@
 language: cpp
-compiler:
-  - gcc
-  - clang
-
+compiler: gcc
 script: cmake . && make
+branches:
+  only:
+    - master
+    - develop
