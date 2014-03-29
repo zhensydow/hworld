@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file script_engine.cpp
     @brief Engine script functions.
     @author Luis Cabellos
@@ -111,6 +111,13 @@ int engine_enableRenderEffects( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
+int engine_stop( lua_State */*ls*/ ){
+    auto & engine = Engine::instance();
+    engine.stop();
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 /** List of functions of engine lua library.
 */
 const luaL_Reg enginelib[] = {
@@ -120,6 +127,7 @@ const luaL_Reg enginelib[] = {
     {"setCamera", engine_setCamera},
     {"saveWorld", engine_saveWorld},
     {"enableRenderEffects", engine_enableRenderEffects},
+    {"stop", engine_stop},
     {nullptr, nullptr}
 };
 

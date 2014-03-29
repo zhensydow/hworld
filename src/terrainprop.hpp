@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file terrainprop.hpp
      @brief TerrainProp declaration.
      @author Luis Cabellos
@@ -40,24 +40,24 @@ class TerrainProp{
 public:
     TerrainProp( World & world );
 
-    unsigned int getFocus() const;
-    void setFocus( unsigned int index );
+    ChunkID getFocus() const;
+    void setFocus( ChunkID index );
 
     void draw( Renderer & renderer );
 
-    std::shared_ptr<ChunkProp> getChunkProp( unsigned int chunk );
+    std::shared_ptr<ChunkProp> getChunkProp( ChunkID chunk );
 
 private:
     World & m_world;
 
-    unsigned int m_focus {CHUNK_NULL_IDX};
+    ChunkID m_focus {CHUNK_NULL_IDX};
 
-    std::unordered_map< unsigned int, std::shared_ptr<ChunkProp> > m_chunks;
+    std::unordered_map< ChunkID, std::shared_ptr<ChunkProp> > m_chunks;
 };
 
 //------------------------------------------------------------------------------
 inline
-unsigned int TerrainProp::getFocus() const{
+ChunkID TerrainProp::getFocus() const{
     return m_focus;
 }
 

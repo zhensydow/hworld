@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file terminal.hpp
     @brief Info
     @author Luis Cabellos

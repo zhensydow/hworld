@@ -16,43 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file renderer3d.hpp
-    @brief Renderer 3D definition.
+/** @file types.hpp
+    @brief Basic Types definitions
     @author Luis Cabellos
-    @date 2014-01-26
+    @date 2014-03-04
 */
 //------------------------------------------------------------------------------
-#ifndef RENDERER3D_HPP_
-#define RENDERER3D_HPP_
+#ifndef TYPES_HPP_
+#define TYPES_HPP_
 
 //------------------------------------------------------------------------------
-#include "renderer.hpp"
-#include "gfxinc.hpp"
+#include <limits>
+
+#define GLM_FORCE_CXX11
+#include "glm/glm.hpp"
 
 //------------------------------------------------------------------------------
-class Renderer3D : public Renderer{
-public:
-    Renderer3D();
+using ChunkID = unsigned int;
 
-    void render( const ChunkProp & chunkprop ) override;
-    void render( const Material & material, const StaticMesh & mesh ) override;
-
-    glm::mat4 view;
-    glm::mat4 proj;
-    glm::vec3 sundir;
-
-private:
-    GLuint m_tex_2d0;
-    GLuint m_tex_2d1;
-
-    GLuint m_chk_wall_prg;
-    GLuint m_chk_tile_prg;
-    GLuint m_chk_floor_prg;
-
-    GLuint m_objmat_prg;
-};
+constexpr ChunkID CHUNK_NULL_IDX = std::numeric_limits<ChunkID>::max();
 
 //------------------------------------------------------------------------------
-#endif//RENDERER3D_HPP_
+using EntityID = unsigned int;
+
+constexpr EntityID ENTITY_NULL_IDX = std::numeric_limits<EntityID>::max();
+
+//------------------------------------------------------------------------------
+#endif//TYPES_HPP_
 
 //------------------------------------------------------------------------------

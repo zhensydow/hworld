@@ -16,74 +16,74 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file gamestate.cpp
-    @brief Game State definitions.
+/** @file quadnode.cpp
+    @brief Quad Node Definitions.
     @author Luis Cabellos
-    @date 2013-09-29
+    @date 2014-03-06
 */
 //------------------------------------------------------------------------------
-#include "gamestate.hpp"
-#include "lua.hpp"
-#include "util.hpp"
+#include "quadnode.hpp"
+#include <iostream>
 
 //------------------------------------------------------------------------------
-GameState::GameState() noexcept : m_ls{nullptr} {
-    //empty
-}
-
-//------------------------------------------------------------------------------
-GameState::GameState( lua_State * ls ) noexcept : m_ls{ls} {
-    //empty
-}
-
-GameState::GameState( GameState&& gs ) noexcept {
-    m_ls = std::move( gs.m_ls );
-    gs.m_ls = nullptr;
-}
-
-GameState& GameState::operator=( GameState&& gs ) noexcept {
-    m_ls = std::move( gs.m_ls );
-    gs.m_ls = nullptr;
-    return *this;
+void QuadNode::setBound( glm::vec2 a, glm::vec2 b ){
+    m_minbound = glm::vec2( std::min( a.x, b.x ), std::min( a.y, b.y ) );
+    m_maxbound = glm::vec2( std::max( a.x, b.x ), std::max( a.y, b.y ) );
 }
 
 //------------------------------------------------------------------------------
-GameState::~GameState() noexcept{
-    if( m_ls ){
-        lua_close( m_ls );
+void QuadNode::setChild( unsigned int idx, std::unique_ptr<QuadNode> && node ){
+    if( idx < 4 ){
+        m_children[idx] = std::move( node );
     }
 }
 
 //------------------------------------------------------------------------------
-void GameState::start(){
-    if( m_ls ){
-        lua_getfield( m_ls, LUA_GLOBALSINDEX, "start" );     // 1
-        if( lua_isfunction( m_ls, -1 ) ){
-            auto ret = lua_pcall( m_ls, 0, 0, 0 );           // 0
-            checkLuaReturn( m_ls, ret );
+bool QuadNode::isLeaf() const{
+    for( const auto & child: m_children ){
+        if( child ){
+            return false;
         }
     }
+    return true;
 }
 
 //------------------------------------------------------------------------------
-void GameState::update( double dt ){
-    if( m_ls ){
-        lua_getfield( m_ls, LUA_GLOBALSINDEX, "update" );    // 1
-        if( lua_isfunction( m_ls, -1 ) ){
-            lua_pushnumber( m_ls, dt );                      // 2
-            auto ret = lua_pcall( m_ls, 1, 0, 0 );           // 0
-            checkLuaReturn( m_ls, ret );
+bool QuadNode::addChunk( ChunkID idx, const glm::vec2 & pos ){
+    if( pos.x < m_minbound.x or pos.y < m_minbound.y or pos.x > m_maxbound.x or pos.y > m_maxbound.y ){
+        return false;
+    }
+
+    if( isLeaf() ){
+        m_chunks.emplace_back( idx );
+        return true;
+    }
+
+    for( const auto & child: m_children ){
+        if( child and child->addChunk( idx, pos ) ){
+            m_chunks.emplace_back( idx );
+            return true;
         }
     }
+
+    return false;
 }
 
 //------------------------------------------------------------------------------
-void GameState::stop(){
-    if( m_ls ){
-        lua_getfield( m_ls, LUA_GLOBALSINDEX, "stop" );      // 1
-        if( lua_isfunction( m_ls, -1 ) ){
-            auto ret = lua_pcall( m_ls, 0, 0, 0 );           // 0
-            checkLuaReturn( m_ls, ret );
+void QuadNode::printDebug( unsigned int n ){
+    std::string tabs = "";
+
+    for( unsigned i = 0 ; i < n ; ++i ){
+        tabs += "  ";
+    }
+
+    std::cout << tabs << m_minbound.x << ", " << m_minbound.y << " -> "
+              << m_maxbound.x << ", " << m_maxbound.y << std::endl;
+    std::cout << tabs << "NumChunks " << m_chunks.size() << std::endl;
+
+    for( const auto & child: m_children ){
+        if( child ){
+            child->printDebug( n + 1 );
         }
     }
 }

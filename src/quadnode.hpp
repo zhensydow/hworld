@@ -16,43 +16,59 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file renderer3d.hpp
-    @brief Renderer 3D definition.
+/** @file quadnode.hpp
+    @brief Quad Node
     @author Luis Cabellos
-    @date 2014-01-26
+    @date 2014-03-06
 */
 //------------------------------------------------------------------------------
-#ifndef RENDERER3D_HPP_
-#define RENDERER3D_HPP_
+#ifndef QUADNODE_HPP_
+#define QUADNODE_HPP_
 
 //------------------------------------------------------------------------------
-#include "renderer.hpp"
-#include "gfxinc.hpp"
+#include <array>
+#include <vector>
+#include <memory>
+#include "types.hpp"
+#include "glm/glm.hpp"
 
 //------------------------------------------------------------------------------
-class Renderer3D : public Renderer{
+class QuadNode {
 public:
-    Renderer3D();
+    glm::vec2 minBound() const;
+    glm::vec2 maxBound() const;
 
-    void render( const ChunkProp & chunkprop ) override;
-    void render( const Material & material, const StaticMesh & mesh ) override;
+    bool isLeaf() const;
 
-    glm::mat4 view;
-    glm::mat4 proj;
-    glm::vec3 sundir;
+    void setBound( glm::vec2 a, glm::vec2 b );
+    void setChild( unsigned int idx, std::unique_ptr<QuadNode> && node );
+
+    bool addChunk( ChunkID idx, const glm::vec2 & pos );
+
+    void printDebug( unsigned int n = 0 );
 
 private:
-    GLuint m_tex_2d0;
-    GLuint m_tex_2d1;
+    glm::vec2 m_minbound;
+    glm::vec2 m_maxbound;
 
-    GLuint m_chk_wall_prg;
-    GLuint m_chk_tile_prg;
-    GLuint m_chk_floor_prg;
+    std::array<std::unique_ptr<QuadNode>, 4> m_children;
 
-    GLuint m_objmat_prg;
+    std::vector<ChunkID> m_chunks;
 };
 
 //------------------------------------------------------------------------------
-#endif//RENDERER3D_HPP_
+inline
+glm::vec2 QuadNode::minBound() const{
+    return m_minbound;
+}
+
+//------------------------------------------------------------------------------
+inline
+glm::vec2 QuadNode::maxBound() const{
+    return m_maxbound;
+}
+
+//------------------------------------------------------------------------------
+#endif//QUADNODE_HPP_
 
 //------------------------------------------------------------------------------

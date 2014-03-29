@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file engine.hpp
     @brief Engine declaration.
     @author Luis Cabellos
@@ -30,8 +30,8 @@
 #include <stack>
 #include <SFML/System/Clock.hpp>
 #include <boost/filesystem.hpp>
+#include "types.hpp"
 #include "gamestate.hpp"
-#include "world.hpp"
 
 //------------------------------------------------------------------------------
 class Entity;
@@ -39,6 +39,7 @@ class IUpdate;
 class IDrawable;
 class Gfx;
 class Config;
+class World;
 class TerrainProp;
 class ResourceFactory;
 class Input;
@@ -60,8 +61,8 @@ public:
     void yield();
     void stop();
 
-    unsigned int terrainFocus() const;
-    void setTerrainFocus( unsigned int idx );
+    ChunkID terrainFocus() const;
+    void setTerrainFocus( ChunkID idx );
 
     World & getWorld();
     Gfx & getGfx();
@@ -73,9 +74,9 @@ public:
 
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
-    std::shared_ptr<Entity> getEntity( const unsigned int id ) noexcept;
+    std::shared_ptr<Entity> getEntity( const EntityID id ) noexcept;
     void addEntity( std::shared_ptr<Entity> entity );
-    void addTerrainEntity( unsigned int chunk_id, unsigned int tile, unsigned int id );
+    void addTerrainEntity( ChunkID chunk_id, unsigned int tile, EntityID id );
     bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 
@@ -105,7 +106,7 @@ private:
 
     std::unique_ptr<Gfx> m_gfx;
     std::unique_ptr<Input> m_input;
-    World m_world;
+    std::unique_ptr<World> m_world;
     std::unique_ptr<Terminal> m_terminal;
     std::unique_ptr<ResourceFactory> m_resourceFactory;
 
@@ -148,7 +149,7 @@ void Engine::stop(){
 //------------------------------------------------------------------------------
 inline
 World & Engine::getWorld(){
-    return m_world;
+    return *m_world;
 }
 
 //------------------------------------------------------------------------------
@@ -189,7 +190,7 @@ bool Engine::hasCamera() noexcept {
 
 //------------------------------------------------------------------------------
 inline
-double Engine::getTime() const noexcept{
+double Engine::getTime() const noexcept {
     return m_accum;
 }
 
