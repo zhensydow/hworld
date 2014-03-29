@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file world.hpp
     @brief World Declaration.
     @author Luis Cabellos
@@ -26,7 +26,9 @@
 #define WORLD_HPP_
 
 //------------------------------------------------------------------------------
+#include <memory>
 #include <unordered_map>
+#include "quadnode.hpp"
 #include "chunk.hpp"
 
 //------------------------------------------------------------------------------
@@ -34,11 +36,28 @@ class World{
 public:
     World();
 
-    Chunk & getChunk( unsigned int );
+    bool hasChunk( ChunkID ) const;
+    Chunk & getChunk( ChunkID );
+
+    bool hasEntity( ChunkID chunk, unsigned int tile ) const;
+    bool insertEntity( ChunkID chunk, unsigned int tile, EntityID id );
+
+    const std::unordered_map< ChunkID, Chunk> & getTerrain() const;
 
 private:
-    std::unordered_map< unsigned int, Chunk>  m_terrain;
+    void addChunk( ChunkID cid, Chunk chunk );
+    void linkChunks( ChunkID root, unsigned int tile, ChunkID branch );
+
+    std::unique_ptr<QuadNode> m_quad;
+
+    std::unordered_map< ChunkID, Chunk> m_terrain;
 };
+
+//------------------------------------------------------------------------------
+inline
+const std::unordered_map< ChunkID, Chunk> & World::getTerrain() const{
+    return m_terrain;
+}
 
 //------------------------------------------------------------------------------
 #endif//WORLD_HPP_

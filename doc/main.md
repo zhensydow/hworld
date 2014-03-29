@@ -8,6 +8,7 @@ Hex World Pet Project is a personal project to:
 - refresh OpenGL, learn Modern OpenGL
 - have fun
 
+![Terrain Demo](@ref shot01.png)
 
 Compile with:
 ~~~~~~~~~~~~~~~~~~~~~
@@ -61,7 +62,38 @@ massif-visualizer massif.out.*
  * Call profiling
 
 ~~~~~~~~~~~~~~~~~~~~~
-valgrind --tool=callgrind build/src/hworld
+valgrind --tool=callgrind src/hworld ../data/config.json
+kcachegrind callgrind.out.*
+~~~~~~~~~~~~~~~~~~~~~
+
+When you want to profile only a part of the program, then start with profiling off and use CALLGRIND_TOGGLE_COLLECT to start to profile on the source:
+
+~~~~~~~~~~~~~~~~~~~~~
+#include <valgrind/callgrind.h>
+
+void Engine::yield(){
+    if( m_nextState ){
+        CALLGRIND_TOGGLE_COLLECT;
+        m_nextState->start();
+        m_states.push( std::move(*m_nextState) );
+        CALLGRIND_TOGGLE_COLLECT;
+    }
+
+    sf::sleep( sf::milliseconds(1) );
+}
+~~~~~~~~~~~~~~~~~~~~~
+
+Compile and execute with:
+
+~~~~~~~~~~~~~~~~~~~~~
+valgrind --collect-at-start=no --tool=callgrind src/hworld ../data/config.json
+kcachegrind callgrind.out.*
+~~~~~~~~~~~~~~~~~~~~~
+
+Also, you can have every detail on the memory behavior with:
+
+~~~~~~~~~~~~~~~~~~~~~
+valgrind --tool=callgrind  --simulate-cache=yes src/hworld ../data/config.json
 kcachegrind callgrind.out.*
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -73,6 +105,11 @@ apitrace dump hworld.trace
 qapitrace hworld.tracex
 ~~~~~~~~~~~~~~~~~~~~~
 
+ * Static Code Analysis
+
+~~~~~~~~~~~~~~~~~~~~~
+cppcheck src src/ent --enable=all -v -DGLM_FORCE_CXX11 | tee cppcheck.log
+~~~~~~~~~~~~~~~~~~~~~
 
  * Export 3DS from blender
 
@@ -82,7 +119,7 @@ Up: Y Up
 Other Resources
 ---------------
 
- * GentiumPlus [->](http://scripts.sil.org/cms/scripts/page.php?item_id=Gentium)
+ * GentiumPlus [http://scripts.sil.org/cms/scripts/page.php?item_id=Gentium](http://scripts.sil.org/cms/scripts/page.php?item_id=Gentium)
 
 Links
 -----
@@ -91,6 +128,7 @@ Links
  * [SFML 2.0 Documentation](http://www.sfml-dev.org/documentation/2.0/)
  * [Using OpenGL with SFML](http://www.sfml-dev.org/tutorials/2.0/window-opengl.php)
  * [Hexagonal Grids](http://www.redblobgames.com/grids/hexagons/)
- * [Entity Component Systems]()
+ * [Entity Component Systems](http://entity-systems.wikidot.com/)
  * [Memory Debug](https://techtalk.intersec.com/2013/12/memory-part-5-debugging-tools/)
  * [Shadow Mapping](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/)
+ * [Polygonal Map Generation](http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/)

@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file filedata.cpp
     @brief File Data definitions.
     @author Luis Cabellos
@@ -25,7 +25,9 @@
 #include "filedata.hpp"
 #include <fstream>
 #include "json/json.h"
+#include "debug.hpp"
 #include "entity.hpp"
+#include "world.hpp"
 #include "engine.hpp"
 #include "c_camera.hpp"
 #include "c_transform.hpp"
@@ -37,7 +39,58 @@ using namespace std;
 using namespace boost::filesystem;
 
 //------------------------------------------------------------------------------
-void saveWorld( const World & /*world*/, const path & /*folder*/ ){
+void saveWorld( const World & world, const path & folder ){
+    logI( "saving the world ... " );
+
+    auto & engine = Engine::instance();
+
+    logI( " saving the terrain .. " );
+
+    auto terrain_filename = path(folder) /= "terrain.dat";
+    std::ofstream fterrain( engine.getDataFilename(terrain_filename),
+                            std::ios::binary );
+
+    if( not fterrain ){
+        logE( "Can't open terrain file at: ", folder );
+        return;
+    }
+
+    const auto & terrain = world.getTerrain();
+
+    auto num_chunks = terrain.size();
+    fterrain.write( reinterpret_cast<char *>(&num_chunks), sizeof( num_chunks ) );
+
+    for( const auto & ci: terrain ){
+        auto cid = ci.first;
+        const auto & chunk = ci.second;
+        fterrain.write( reinterpret_cast<const char *>(&cid), sizeof( cid ) );
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_heights[0]),
+                        chunk.m_heights.size()*sizeof(chunk.m_heights[0]) );
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_tiles[0]),
+                        chunk.m_tiles.size()*sizeof(chunk.m_tiles[0]) );
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_neighbours[0]),
+                        chunk.m_neighbours.size()*sizeof(chunk.m_neighbours[0]) );
+
+        auto num_ents = chunk.m_entities.size();
+        fterrain.write( reinterpret_cast<char *>(&num_ents),
+                        sizeof( num_ents ) );
+        for( const auto & ce: chunk.m_entities ){
+            auto ent_tile = get<0>(ce);
+            auto ent_id = get<1>(ce);
+            fterrain.write( reinterpret_cast<const char *>(&ent_tile),
+                            sizeof( ent_tile ) );
+            fterrain.write( reinterpret_cast<const char *>(&ent_id),
+                            sizeof( ent_id ) );
+        }
+
+        fterrain.write( reinterpret_cast<const char *>(&chunk.m_minNeighHeight),
+                        sizeof(chunk.m_minNeighHeight) );
+    }
+
+    logI( ".. End saving" );
 }
 
 //------------------------------------------------------------------------------
@@ -123,7 +176,7 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
     auto cfun = s_componentTable.find( name );
 
     if( cfun == s_componentTable.end() ){
-        cout << "ERROR: Unknown component in JSON '" << name << "'\n";
+        logE( "Unknown component in JSON '", name, "'" );
         return;
     }
 
@@ -133,15 +186,26 @@ void createComponent( shared_ptr<Entity> entity, const string & name,
 }
 
 //------------------------------------------------------------------------------
-std::shared_ptr<Entity> makeEntity( const string  & filename ){
+/** Create a new entity using the template data of a Json file.
+
+    @param id id to set in new Entity
+    @param filename file with Json data to create the entity
+    @returns new entity created or nullptr
+*/
+std::shared_ptr<Entity> makeEntity( EntityID id, const string & filename ){
+    if( id == ENTITY_NULL_IDX ){
+        logE( "Bad Entity ID" );
+        return nullptr;
+    }
+
     if( !is_regular_file(filename) ){
-        cout << "ERROR: Not file '" << filename << "'" << endl;
+        logE( "Not file '", filename, "'" );
         return nullptr;
     }
 
     ifstream ifs( filename, ifstream::binary );
     if( !ifs ){
-        cout << "ERROR: Could not open " << filename << endl;
+        logE( "Could not open ", filename );
         return nullptr;
     }
 
@@ -161,12 +225,12 @@ std::shared_ptr<Entity> makeEntity( const string  & filename ){
 
     auto parsingRet = reader.parse( entityJson, root );
     if( ! parsingRet ){
-        cout << "ERROR: invalid entity JSON parsing" << endl;
-        cout << reader.getFormattedErrorMessages();
+        logE( "Invalid entity JSON parsing : ",
+              reader.getFormattedErrorMessages() );
         return nullptr;
     }
 
-    auto entity = std::make_shared<Entity>();
+    auto entity = std::make_shared<Entity>( id );
     if( entity ){
         newComponent<CTransform>( *entity );
 

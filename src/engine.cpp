@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file engine.cpp
     @brief Engine definitions.
     @author Luis Cabellos
@@ -25,11 +25,17 @@
 #include "engine.hpp"
 #include "util.hpp"
 #include "entity.hpp"
+#include "gfx.hpp"
+#include "input.hpp"
+#include "terminal.hpp"
 #include "c_transform.hpp"
 #include "c_camera.hpp"
 #include "c_staticmodel.hpp"
 #include "c_script.hpp"
 #include "script.hpp"
+#include "world.hpp"
+#include "resourcefactory.hpp"
+#include "terrainprop.hpp"
 #include "config.hpp"
 
 //------------------------------------------------------------------------------
@@ -47,19 +53,27 @@ Engine & Engine::instance(){
 
 //------------------------------------------------------------------------------
 Engine::Engine() : m_nextState{nullptr} {
-    //empty
+    m_gfx = unique_ptr<Gfx>( new Gfx );
+    assert( m_gfx && "Error creating Gfx" );
+    m_resourceFactory = unique_ptr<ResourceFactory>( new ResourceFactory );
+    assert( m_resourceFactory && "Error creating ResourceFactory" );
+    m_input = unique_ptr<Input>( new Input );
+    assert( m_input && "Error creating Input" );
+    m_terminal = unique_ptr<Terminal>( new Terminal );
+    assert( m_terminal && "Error creating Terminal" );
+    m_world = unique_ptr<World>( new World );
+    assert( m_world && "Error creating World" );
 }
 
 //------------------------------------------------------------------------------
 void Engine::setup( const Config & config ){
     m_datadir = config.datadir;
 
-    m_gfx.setup();
+    m_gfx->setup( config );
 
-    m_terminal.initialize();
+    m_terminal->initialize();
 
-    m_terrain = unique_ptr<TerrainProp>( new TerrainProp(m_world) );
-    m_terrain->setFocus( 0 );
+    m_terrain = unique_ptr<TerrainProp>( new TerrainProp(*m_world) );
 
     if( !tex.loadFromFile( getDataFilename( "gfx/template.png" ) ) ){
         std::terminate();
@@ -74,7 +88,17 @@ void Engine::setup( const Config & config ){
 
 //------------------------------------------------------------------------------
 void Engine::destroy(){
-    m_gfx.destroy();
+    m_gfx->destroy();
+}
+
+//------------------------------------------------------------------------------
+ChunkID Engine::terrainFocus() const{
+    return m_terrain->getFocus();
+}
+
+//------------------------------------------------------------------------------
+void Engine::setTerrainFocus( ChunkID idx ){
+    m_terrain->setFocus( idx );
 }
 
 //------------------------------------------------------------------------------
@@ -86,13 +110,14 @@ void Engine::setState( unique_ptr<GameState> state ){
 }
 
 //------------------------------------------------------------------------------
-shared_ptr<Entity> Engine::getEntity( const Entity * const ent ) noexcept{
+shared_ptr<Entity> Engine::getEntity( const EntityID id ) noexcept{
     auto it = find_if( begin(m_entities), end(m_entities),
-                       [ent]( shared_ptr<Entity> & e){ return e.get() == ent; } );
+                       [id]( shared_ptr<Entity> & e){ return e->id() == id; } );
 
     if( it != end(m_entities) ){
         return *it;
     }
+
     return nullptr;
 }
 
@@ -114,29 +139,57 @@ void Engine::addEntity( shared_ptr<Entity> entity ){
 }
 
 //------------------------------------------------------------------------------
+void Engine::addTerrainEntity( ChunkID chunk_id, unsigned int tile, EntityID id ){
+    auto entity = getEntity( id );
+    if( not entity ){
+        logW( "Entity ", id, " doesn't exists" );
+        return;
+    }
+
+    if( not m_world->hasChunk( chunk_id ) ){
+        logW( "Chunk ", chunk_id, " doesn't exists" );
+        return;
+    }
+
+    if( not m_world->insertEntity( chunk_id, tile, id ) ){
+        logW( "Can't insert entity ", id, " into chunk ", chunk_id, ", ", tile );
+        return;
+    }
+
+    auto cprop = m_terrain->getChunkProp( chunk_id );
+    if( cprop and tile < Chunk::NTILES ){
+        auto parentPos = cprop->tilePos( tile ) + cprop->getPosition();
+        auto tcomp = entity->getComponent<CTransform>();
+        if( tcomp ){
+            tcomp->setParentPosition( parentPos );
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
 void Engine::update(){
     double frameTime = m_clock.restart().asSeconds();
     if( frameTime > MAX_FRAME_TIME ){
         frameTime = MAX_FRAME_TIME;
     }
 
-    m_input.beginFrame();
+    m_input->beginFrame();
 
-    auto window = m_gfx.getWindow();
+    auto window = m_gfx->getWindow();
     sf::Event event;
     while( window->pollEvent(event) ){
         if( event.type == sf::Event::Closed ){
             stop();
         }else if( event.type == sf::Event::Resized ){
-            m_gfx.setViewport( event.size.width, event.size.height );
-            m_terminal.resize( event.size.width, event.size.height );
+            m_gfx->setViewport( event.size.width, event.size.height );
+            m_terminal->resize( event.size.width, event.size.height );
         }else if( event.type == sf::Event::KeyReleased ){
             if( event.key.code == sf::Keyboard::Tab ){
-                m_terminal.setVisible( not m_terminal.isVisible() );
+                m_terminal->setVisible( not m_terminal->isVisible() );
             }
-            m_input.setKeyReleased( event.key.code );
+            m_input->setKeyReleased( event.key.code );
         }else if( event.type == sf::Event::KeyPressed ){
-            m_input.setKeyPressed( event.key.code );
+            m_input->setKeyPressed( event.key.code );
         }
     }
 
@@ -157,7 +210,7 @@ void Engine::update(){
 }
 
 //------------------------------------------------------------------------------
-void Engine::draw(){
+void Engine::updateCamera() {
     if( m_camera ){
         auto ctrans = m_camera->getComponent<CTransform>();
         auto ccam = m_camera->getComponent<CCamera>();
@@ -168,19 +221,26 @@ void Engine::draw(){
             auto dist = glm::dot( tmp, tmp );
             // if eye and obj are the same point, we get division by zero
             if( dist > 0.001 ){
-                m_gfx.view = glm::lookAt( eye, obj,
+                m_gfx->view = glm::lookAt( eye, obj,
                                            glm::vec3(0,1,0) );
                 auto fov = ccam->getFov();
-                m_gfx.proj = glm::perspective( fov,
-                                               m_gfx.aspectRatio(),
-                                               0.1f, 100.0f );
+                m_gfx->proj = glm::perspective( fov,
+                                                m_gfx->aspectRatio(),
+                                                0.1f, 100.0f );
             }
         }
     }
+}
 
-    m_gfx.startFrame();
+//------------------------------------------------------------------------------
+void Engine::draw(){
+    updateCamera();
 
-    auto renderer = m_gfx.getCurrentRenderer();
+    m_gfx->startFrame();
+
+    m_gfx->startShadowMappingPass();
+
+    auto renderer = m_gfx->getCurrentRenderer();
     if( renderer ){
         m_terrain->draw( *renderer );
 
@@ -189,24 +249,35 @@ void Engine::draw(){
         }
     }
 
-    m_gfx.startGUI();
+    m_gfx->startColorPass();
 
-    renderer = m_gfx.getCurrentRenderer();
+    renderer = m_gfx->getCurrentRenderer();
     if( renderer ){
-        m_terminal.draw( *renderer );
+        m_terrain->draw( *renderer );
+
+        for( auto & comp: m_drawableList ){
+            comp->draw( *renderer );
+        }
     }
 
-    auto window = m_gfx.getWindow();
-    window->draw( spr );
+    m_gfx->startGUI();
 
-    m_gfx.endFrame();
+    renderer = m_gfx->getCurrentRenderer();
+    if( renderer ){
+        m_terminal->draw( *renderer );
+    }
+
+    //auto window = m_gfx->getWindow();
+    //window->draw( spr );
+
+    m_gfx->endFrame();
 }
 
 //------------------------------------------------------------------------------
 void Engine::yield(){
     switch( m_nextStateType ){
     case NextState::NEW_STATE:
-        cout << " new state " << m_t << endl;
+        logI( "New state ", m_t );
         if( not m_states.empty() ){
             auto old = std::move(m_states.top());
             m_states.pop();
@@ -234,19 +305,20 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto filename = statedir /= (name + ".lua");
 
     if( !is_regular_file( filename ) ){
-        cout << "Not file for class '" <<  name << "'" << endl;
+        logE( "Not file for class '", name, "'" );
         return nullptr;
     }
 
     // Lua Initialization
     auto ls = luaL_newstate();
     if( !ls ){
-        cout << "Can't create Lua State" << endl;
+        logE( "Can't create Lua State" );
         return nullptr;
     }
 
     lua_gc( ls, LUA_GCSTOP, 0 );
     luaL_openlibs( ls );
+    openWorld( ls );
     openInput( ls );
     openTerminal( ls );
     openEngine( ls );
@@ -258,7 +330,7 @@ unique_ptr<GameState> Engine::makeGameState( const string & name ) const{
     auto state = std::unique_ptr<GameState>(new GameState( ls ) );
     if( !state ){
         lua_close( ls );
-        cout << "Can't create agent class '" << name << "' instance" << endl;
+        logE( "Can't create agent class '", name, "' instance" );
         return nullptr;
     }
 

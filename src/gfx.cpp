@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file gfx.cpp
     @brief Gfx definitions.
     @author Luis Cabellos
@@ -23,11 +23,72 @@
 */
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
+#include "debug.hpp"
+#include "config.hpp"
+#include "engine.hpp"
 #include "renderer2d.hpp"
 #include "renderer3d.hpp"
+#include "shader.hpp"
 
 //------------------------------------------------------------------------------
-void Gfx::setup(){
+using namespace std;
+
+//------------------------------------------------------------------------------
+array< GLfloat, 6*3 > Gfx::s_quad_verts = { {
+    -1.0f, -1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    1.0f,  1.0f, 0.0f,
+    } };
+
+//------------------------------------------------------------------------------
+void Gfx::setGLSLVersion( const string & version ){
+    auto ot = 0;
+    auto searching = true;
+    vector<int> numbers;
+
+    while( searching ){
+        auto it = version.find( '.', ot );
+        if( it == string::npos ){
+            it = version.find( ' ', ot );
+            auto nstr = version.substr( ot, it );
+            numbers.push_back( atoi(nstr.data()) );
+            searching = false;
+        }else{
+            auto nstr = version.substr( ot, it );
+            numbers.push_back( atoi(nstr.data()) );
+            ot = ++it;
+        }
+    }
+
+    static array<vector<int>,2> available = { {
+            { {1, 20} }, { {3, 30} } } };
+
+    if( numbers < available[0] ){
+        return;
+    }
+
+    unsigned pos = 0;
+    while( pos < available.size() and numbers > available[pos] ){
+        ++pos;
+    }
+
+    if( pos >= available.size() ){
+        pos = available.size() - 1;
+    }
+
+    if( numbers < available[pos] ){
+        --pos;
+    }
+
+    m_glslVersion = to_string(available[pos][0]) + "." +
+        to_string(available[pos][1]);
+}
+
+//------------------------------------------------------------------------------
+void Gfx::setup( const Config & config ){
     static_assert( DESIRED_HEIGHT > 0 and DESIRED_WIDTH > 0
                    , "Screen size must be > 0" );
 
@@ -37,26 +98,58 @@ void Gfx::setup(){
     glGenVertexArrays( 1, &m_vertexArrayID );
     glBindVertexArray( m_vertexArrayID );
 
+    // rendered framebuffer values
+    glGenFramebuffers( 1, &m_fbRendered );
+    glGenTextures( 1, &m_renderedTex );
+    glGenRenderbuffers( 1, &m_renderedDepth );
+
+    m_width = DESIRED_WIDTH;
+    m_height = DESIRED_HEIGHT;
+
     m_window = new sf::RenderWindow{
         sf::VideoMode( DESIRED_WIDTH, DESIRED_HEIGHT ),
         "HexWorld", sf::Style::Default, desired };
     m_window->setVerticalSyncEnabled( true );
     m_window->setKeyRepeatEnabled( false );
 
-    auto settings = m_window->getSettings();
-    std::cout << "OpenGL version: " << settings.majorVersion << "."
-              << settings.minorVersion << std::endl;
+    auto sets = m_window->getSettings();
+    logI( "OpenGL version: ", sets.majorVersion, ".", sets.minorVersion );
 
-    m_renderer2D = std::make_shared<Renderer2D>( m_window );
+    if( config.glslVersion != "" ){
+        setGLSLVersion( config.glslVersion );
+    }
+    if( m_glslVersion == "" ){
+        const auto glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
+        setGLSLVersion( reinterpret_cast<const char*>(glslVersion) );
+    }
+    if( m_glslVersion == "" ){
+        logE( "Can't set GLSL version" );
+        terminate();
+    }
+    logI( "GLSL version: ", m_glslVersion );
+
+    m_renderer2D = make_shared<Renderer2D>( m_window );
     if( m_renderer2D ){
         auto & guiView = m_renderer2D->getGuiView();
         guiView.setCenter( {DESIRED_WIDTH/2.0, DESIRED_HEIGHT/2.0} );
         guiView.setSize( {DESIRED_WIDTH, DESIRED_HEIGHT} );
     }
 
-    setViewport( DESIRED_WIDTH, DESIRED_HEIGHT );
+    m_renderer3D = make_shared<Renderer3D>();
 
-    m_renderer3D = std::make_shared<Renderer3D>();
+    glGenBuffers( 1, &m_quad_vertsbuff );
+    glBindBuffer( GL_ARRAY_BUFFER, m_quad_vertsbuff );
+    glBufferData( GL_ARRAY_BUFFER, s_quad_verts.size()*sizeof(GLfloat),
+                  &s_quad_verts[0], GL_STATIC_DRAW );
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    auto & engine = Engine::instance();
+    m_quad_prg = loadProgram( engine.getDataFilename( "shaders/quad" ) );
+
+    m_rfx_tex_id = glGetUniformLocation( m_quad_prg , "rendererTexture" );
+    m_rfx_time_id = glGetUniformLocation( m_quad_prg , "time" );
+    m_rfx_w_id = glGetUniformLocation( m_quad_prg , "width" );
+    m_rfx_h_id = glGetUniformLocation( m_quad_prg , "height" );
 }
 
 //------------------------------------------------------------------------------
@@ -68,10 +161,10 @@ void Gfx::destroy(){
 void Gfx::setViewport( GLsizei width, GLsizei height ){
     constexpr float SCR_FACTOR = float(DESIRED_WIDTH) / float(DESIRED_HEIGHT);
     static_assert( SCR_FACTOR > 0, "SCR_FACTOR must be > 0" );
+    logI( "Set Viewport to ", width, "x", height );
 
     m_width = width;
     m_height = height;
-    glViewport(0, 0, width, height);
 
     if( height > 0 ){
         auto newFactor = float(width)/float(height);
@@ -88,6 +181,48 @@ void Gfx::setViewport( GLsizei width, GLsizei height ){
             }
             m_renderer2D->resetGuiView();
         }
+    }
+
+    // create the rendered framebuffer
+    glBindFramebuffer( GL_FRAMEBUFFER, m_fbRendered );
+    // setup the rendered texture
+    glBindTexture( GL_TEXTURE_2D, m_renderedTex );
+    glTexImage2D( GL_TEXTURE_2D, 0,GL_RGB, m_width, m_height, 0,
+                  GL_RGB, GL_UNSIGNED_BYTE, 0 );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    // setup the depth buffer
+    glBindRenderbuffer( GL_RENDERBUFFER, m_renderedDepth );
+    glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height );
+    glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                               GL_RENDERBUFFER, m_renderedDepth );
+    //// Alternative : Depth texture. Slower, but you can sample it later in your shader
+    // glBindTexture( GL_TEXTURE_2D, m_renderedDepthTex );
+    // glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24,
+    //              m_width, m_height, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0 );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    // glFramebufferTexture( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_renderedDepthTex, 0 );
+    // link with framebuffer
+    glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                            GL_TEXTURE_2D, m_renderedTex, 0 );
+    GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers( 1, DrawBuffers );
+
+    // set shader constants
+    glUseProgram( m_quad_prg );
+    glUniform1f( m_rfx_w_id, m_width );
+    glUniform1f( m_rfx_h_id, m_height );
+    glUseProgram( 0 );
+
+    auto ret = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if( ret != GL_FRAMEBUFFER_COMPLETE ){
+        logW( "Can't generate Render FrameBuffer :", ret );
+        terminate();
     }
 }
 
@@ -106,6 +241,15 @@ Ray Gfx::getMouseRay() const{
 
 //------------------------------------------------------------------------------
 void Gfx::startFrame() {
+}
+
+//------------------------------------------------------------------------------
+void Gfx::startShadowMappingPass(){
+    m_currentRenderer = nullptr;
+}
+
+//------------------------------------------------------------------------------
+void Gfx::startColorPass(){
     m_currentRenderer = m_renderer3D;
     if( m_currentRenderer ){
         m_currentRenderer->clearModelStack();
@@ -115,15 +259,50 @@ void Gfx::startFrame() {
         m_renderer3D->sundir = m_sundir;
     }
 
+    if( m_rendereffects ){
+        glBindFramebuffer( GL_FRAMEBUFFER, m_fbRendered );
+    }else{
+        glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+    }
+    glViewport( 0, 0, m_width, m_height );
+
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LESS );
     glEnable( GL_CULL_FACE );
 
+    glClearColor( 0.0, 0.746, 1.0, 0.0 );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
 //------------------------------------------------------------------------------
 void Gfx::startGUI(){
+    if( m_rendereffects ){
+        // render texture to screen
+        glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+        glViewport( 0, 0, m_width, m_height );
+
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glUseProgram( m_quad_prg );
+
+        // Bind our texture in Texture Unit 0
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( GL_TEXTURE_2D, m_renderedTex );
+        glUniform1i( m_rfx_tex_id, 0 );
+        auto & engine = Engine::instance();
+        glUniform1f( m_rfx_time_id, static_cast<float>(engine.getTime()) );
+
+        glEnableVertexAttribArray( 0 );
+        glBindBuffer( GL_ARRAY_BUFFER, m_quad_vertsbuff );
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+        glDrawArrays( GL_TRIANGLES, 0, 6 );
+
+        glDisableVertexAttribArray( 0 );
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        glBindTexture( GL_TEXTURE_2D, 0 );
+    }
+
     m_window->pushGLStates();
     m_currentRenderer = m_renderer2D;
 }

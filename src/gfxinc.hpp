@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file gfxinc.hpp
     @brief Graphics includes.
     @author Luis Cabellos
@@ -32,8 +32,12 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
+//#define GLM_MESSAGES
+#define GLM_FORCE_CXX11
 #include "glm/glm.hpp"
-#include "glm/ext.hpp"
+#include "glm/gtx/transform.hpp"
+#include "glm/gtx/rotate_vector.hpp"
+//#include "glm/ext.hpp"
 #include "SOIL.h"
 #include <assimp/cimport.h>
 #include <assimp/scene.h>

@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file renderer3d.cpp
     @brief Renderer 3D definitions.
     @author Luis Cabellos
@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "renderer3d.hpp"
+#include "debug.hpp"
 #include "material.hpp"
 #include "chunkprop.hpp"
 #include "staticmesh.hpp"
@@ -41,8 +42,8 @@ Renderer3D::Renderer3D(){
                                        | SOIL_FLAG_NTSC_SAFE_RGB
                                        | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == m_tex_2d0 ){
-        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
-        std::cout << " at file " << tex_filename << "'\n";
+        logE( "SOIL loading error: '", SOIL_last_result(), "'" );
+        logE( " at file ", tex_filename, "'" );
         std::terminate();
     }
 
@@ -53,8 +54,8 @@ Renderer3D::Renderer3D(){
                                        | SOIL_FLAG_NTSC_SAFE_RGB
                                        | SOIL_FLAG_COMPRESS_TO_DXT );
     if( 0 == m_tex_2d1 ){
-        std::cout << "SOIL loading error: '" << SOIL_last_result() << "'\n";
-        std::cout << " at file " << tex_filename << "'\n";
+        logE( "SOIL loading error: '", SOIL_last_result(), "'" );
+        logE( " at file ", tex_filename, "'" );
         std::terminate();
     }
 

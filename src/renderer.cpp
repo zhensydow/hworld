@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,20 +15,18 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
-/** @file memory.hpp
-    @brief Memory Utils.
+------------------------------------------------------------------------------*/
+/** @file renderer.cpp
+    @brief Renderer Definition.
     @author Luis Cabellos
-    @date 2013-09-22
+    @date 2013-08-19
 */
 //------------------------------------------------------------------------------
-#ifndef MEMORY_HPP_
-#define MEMORY_HPP_
+#include "renderer.hpp"
 
 //------------------------------------------------------------------------------
-void outMemoryInfo();
-
-//------------------------------------------------------------------------------
-#endif//MEMORY_HPP_
+Renderer::~Renderer(){
+    // empty
+}
 
 //------------------------------------------------------------------------------

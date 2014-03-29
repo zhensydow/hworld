@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file main.cpp
     @brief Info
     @author Luis Cabellos
@@ -24,7 +24,7 @@
 //------------------------------------------------------------------------------
 #include <cstdlib>
 #include "config.hpp"
-#include "memory.hpp"
+#include "debug.hpp"
 #include "engine.hpp"
 
 //------------------------------------------------------------------------------
@@ -39,10 +39,11 @@ int main( int argc, char *argv[] ){
 
     auto config = loadConfig( argv[1] );
     if( not config ){
-        std::cout << "can't load config file " << argv[1] << std::endl;
+        logE( "Can't load config file ", argv[1] );
         return EXIT_FAILURE;
     }
 
+    setLogLevel( config->loglevel );
     outMemoryInfo();
 
     auto & engine = Engine::instance();

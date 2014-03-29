@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file config.cpp
     @brief Configuration definitions.
     @author Luis Cabellos
@@ -35,7 +35,7 @@ using namespace boost::filesystem;
 unique_ptr<Config> loadConfig( const string & filename ){
     ifstream ifs( filename, ifstream::binary );
     if( !ifs ){
-        cout << "ERROR: Could not open " << filename << endl;
+        logE( "Could not open ", filename );
         return nullptr;
     }
 
@@ -55,8 +55,8 @@ unique_ptr<Config> loadConfig( const string & filename ){
 
     auto parsingRet = reader.parse( entityJson, root );
     if( ! parsingRet ){
-        cout << "ERROR: invalid entity JSON parsing" << endl;
-        cout << reader.getFormattedErrorMessages();
+        logE( "Invalid entity JSON parsing: ",
+              reader.getFormattedErrorMessages() );
         return nullptr;
     }
 
@@ -65,10 +65,32 @@ unique_ptr<Config> loadConfig( const string & filename ){
     if( config ){
         config->datadir = path(filename).parent_path().string();
 
-        if( root.isMember( "initialState" ) ){
-            auto & value = root["initialState"];
-            if( value.isString() ){
-                config->initialState = value.asString();
+        for( auto it = root.begin() ; it != root.end() ; ++it ){
+            auto name = string{ it.memberName() };
+            const auto & value = *it;
+            if( name == "initialState" ){
+                if( value.isString() ){
+                    config->initialState = value.asString();
+                }
+            }else if( name == "logLevel" ){
+                if( value.isString() ){
+                    auto level = value.asString();
+                    if( level == "debug" ){
+                        config->loglevel = LogLevel::LL_DEBUG;
+                    }else if( level == "info" ){
+                        config->loglevel = LogLevel::LL_INFO;
+                    }else if( level == "warning" ){
+                        config->loglevel = LogLevel::LL_WARNING;
+                    }else if( level == "error" ){
+                        config->loglevel = LogLevel::LL_ERROR;
+                    }
+                }
+            }else if( name == "glslVersion" ){
+                if( value.isString() ){
+                    config->glslVersion = value.asString();
+                }
+            }else{
+                logW( "Unknown config value : '", name, "'" );
             }
         }
     }

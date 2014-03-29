@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file chunk.hpp
     @brief Chunk Class Definition.
     @author Luis Cabellos
@@ -27,10 +27,9 @@
 
 //------------------------------------------------------------------------------
 #include <array>
-#include "gfxinc.hpp"
-
-//------------------------------------------------------------------------------
-constexpr unsigned int CHUNK_NULL_IDX = std::numeric_limits<unsigned int>::max();
+#include <vector>
+#include <tuple>
+#include "types.hpp"
 
 //------------------------------------------------------------------------------
 class Chunk{
@@ -42,25 +41,23 @@ public:
 
     Chunk();
 
-    void setHeight( unsigned int i, const int val );
+    void setHeight( const unsigned int i, const int16_t val );
 
-    std::array< int, NTILES > m_heights;
-    std::array< unsigned int, NNEIGHBOURS > m_neighbours;
+    bool insertEntity( uint8_t tile, EntityID id );
+    bool hasEntity( uint8_t tile ) const;
+
+    std::array< int16_t, NTILES > m_heights;
+    std::array< int8_t, NTILES > m_tiles;
+    std::array< ChunkID, NNEIGHBOURS > m_neighbours;
+    std::vector< std::tuple<uint8_t, EntityID> > m_entities;
+
+    glm::vec2 m_pos {0};
+    int16_t m_minNeighHeight {0};
 };
 
 //------------------------------------------------------------------------------
-constexpr GLfloat sqrt3 = sqrt( 3 );
-constexpr GLfloat TileCZ = 0.5 * sqrt3;
-constexpr GLfloat TileCX = 0.5;
-
-//------------------------------------------------------------------------------
-constexpr std::array< GLfloat, Chunk::VERTS_TILE*2 > TilePos{ {
-        -TileCX, -TileCZ, TileCX, -TileCZ, 1.0f, 0.0f,
-            TileCX, TileCZ, -TileCX, TileCZ, -1.0f, 0.0f } };
-
-//------------------------------------------------------------------------------
 inline
-void Chunk::setHeight( unsigned int i, const int val ){
+void Chunk::setHeight( const unsigned int i, const int16_t val ){
     if( i < NTILES ){
         m_heights[ i ] = val;
     }

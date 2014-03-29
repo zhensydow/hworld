@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file renderer.hpp
     @brief Renderer declaration.
     @author Luis Cabellos
@@ -27,7 +27,7 @@
 
 //------------------------------------------------------------------------------
 #include <stack>
-#include "gfxinc.hpp"
+#include "types.hpp"
 
 //------------------------------------------------------------------------------
 class ChunkProp;
@@ -38,6 +38,8 @@ class Material;
 //------------------------------------------------------------------------------
 class Renderer {
 public:
+    virtual ~Renderer();
+
     virtual void render( const ChunkProp & chunkprop );
     virtual void render( const Terminal & terminal );
     virtual void render( const Material & material, const StaticMesh & mesh );

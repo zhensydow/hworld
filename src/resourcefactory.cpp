@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file resourcefactory.cpp
     @brief ResourceFactory definitions.
     @author Luis Cabellos
@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "resourcefactory.hpp"
+#include "debug.hpp"
 #include <boost/filesystem.hpp>
 #include "engine.hpp"
 #include "gfxinc.hpp"
@@ -53,7 +54,7 @@ shared_ptr<StaticModel> ResourceFactory::getSimpleModel( const string & name ){
                                    aiProcess_SortByPType);
 
         if( !scene ){
-            cout << "ERROR: " << aiGetErrorString() << endl;
+            logE( aiGetErrorString() );
         }else{
             for( unsigned i = 0 ; i < scene->mNumMaterials ; ++i ){
                 Material material;

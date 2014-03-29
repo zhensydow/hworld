@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file chunk.cpp
     @brief Chunk class definition.
     @author Luis Cabellos
@@ -27,6 +27,32 @@
 //------------------------------------------------------------------------------
 Chunk::Chunk(){
     std::fill( m_neighbours.begin(), m_neighbours.end(), CHUNK_NULL_IDX );
+}
+
+//------------------------------------------------------------------------------
+bool Chunk::insertEntity( uint8_t tile, EntityID id ){
+    if( tile >= NTILES ){
+        return false;
+    }
+
+    m_entities.emplace_back( std::make_pair(tile,id) );
+
+    return true;
+}
+
+//------------------------------------------------------------------------------
+bool Chunk::hasEntity( uint8_t tile ) const{
+    if( tile >= NTILES ){
+        return false;
+    }
+
+    for( const auto & p: m_entities ){
+        if( std::get<0>( p ) == tile ){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //------------------------------------------------------------------------------

@@ -3,8 +3,10 @@
 in vec2 UV;
 in vec3 normalCam;
 in vec3 lightDirCam;
-out vec3 color;
+
 uniform sampler2D texSampler;
+
+layout(location = 0) out vec3 color;
 
 void main(){
     vec3 n = normalize( normalCam );

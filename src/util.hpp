@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file util.hpp
     @brief Util functions.
     @author Luis Cabellos
@@ -26,9 +26,10 @@
 #define UTIL_HPP_
 
 //------------------------------------------------------------------------------
-
+#include <memory>
 #include "chunk.hpp"
 #include "chunkprop.hpp"
+#include "quadnode.hpp"
 
 //------------------------------------------------------------------------------
 struct lua_State;
@@ -36,6 +37,8 @@ struct lua_State;
 //------------------------------------------------------------------------------
 Chunk createRandomChunk( int min, int max );
 ChunkProp createChunkProp( const Chunk & chunk );
+std::unique_ptr<QuadNode> createWorldQuad( unsigned int levels, glm::vec2 minb, glm::vec2 maxb );
+
 //------------------------------------------------------------------------------
 /** Check a lua function return, and show error message if needed.
     @param ls Lua State.

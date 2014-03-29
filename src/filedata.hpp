@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file filedata.hpp
     @brief File Data functions.
     @author Luis Cabellos
@@ -29,13 +29,15 @@
 //------------------------------------------------------------------------------
 #include <string>
 #include <boost/filesystem.hpp>
+#include "types.hpp"
 
 //------------------------------------------------------------------------------
 class World;
 class Entity;
+
 //------------------------------------------------------------------------------
 void saveWorld( const World & world, const boost::filesystem::path & folder );
-std::shared_ptr<Entity> makeEntity( const std::string  & filename );
+std::shared_ptr<Entity> makeEntity( EntityID id, const std::string & filename );
 
 //------------------------------------------------------------------------------
 #endif//FILEDATA_HPP_

@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file chunkprop.cpp
     @brief ChunkProp class definition.
     @author Luis Cabellos
@@ -28,6 +28,16 @@
 
 //------------------------------------------------------------------------------
 using namespace std;
+
+//------------------------------------------------------------------------------
+constexpr GLfloat sqrt3 = sqrt( 3 );
+constexpr GLfloat TileCZ = 0.5 * sqrt3;
+constexpr GLfloat TileCX = 0.5;
+
+//------------------------------------------------------------------------------
+constexpr std::array< GLfloat, Chunk::VERTS_TILE*2 > TilePos{ {
+        -TileCX, -TileCZ, TileCX, -TileCZ, 1.0f, 0.0f,
+            TileCX, TileCZ, -TileCX, TileCZ, -1.0f, 0.0f } };
 
 //------------------------------------------------------------------------------
 std::array< GLuint, 2 > ChunkProp::s_floorBuffers;

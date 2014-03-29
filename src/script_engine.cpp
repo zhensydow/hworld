@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file script_engine.cpp
     @brief Engine script functions.
     @author Luis Cabellos
@@ -24,8 +24,11 @@
 //------------------------------------------------------------------------------
 #include "engine.hpp"
 #include "lua.hpp"
+#include "entity.hpp"
 #include "script.hpp"
 #include "filedata.hpp"
+#include "gfx.hpp"
+#include "terminal.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -54,7 +57,8 @@ int engine_newEntity( lua_State *ls ){
     }
 
     auto & engine = Engine::instance();
-    auto entity = makeEntity( engine.getDataFilename( str ) );
+    auto id = Entity::nextID();
+    auto entity = makeEntity( id, engine.getDataFilename( str ) );
     if( entity ){
         engine.addEntity( entity );
         lua_pushEntity( ls, *entity );
@@ -70,7 +74,7 @@ int engine_setCamera( lua_State *ls ){
     auto ent = lua_checkEntity( ls, 1 );
     if( ent ){
         auto & engine = Engine::instance();
-        auto entity = engine.getEntity( ent );
+        auto entity = engine.getEntity( ent->id() );
         if( entity ){
             engine.setCamera( entity );
         }
@@ -98,6 +102,22 @@ int engine_saveWorld( lua_State *ls ){
 }
 
 //------------------------------------------------------------------------------
+int engine_enableRenderEffects( lua_State *ls ){
+    auto v = lua_toboolean( ls, 1 ) == 1;
+    auto & engine = Engine::instance();
+    auto & gfx = engine.getGfx();
+    gfx.enableRenderEffects( v );
+    return 0;
+}
+
+//------------------------------------------------------------------------------
+int engine_stop( lua_State */*ls*/ ){
+    auto & engine = Engine::instance();
+    engine.stop();
+    return 0;
+}
+
+//------------------------------------------------------------------------------
 /** List of functions of engine lua library.
 */
 const luaL_Reg enginelib[] = {
@@ -106,6 +126,8 @@ const luaL_Reg enginelib[] = {
     {"hasCamera", engine_hasCamera},
     {"setCamera", engine_setCamera},
     {"saveWorld", engine_saveWorld},
+    {"enableRenderEffects", engine_enableRenderEffects},
+    {"stop", engine_stop},
     {nullptr, nullptr}
 };
 

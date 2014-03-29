@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,25 +15,33 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
-/** @file memory.cpp
-    @brief Memory util definitions.
+------------------------------------------------------------------------------*/
+/** @file types.hpp
+    @brief Basic Types definitions
     @author Luis Cabellos
-    @date 2013-09-22
+    @date 2014-03-04
 */
 //------------------------------------------------------------------------------
-#include "memory.hpp"
-#include "chunk.hpp"
-#include "chunkprop.hpp"
-#include "terrainprop.hpp"
-#include "world.hpp"
+#ifndef TYPES_HPP_
+#define TYPES_HPP_
 
 //------------------------------------------------------------------------------
-void outMemoryInfo(){
-    std::cout << "Chunk size: " << sizeof(Chunk) << std::endl;
-    std::cout << "ChunkProp size: " << sizeof(ChunkProp) << std::endl;
-    std::cout << "TerrainProp size: " << sizeof(TerrainProp) << std::endl;
-    std::cout << "World size: " << sizeof(World) << std::endl;
-}
+#include <limits>
+
+#define GLM_FORCE_CXX11
+#include "glm/glm.hpp"
+
+//------------------------------------------------------------------------------
+using ChunkID = unsigned int;
+
+constexpr ChunkID CHUNK_NULL_IDX = std::numeric_limits<ChunkID>::max();
+
+//------------------------------------------------------------------------------
+using EntityID = unsigned int;
+
+constexpr EntityID ENTITY_NULL_IDX = std::numeric_limits<EntityID>::max();
+
+//------------------------------------------------------------------------------
+#endif//TYPES_HPP_
 
 //------------------------------------------------------------------------------

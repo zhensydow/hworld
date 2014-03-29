@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file script.hpp
     @brief Script open functions.
     @author Luis Cabellos
@@ -33,6 +33,7 @@ class Entity;
 
 //------------------------------------------------------------------------------
 void openEngine( lua_State * lua );
+void openWorld( lua_State * lua );
 void openGame( lua_State * lua );
 void openInput( lua_State * lua );
 void openTerminal( lua_State * lua );

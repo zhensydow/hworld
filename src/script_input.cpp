@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file script_input.cpp
     @brief Input script library.
     @author Luis Cabellos
@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 #include "script.hpp"
 #include <SFML/Graphics.hpp>
+#include "input.hpp"
 #include "engine.hpp"
 
 //------------------------------------------------------------------------------

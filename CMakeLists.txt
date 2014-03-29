@@ -18,6 +18,10 @@ find_package( jsoncpp REQUIRED )
 find_package( assimp REQUIRED )
 
 add_definitions( -O3 )
+if( CMAKE_BUILD_TYPE MATCHES RELEASE )
+  add_definitions( -march=native )
+  add_definitions( -mtune=native )
+endif( CMAKE_BUILD_TYPE MATCHES RELEASE )
 
 add_subdirectory( soil )
 add_subdirectory( src )
@@ -28,8 +32,9 @@ find_package( Doxygen )
 if( DOXYGEN_FOUND )
   find_package( Perl )
   set( DOXYGEN_INPUTS
-    "${PROJECT_SOURCE_DIR}/doc ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}" )
+    "${PROJECT_SOURCE_DIR}/doc ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/src/ent " )
   set(DOXYGEN_DEFINES "")
+  set(DOXYGEN_IMG_PATH "${PROJECT_SOURCE_DIR}/doc" )
 
   if( DOXYGEN_DOT_PATH )
     set( DOXYGEN_HAVE_DOT "YES" )

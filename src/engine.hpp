@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file engine.hpp
     @brief Engine declaration.
     @author Luis Cabellos
@@ -30,19 +30,20 @@
 #include <stack>
 #include <SFML/System/Clock.hpp>
 #include <boost/filesystem.hpp>
+#include "types.hpp"
 #include "gamestate.hpp"
-#include "world.hpp"
-#include "terrainprop.hpp"
-#include "terminal.hpp"
-#include "gfx.hpp"
-#include "input.hpp"
-#include "resourcefactory.hpp"
 
 //------------------------------------------------------------------------------
 class Entity;
 class IUpdate;
 class IDrawable;
+class Gfx;
 class Config;
+class World;
+class TerrainProp;
+class ResourceFactory;
+class Input;
+class Terminal;
 
 //------------------------------------------------------------------------------
 class Engine {
@@ -60,6 +61,9 @@ public:
     void yield();
     void stop();
 
+    ChunkID terrainFocus() const;
+    void setTerrainFocus( ChunkID idx );
+
     World & getWorld();
     Gfx & getGfx();
     Input & getInput();
@@ -70,13 +74,18 @@ public:
 
     std::unique_ptr<GameState> makeGameState( const std::string & name ) const;
 
-    std::shared_ptr<Entity> getEntity( const Entity * const ent ) noexcept;
+    std::shared_ptr<Entity> getEntity( const EntityID id ) noexcept;
     void addEntity( std::shared_ptr<Entity> entity );
+    void addTerrainEntity( ChunkID chunk_id, unsigned int tile, EntityID id );
     bool hasCamera() noexcept;
     void setCamera( std::shared_ptr<Entity> entity ) noexcept;
 
+    double getTime() const noexcept;
+
 private:
     Engine();
+
+    void updateCamera();
 
     enum class NextState{
         NEW_STATE,
@@ -95,11 +104,11 @@ private:
     NextState m_nextStateType = NextState::NOTHING;
     std::unique_ptr<GameState> m_nextState = nullptr;
 
-    Gfx m_gfx;
-    Input m_input;
-    World m_world;
-    Terminal m_terminal;
-    ResourceFactory m_resourceFactory;
+    std::unique_ptr<Gfx> m_gfx;
+    std::unique_ptr<Input> m_input;
+    std::unique_ptr<World> m_world;
+    std::unique_ptr<Terminal> m_terminal;
+    std::unique_ptr<ResourceFactory> m_resourceFactory;
 
     std::unique_ptr<TerrainProp> m_terrain;
 
@@ -133,38 +142,38 @@ bool Engine::isRunning() const{
 
 //------------------------------------------------------------------------------
 inline
-void Engine::stop() {
+void Engine::stop(){
     m_running = false;
 }
 
 //------------------------------------------------------------------------------
 inline
 World & Engine::getWorld(){
-    return m_world;
+    return *m_world;
 }
 
 //------------------------------------------------------------------------------
 inline
 Gfx & Engine::getGfx(){
-    return m_gfx;
+    return *m_gfx;
 }
 
 //------------------------------------------------------------------------------
 inline
 Input & Engine::getInput(){
-    return m_input;
+    return *m_input;
 }
 
 //------------------------------------------------------------------------------
 inline
 Terminal & Engine::getTerminal(){
-    return m_terminal;
+    return *m_terminal;
 }
 
 //------------------------------------------------------------------------------
 inline
 ResourceFactory & Engine::getResourceFactory(){
-    return m_resourceFactory;
+    return *m_resourceFactory;
 }
 
 //------------------------------------------------------------------------------
@@ -177,6 +186,12 @@ void Engine::setCamera( std::shared_ptr<Entity> cam ) noexcept {
 inline
 bool Engine::hasCamera() noexcept {
     return m_camera != nullptr;
+}
+
+//------------------------------------------------------------------------------
+inline
+double Engine::getTime() const noexcept {
+    return m_accum;
 }
 
 //------------------------------------------------------------------------------

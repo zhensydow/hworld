@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file gfx.hpp
     @brief Graphics Class.
     @author Luis Cabellos
@@ -27,10 +27,12 @@
 
 //------------------------------------------------------------------------------
 #include <memory>
+#include <array>
 #include "gfxinc.hpp"
 #include "ray.hpp"
 
 //------------------------------------------------------------------------------
+class Config;
 class Renderer;
 class Renderer2D;
 class Renderer3D;
@@ -38,11 +40,17 @@ class Renderer3D;
 //------------------------------------------------------------------------------
 class Gfx {
 public:
-    void setup();
+    void setup( const Config & config );
     void destroy();
     void startFrame();
+    void startShadowMappingPass();
+    void startColorPass();
     void startGUI();
     void endFrame();
+
+    std::string getGLSLVersion() const noexcept;
+
+    void enableRenderEffects( bool v = true ) noexcept;
 
     void setSunDir( glm::vec3 && dir ) noexcept ;
 
@@ -63,6 +71,10 @@ private:
     constexpr static unsigned int DESIRED_WIDTH = 800;
     constexpr static unsigned int DESIRED_HEIGHT = 600;
 
+    void setGLSLVersion( const std::string & version );
+
+    static std::array< GLfloat, 6*3 > s_quad_verts;
+
     sf::RenderWindow * m_window;
 
     glm::mat4 m_mvp;
@@ -73,11 +85,30 @@ private:
     std::shared_ptr<Renderer2D> m_renderer2D = nullptr;
     std::shared_ptr<Renderer3D> m_renderer3D = nullptr;
 
+    std::string m_glslVersion = "";
+
     float m_width;
     float m_height;
 
     GLuint m_vertexArrayID;
+    GLuint m_fbRendered;
+    GLuint m_renderedTex;
+    GLuint m_renderedDepth;
+    GLuint m_quad_prg;
+    GLuint m_rfx_tex_id;
+    GLuint m_rfx_time_id;
+    GLuint m_rfx_w_id;
+    GLuint m_rfx_h_id;
+    GLuint m_quad_vertsbuff;
+
+    bool m_rendereffects = false;
 };
+
+//------------------------------------------------------------------------------
+inline
+std::string Gfx::getGLSLVersion() const noexcept{
+    return m_glslVersion;
+}
 
 //------------------------------------------------------------------------------
 inline
@@ -92,6 +123,12 @@ void Gfx::setSunDir( glm::vec3 && dir ) noexcept {
     if( glm::any( glm::notEqual( dir, glm::vec3(0.0f) ) ) ){
         m_sundir = std::move(dir);
     }
+}
+
+//------------------------------------------------------------------------------
+inline
+void Gfx::enableRenderEffects( bool v ) noexcept {
+    m_rendereffects = v;
 }
 
 //------------------------------------------------------------------------------

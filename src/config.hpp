@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file config.hpp
     @brief Configuration stuff.
     @author Luis Cabellos
@@ -28,12 +28,15 @@
 //------------------------------------------------------------------------------
 #include <memory>
 #include <string>
+#include "debug.hpp"
 
 //------------------------------------------------------------------------------
 class Config{
 public:
     std::string datadir = "";
     std::string initialState = "";
+    LogLevel loglevel = LogLevel::LL_WARNING;
+    std::string glslVersion = "";
 };
 
 //------------------------------------------------------------------------------

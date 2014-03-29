@@ -1,4 +1,4 @@
-/**
+/*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
     This file is part of HexWorld.
@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
-**/
+------------------------------------------------------------------------------*/
 /** @file terminal.cpp
     @brief Terminal Singleton class.
     @author Luis Cabellos
@@ -23,7 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "terminal.hpp"
-#include <iostream>
+#include "debug.hpp"
 #include "renderer.hpp"
 #include "engine.hpp"
 
@@ -31,7 +31,7 @@
 void Terminal::initialize(){
     auto filename = Engine::instance().getDataFilename( "GentiumPlus-R.ttf" );
     if( !m_font.loadFromFile( filename ) ){
-        std::cout << "Error loading Font\n";
+        logE( "Can't load font ", filename );
         std::terminate();
     }
 
