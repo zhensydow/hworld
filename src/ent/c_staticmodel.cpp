@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "c_staticmodel.hpp"
+#include "glm/ext.hpp"
 #include "staticmodel.hpp"
 #include "engine.hpp"
 #include "c_transform.hpp"

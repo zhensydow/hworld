@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "world.hpp"
+#include "glm/ext.hpp"
 #include "util.hpp"
 #include "debug.hpp"
 

@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 #include "terrainprop.hpp"
 #include <queue>
+#include "glm/gtx/rotate_vector.hpp"
 #include "constants.hpp"
 #include "engine.hpp"
 #include "chunkprop.hpp"

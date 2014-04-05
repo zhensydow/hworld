@@ -1,3 +1,4 @@
+
 /*------------------------------------------------------------------------------
     Copyright 2014, HexWorld Authors.
 
@@ -30,7 +31,6 @@
 #include <vector>
 #include <memory>
 #include "types.hpp"
-#include "glm/glm.hpp"
 
 //------------------------------------------------------------------------------
 class QuadNode {

@@ -32,12 +32,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
-//#define GLM_MESSAGES
-#define GLM_FORCE_CXX11
-#include "glm/glm.hpp"
-#include "glm/gtx/transform.hpp"
-#include "glm/gtx/rotate_vector.hpp"
-//#include "glm/ext.hpp"
+#include "types.hpp"
 #include "SOIL.h"
 #include <assimp/cimport.h>
 #include <assimp/scene.h>

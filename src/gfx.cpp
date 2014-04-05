@@ -23,6 +23,8 @@
 */
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
+#include "glm/vector_relational.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "debug.hpp"
 #include "config.hpp"
 #include "engine.hpp"
@@ -305,6 +307,13 @@ void Gfx::startGUI(){
 
     m_window->pushGLStates();
     m_currentRenderer = m_renderer2D;
+}
+
+//------------------------------------------------------------------------------
+void Gfx::setSunDir( glm::vec3 && dir ) noexcept {
+    if( glm::any( glm::notEqual( dir, glm::vec3(0.0f) ) ) ){
+        m_sundir = std::move(dir);
+    }
 }
 
 //------------------------------------------------------------------------------

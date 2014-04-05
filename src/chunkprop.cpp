@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "chunkprop.hpp"
+#include "glm/ext.hpp"
 #include "constants.hpp"
 #include <algorithm>
 #include "renderer.hpp"

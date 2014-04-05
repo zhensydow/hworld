@@ -30,7 +30,6 @@
 #define GL3_PROTOTYPES 1
 #include <GL/gl.h>
 
-
 constexpr GLfloat sqrt3 = std::sqrt( 3 );
 
 //------------------------------------------------------------------------------
