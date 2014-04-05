@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "chunkprop.hpp"
+#include "constants.hpp"
 #include <algorithm>
 #include "renderer.hpp"
 
@@ -30,7 +31,6 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
-constexpr GLfloat sqrt3 = sqrt( 3 );
 constexpr GLfloat TileCZ = 0.5 * sqrt3;
 constexpr GLfloat TileCX = 0.5;
 

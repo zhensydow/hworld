@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 #include "terrainprop.hpp"
 #include <queue>
+#include "constants.hpp"
 #include "engine.hpp"
 #include "chunkprop.hpp"
 #include "world.hpp"
@@ -80,8 +81,6 @@ void TerrainProp::setFocus( ChunkID center ){
                     }
                 }
             }
-
-            constexpr GLfloat sqrt3 = sqrt( 3 );
 
             for( unsigned int i = 0 ; i < chunk.m_neighbours.size() ; ++i ){
                 auto ns = chunk.m_neighbours[i];
