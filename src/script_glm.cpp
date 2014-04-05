@@ -23,8 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "script.hpp"
-#include "glm/glm.hpp"
-#include "glm/ext.hpp"
+#include "glm/gtx/transform.hpp"
 #include "util.hpp"
 
 //------------------------------------------------------------------------------
@@ -54,7 +53,7 @@ int glm_rotate( lua_State * lua ){
     auto xa = float( luaL_checknumber( lua, 2 ) );
     auto ya = float( luaL_checknumber( lua, 3 ) );
     auto za = float( luaL_checknumber( lua, 4 ) );
-    auto rot = glm::rotate( angle, xa, ya, za );
+    auto rot = glm::rotate( angle, glm::vec3{xa, ya, za} );
 
     lua_push_mat4x4( lua, rot );
 
