@@ -30,7 +30,9 @@
 #define GL3_PROTOTYPES 1
 #include <GL/gl.h>
 
+constexpr GLfloat PI = 3.14159265358979323846f;
 constexpr GLfloat sqrt3 = std::sqrt( 3 );
+constexpr GLfloat sixthPart = (60.0f * PI) / 180.0f; // 60 degrees
 
 //------------------------------------------------------------------------------
 #endif//CONSTANTS_HPP_
