@@ -92,7 +92,7 @@ void World::linkChunks( ChunkID root, unsigned int tile, ChunkID branch ){
 
         auto & branchChunk = m_terrain[branch];
         auto offset = glm::rotate( glm::vec2( 1.5, -(5./2.)*sqrt3 ),
-                                   60.0f * tile );
+                                   sixthPart * tile );
         branchChunk.m_pos = rootChunk.m_pos + offset;
         branchChunk.m_neighbours[ tileBranch ] = root;
     }

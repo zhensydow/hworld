@@ -84,7 +84,7 @@ void ChunkProp::setupCommon(){
     glGenBuffers( s_floorBuffers.size(), &s_floorBuffers[0] );
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES - 1 ; ++tile ){
-        offset = glm::rotate( glm::vec2( 0, -sqrt3 ), 60.0f * tile );
+        offset = glm::rotate( glm::vec2( 0, -sqrt3 ), sixthPart * tile );
 
         for( unsigned int i = 0 ; i < 3 ; ++i ){
             auto dst = (tile*3 + i)*3;
@@ -184,7 +184,7 @@ void ChunkProp::setup( const Chunk & chunk ){
             offset = glm::vec2( 0, 0 );
         }else{
             offset = glm::rotate( glm::vec2( 0, -sqrt3 ),
-                                  60.0f * (tile - 1) );
+                                  sixthPart * (tile - 1) );
         }
 
         m_tilePos[ tile ] = glm::vec3( offset.x,
@@ -206,7 +206,7 @@ void ChunkProp::setup( const Chunk & chunk ){
             offset = glm::vec2( 0, 0 );
         }else{
             offset = glm::rotate( glm::vec2( 0, -sqrt3 ),
-                                  60.0f * (tile - 1) );
+                                  sixthPart * (tile - 1) );
         }
 
         auto h = heigths[tile] * Chunk::STEP_SIZE;
