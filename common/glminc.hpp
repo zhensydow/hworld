@@ -16,36 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file types.hpp
-    @brief Basic Types definitions
+/** @file glminc.hpp
+    @brief GLM include files for cpp ones.
     @author Luis Cabellos
-    @date 2014-03-04
+    @date 2014-04-05
 */
 //------------------------------------------------------------------------------
-#ifndef TYPES_HPP_
-#define TYPES_HPP_
+#ifndef GLMINC_HPP_
+#define GLMINC_HPP_
 
-//------------------------------------------------------------------------------
-#include <limits>
+#include "types.hpp"
 
 #define GLM_FORCE_CXX11
 #define GLM_FORCE_RADIANS
-#include "glm/fwd.hpp"
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
-#include "glm/mat4x4.hpp"
+#include "glm/vector_relational.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/rotate_vector.hpp"
+#include "glm/gtx/transform.hpp"
 
 //------------------------------------------------------------------------------
-using ChunkID = unsigned int;
-
-constexpr ChunkID CHUNK_NULL_IDX = std::numeric_limits<ChunkID>::max();
-
-//------------------------------------------------------------------------------
-using EntityID = unsigned int;
-
-constexpr EntityID ENTITY_NULL_IDX = std::numeric_limits<EntityID>::max();
-
-//------------------------------------------------------------------------------
-#endif//TYPES_HPP_
+#endif//GLMINC_HPP_
 
 //------------------------------------------------------------------------------

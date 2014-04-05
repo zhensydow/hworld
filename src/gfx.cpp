@@ -23,8 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "gfx.hpp"
-#include "glm/vector_relational.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "glminc.hpp"
 #include "debug.hpp"
 #include "config.hpp"
 #include "engine.hpp"

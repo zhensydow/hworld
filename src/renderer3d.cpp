@@ -23,7 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "renderer3d.hpp"
-#include "glm/gtx/transform.hpp"
+#include "glminc.hpp"
 #include "debug.hpp"
 #include "material.hpp"
 #include "chunkprop.hpp"
