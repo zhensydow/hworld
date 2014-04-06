@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
+#include <SFML/Graphics.hpp>
 #include "glminc.hpp"
 #include "constants.hpp"
 #include "chunk.hpp"
@@ -127,6 +128,22 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 }
 
 //------------------------------------------------------------------------------
+void saveDebugBMP( const vector<Chunk> & tiles ){
+    sf::RenderTexture renderTexture;
+    if( not renderTexture.create( 500, 500 ) ){
+        cout << "ERROR: Can't create debug BMP" << endl;
+        return;
+    }
+
+    renderTexture.clear();
+    renderTexture.display();
+
+    auto image = renderTexture.getTexture().copyToImage();
+
+    image.saveToFile( "text.png" );
+}
+
+//------------------------------------------------------------------------------
 int main(){
     std::cout << "Generating Tile Map" << std::endl;
 
@@ -147,6 +164,9 @@ int main(){
         }
         std::cout << std::endl;
     }
+
+    cout << "Saving Debug BMP" << endl;
+    saveDebugBMP( tiles );
 
     return 0;
 }
