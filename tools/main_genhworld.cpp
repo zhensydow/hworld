@@ -178,7 +178,7 @@ int main(){
     std::cout << "Generating Tile Map" << std::endl;
 
     auto bound0 = glm::vec2( 0.0f, 0.0f );
-    auto bound1 = glm::vec2( 200.0f, 200.0f );
+    auto bound1 = glm::vec2( 500.0f, 500.0f );
     auto tiles = genTileDivision( bound0, bound1 );
 
     std::cout << std::endl << "Total Tiles : " << tiles.size() << std::endl;
