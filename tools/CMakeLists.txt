@@ -16,5 +16,6 @@ add_executable( genhworld main_genhworld.cpp )
 
 set_target_properties( genhworld PROPERTIES LINK_FLAGS_RELEASE -flto )
 
+target_link_libraries( genhworld ${SFML_LIBRARIES} )
 target_link_libraries( genhworld ${jsoncpp_LIBRARIES} )
 target_link_libraries( genhworld libcommon )
