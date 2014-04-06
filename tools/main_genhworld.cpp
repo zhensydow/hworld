@@ -128,14 +128,42 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 }
 
 //------------------------------------------------------------------------------
-void saveDebugBMP( const vector<Chunk> & tiles ){
+void saveDebugBMP( const vector<Chunk> & tiles,
+                   const glm::vec2 & a, const glm::vec2 & b )
+{
     sf::RenderTexture renderTexture;
-    if( not renderTexture.create( 500, 500 ) ){
+    if( not renderTexture.create( 1000, 1000 ) ){
         cout << "ERROR: Can't create debug BMP" << endl;
         return;
     }
 
+    auto view = sf::View( sf::FloatRect( a.x, a.y, (b.x - a.x), (b.y - a.y) ) );
+
+    renderTexture.setView( view );
+
     renderTexture.clear();
+
+    sf::CircleShape circle( 1 );
+    circle.setOrigin( 1, 1 );
+    sf::Vertex line[] = {
+        sf::Vertex( sf::Vector2f( 0, 0 ) ),
+        sf::Vertex( sf::Vector2f( 150, 150 ) )
+    };
+
+    for( auto & t: tiles ){
+        circle.setPosition( t.m_pos.x, t.m_pos.y );
+        renderTexture.draw( circle );
+        line[0].position = { t.m_pos.x, t.m_pos.y };
+        for( auto & nn: t.m_neighbours ){
+            if( nn != CHUNK_NULL_IDX ){
+                auto & pchunk = tiles[ nn ];
+                line[1].position = { pchunk.m_pos.x, pchunk.m_pos.y };
+                renderTexture.draw( line, 2, sf::Lines );
+            }
+        }
+    }
+
+
     renderTexture.display();
 
     auto image = renderTexture.getTexture().copyToImage();
@@ -147,26 +175,14 @@ void saveDebugBMP( const vector<Chunk> & tiles ){
 int main(){
     std::cout << "Generating Tile Map" << std::endl;
 
-    auto tiles = genTileDivision( glm::vec2( 0, 0 ), glm::vec2( 500, 500 ) );
+    auto bound0 = glm::vec2( 0.0f, 0.0f );
+    auto bound1 = glm::vec2( 200.0f, 200.0f );
+    auto tiles = genTileDivision( bound0, bound1 );
 
     std::cout << std::endl << "Total Tiles : " << tiles.size() << std::endl;
 
-    for( auto & t: tiles ){
-        std::cout << "Tile " << t.m_pos.x << ", " << t.m_pos.y << " ";
-
-        std::cout << "nns = ";
-        for( auto & nn: t.m_neighbours ){
-            if( nn == CHUNK_NULL_IDX ){
-                std::cout << "- ";
-            }else{
-                std::cout << nn << " ";
-            }
-        }
-        std::cout << std::endl;
-    }
-
     cout << "Saving Debug BMP" << endl;
-    saveDebugBMP( tiles );
+    saveDebugBMP( tiles, bound0, bound1 );
 
     return 0;
 }
