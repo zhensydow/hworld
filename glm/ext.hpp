@@ -70,7 +70,7 @@
 #include "./gtc/matrix_inverse.hpp"
 #include "./gtc/matrix_transform.hpp"
 #include "./gtc/noise.hpp"
-#include "./gtc/packing.hpp"
+//#include "./gtc/packing.hpp"
 #include "./gtc/quaternion.hpp"
 #include "./gtc/random.hpp"
 #include "./gtc/reciprocal.hpp"
