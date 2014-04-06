@@ -146,8 +146,10 @@ void saveDebugBMP( const vector<Chunk> & tiles,
     sf::CircleShape circle( 1 );
     circle.setOrigin( 1, 1 );
     sf::Vertex line[] = {
-        sf::Vertex( sf::Vector2f( 0, 0 ) ),
-        sf::Vertex( sf::Vector2f( 150, 150 ) )
+        sf::Vertex( sf::Vector2f( 0, 0 ),
+                    sf::Color( 200, 200, 200, 100 ) ),
+        sf::Vertex( sf::Vector2f( 0, 0 ),
+                    sf::Color( 200, 200, 200, 100 ) )
     };
 
     for( auto & t: tiles ){
