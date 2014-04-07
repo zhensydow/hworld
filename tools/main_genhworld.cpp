@@ -60,7 +60,7 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 
     auto w = b.x - a.x;
     auto h = b.y - a.y;
-    float estimated = (w/5.0) * (h/5.0);
+    float estimated = (w/(TILE_RADIUS*4)) * (h/(2.5*TILE_OFFSET_Y));
     float lastPercent = 0.0f;
 
     cout << estimated << endl;
