@@ -38,6 +38,9 @@ constexpr GLfloat TILE_RADIUS = 1.0f;
 constexpr unsigned int TILE_VERTICES = 6;
 constexpr GLfloat TILE_OFFSET_Y = sqrt3 * std::sqrt( TILE_RADIUS*TILE_RADIUS );
 
+constexpr GLfloat CHUNK_OFFSET_X = 1.5f*TILE_RADIUS;
+constexpr GLfloat CHUNK_OFFSET_Y = -2.5*TILE_OFFSET_Y;
+
 //------------------------------------------------------------------------------
 #endif//CONSTANTS_HPP_
 

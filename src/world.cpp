@@ -82,8 +82,6 @@ void World::addChunk( ChunkID idx, Chunk chunk ){
 
 //------------------------------------------------------------------------------
 void World::linkChunks( ChunkID root, unsigned int tile, ChunkID branch ){
-    constexpr GLfloat sqrt3 = sqrt( 3 );
-
     if( tile < 6 and hasChunk( root ) and hasChunk( branch ) ){
         auto tileBranch = (tile + 3) % 6;
         auto & rootChunk = m_terrain[root];
@@ -91,7 +89,8 @@ void World::linkChunks( ChunkID root, unsigned int tile, ChunkID branch ){
         rootChunk.m_neighbours[ tile ] = branch;
 
         auto & branchChunk = m_terrain[branch];
-        auto offset = glm::rotate( glm::vec2( 1.5, -(5./2.)*sqrt3 ),
+        auto offset = glm::rotate( glm::vec2( CHUNK_OFFSET_X,
+                                              CHUNK_OFFSET_Y ),
                                    sixthPart * tile );
         branchChunk.m_pos = rootChunk.m_pos + offset;
         branchChunk.m_neighbours[ tileBranch ] = root;

@@ -86,8 +86,10 @@ void TerrainProp::setFocus( ChunkID center ){
             for( unsigned int i = 0 ; i < chunk.m_neighbours.size() ; ++i ){
                 auto ns = chunk.m_neighbours[i];
                 if( ns != CHUNK_NULL_IDX and m_world.hasChunk(ns) ){
-                    auto offset = glm::rotateY( glm::vec3( 1.5, 0, -(5./2.)*sqrt3 ),
-                                               sixthPart * i );
+                    auto offset = glm::rotateY( glm::vec3( CHUNK_OFFSET_X,
+                                                           0,
+                                                           CHUNK_OFFSET_Y),
+                                                sixthPart * i );
                     auto newPos = pos + offset;
                     queue.emplace( std::make_pair( ns, newPos ) );
                 }
