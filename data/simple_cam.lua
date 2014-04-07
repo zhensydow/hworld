@@ -20,18 +20,18 @@ function onUpdate( delta )
    end
 
    if input.isKeyPressed( input.Right ) then
-      angle1 = angle1 + 100.0 * delta
+      angle1 = angle1 + 2.0 * delta
    end
 
    if input.isKeyPressed( input.Left ) then
-      angle1 = angle1 - 100.0 * delta
+      angle1 = angle1 - 2.0 * delta
    end
 
    if input.isKeyPressed( input.Up ) then
       if input.isKeyPressed( input.LShift ) then
          dist = dist + 10.0 * delta
       else
-         angle2 = angle2 + 100.0 * delta
+         angle2 = angle2 + 2.0 * delta
       end
    end
 
@@ -39,16 +39,16 @@ function onUpdate( delta )
       if input.isKeyPressed( input.LShift ) then
          dist = dist - 10.0 * delta
       else
-         angle2 = angle2 - 100.0 * delta
+         angle2 = angle2 - 2.0 * delta
       end
    end
 
-   if angle2 > 40 then
-      angle2 = 40
+   if angle2 > 0.70 then
+      angle2 = 0.70
    end
 
-   if angle2 < -40 then
-      angle2 = -40
+   if angle2 < -0.70 then
+      angle2 = -0.70
    end
 
    rot1 = glm.rotate( angle1, 0.0, 1.0, 0.0 )

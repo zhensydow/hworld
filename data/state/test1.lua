@@ -40,7 +40,7 @@ function update( dt )
    --print( 'Update state ' .. dt .. ' and ' .. dtime )
    --tree.transform:setPosition( 0, dtime / 4.0, 0 )
 
-   angle1 = dtime*200
+   angle1 = dtime*3.5
    rot1 = glm.rotate( angle1, 0.0, 1.0, 0.0 )
    axis2 = rot1:mul( glm.vec4( 0, -1, -1, 0.0 ) )
 
