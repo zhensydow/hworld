@@ -27,6 +27,7 @@
 
 //------------------------------------------------------------------------------
 #include <array>
+#include "constants.hpp"
 #include "gfxinc.hpp"
 #include "chunk.hpp"
 
@@ -83,8 +84,8 @@ private:
     static std::array< GLushort, m_numFloorTris*3 > s_floorTris;
 
     static std::array< GLuint, 3 > s_tileBuffers;
-    static std::array< GLfloat, Chunk::VERTS_TILE*3 > s_tileVerts;
-    static std::array< GLfloat, Chunk::VERTS_TILE*2 > s_tileUVs;
+    static std::array< GLfloat, TILE_VERTICES*3 > s_tileVerts;
+    static std::array< GLfloat, TILE_VERTICES*2 > s_tileUVs;
     static std::array< GLushort, TRIS_TILE*3 > s_tileTris;
 
     static std::array< GLushort, m_numFaceTris*3 > s_faceTris;

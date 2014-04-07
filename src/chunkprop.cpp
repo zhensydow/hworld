@@ -24,7 +24,6 @@
 //------------------------------------------------------------------------------
 #include "chunkprop.hpp"
 #include "glminc.hpp"
-#include "constants.hpp"
 #include <algorithm>
 #include "renderer.hpp"
 
@@ -36,7 +35,7 @@ constexpr GLfloat TileCZ = 0.5 * sqrt3;
 constexpr GLfloat TileCX = 0.5;
 
 //------------------------------------------------------------------------------
-constexpr std::array< GLfloat, Chunk::VERTS_TILE*2 > TilePos{ {
+constexpr std::array< GLfloat, TILE_VERTICES*2 > TilePos{ {
         -TileCX, -TileCZ, TileCX, -TileCZ, 1.0f, 0.0f,
             TileCX, TileCZ, -TileCX, TileCZ, -1.0f, 0.0f } };
 
@@ -46,8 +45,8 @@ std::array< GLfloat, ChunkProp::m_numFloorVerts*3 > ChunkProp::s_floorVerts;
 std::array< GLushort, ChunkProp::m_numFloorTris*3 > ChunkProp::s_floorTris;
 
 std::array< GLuint, 3 > ChunkProp::s_tileBuffers;
-std::array< GLfloat, Chunk::VERTS_TILE*3 > ChunkProp::s_tileVerts;
-std::array< GLfloat, Chunk::VERTS_TILE*2 > ChunkProp::s_tileUVs;
+std::array< GLfloat, TILE_VERTICES*3 > ChunkProp::s_tileVerts;
+std::array< GLfloat, TILE_VERTICES*2 > ChunkProp::s_tileUVs;
 std::array< GLushort, ChunkProp::TRIS_TILE*3 > ChunkProp::s_tileTris;
 std::array< GLushort, ChunkProp::m_numFaceTris*3 > ChunkProp::s_faceTris;
 GLuint ChunkProp::s_faceTrisBuffer;
@@ -58,7 +57,7 @@ void ChunkProp::setupCommon(){
     // generate base tile
     glGenBuffers( s_tileBuffers.size(), &s_tileBuffers[0] );
 
-    for( unsigned int vert = 0 ; vert < Chunk::VERTS_TILE ; ++vert ){
+    for( unsigned int vert = 0 ; vert < TILE_VERTICES ; ++vert ){
         auto dst0 = vert*3;
         auto dst1 = vert*2;
 
@@ -88,8 +87,8 @@ void ChunkProp::setupCommon(){
 
         for( unsigned int i = 0 ; i < 3 ; ++i ){
             auto dst = (tile*3 + i)*3;
-            auto src0 = ((tile + i + (Chunk::VERTS_TILE-1))
-                         % Chunk::VERTS_TILE)*2;
+            auto src0 = ((tile + i + (TILE_VERTICES-1))
+                         % TILE_VERTICES)*2;
 
             s_floorVerts[ dst + 0 ] = TilePos[ src0 ] + offset.x;
             s_floorVerts[ dst + 1 ] = 0.0f;
@@ -98,7 +97,7 @@ void ChunkProp::setupCommon(){
 
         auto dst = tile * 2 * 3;
         auto src0 = tile * 3;
-        auto srcN = (src0 + 3) % (Chunk::VERTS_TILE*3);
+        auto srcN = (src0 + 3) % (TILE_VERTICES*3);
 
         s_floorTris[ dst + 0 ] = src0;
         s_floorTris[ dst + 1 ] = src0 + 1;
@@ -215,7 +214,7 @@ void ChunkProp::setup( const Chunk & chunk ){
         for( unsigned int face = 0 ; face < FACES_TILE ; ++face ){
             auto pface = tile*FACES_TILE + face;
             auto src0 = face*2;
-            auto src1 = ((face+1) % Chunk::VERTS_TILE)*2;
+            auto src1 = ((face+1) % TILE_VERTICES)*2;
             auto dst = pface*VERTS_FACE*3;
 
             m_faceVerts[ dst + 0 ] = TilePos[ src0 ] + offset.x;

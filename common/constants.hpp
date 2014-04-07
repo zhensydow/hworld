@@ -34,6 +34,9 @@ constexpr GLfloat PI = 3.14159265358979323846f;
 constexpr GLfloat sqrt3 = std::sqrt( 3 );
 constexpr GLfloat sixthPart = (60.0f * PI) / 180.0f; // 60 degrees
 
+constexpr GLfloat TILE_RADIUS = 1.0f;
+constexpr unsigned int TILE_VERTICES = 6;
+
 //------------------------------------------------------------------------------
 #endif//CONSTANTS_HPP_
 
