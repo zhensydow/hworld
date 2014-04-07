@@ -31,13 +31,13 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
-constexpr GLfloat TileCZ = 0.5 * sqrt3;
-constexpr GLfloat TileCX = 0.5;
+constexpr GLfloat TileCZ = 0.5 * TILE_OFFSET_Y;
+constexpr GLfloat TileCX = 0.5 * TILE_RADIUS;
 
 //------------------------------------------------------------------------------
 constexpr std::array< GLfloat, TILE_VERTICES*2 > TilePos{ {
-        -TileCX, -TileCZ, TileCX, -TileCZ, 1.0f, 0.0f,
-            TileCX, TileCZ, -TileCX, TileCZ, -1.0f, 0.0f } };
+        -TileCX, -TileCZ, TileCX, -TileCZ, TILE_RADIUS, 0.0f,
+            TileCX, TileCZ, -TileCX, TileCZ, -TILE_RADIUS, 0.0f } };
 
 //------------------------------------------------------------------------------
 std::array< GLuint, 2 > ChunkProp::s_floorBuffers;
@@ -83,7 +83,7 @@ void ChunkProp::setupCommon(){
     glGenBuffers( s_floorBuffers.size(), &s_floorBuffers[0] );
 
     for( unsigned int tile = 0 ; tile < Chunk::NTILES - 1 ; ++tile ){
-        offset = glm::rotate( glm::vec2( 0, -sqrt3 ), sixthPart * tile );
+        offset = glm::rotate( glm::vec2( 0, -TILE_OFFSET_Y ), sixthPart * tile );
 
         for( unsigned int i = 0 ; i < 3 ; ++i ){
             auto dst = (tile*3 + i)*3;
@@ -182,7 +182,7 @@ void ChunkProp::setup( const Chunk & chunk ){
         if( tile == 0 ){
             offset = glm::vec2( 0, 0 );
         }else{
-            offset = glm::rotate( glm::vec2( 0, -sqrt3 ),
+            offset = glm::rotate( glm::vec2( 0, -TILE_OFFSET_Y ),
                                   sixthPart * (tile - 1) );
         }
 
@@ -204,7 +204,7 @@ void ChunkProp::setup( const Chunk & chunk ){
         if( tile == 0 ){
             offset = glm::vec2( 0, 0 );
         }else{
-            offset = glm::rotate( glm::vec2( 0, -sqrt3 ),
+            offset = glm::rotate( glm::vec2( 0, -TILE_OFFSET_Y ),
                                   sixthPart * (tile - 1) );
         }
 
