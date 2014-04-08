@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include "renderer3d.hpp"
+#include "glminc.hpp"
 #include "debug.hpp"
 #include "material.hpp"
 #include "chunkprop.hpp"

@@ -28,6 +28,7 @@
 //------------------------------------------------------------------------------
 #include <memory>
 #include <array>
+#include "types.hpp"
 #include "gfxinc.hpp"
 #include "ray.hpp"
 
@@ -115,14 +116,6 @@ inline
 void Gfx::endFrame(){
     m_window->popGLStates();
     m_window->display();
-}
-
-//------------------------------------------------------------------------------
-inline
-void Gfx::setSunDir( glm::vec3 && dir ) noexcept {
-    if( glm::any( glm::notEqual( dir, glm::vec3(0.0f) ) ) ){
-        m_sundir = std::move(dir);
-    }
 }
 
 //------------------------------------------------------------------------------

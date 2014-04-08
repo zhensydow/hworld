@@ -1,0 +1,6 @@
+compiler: gcc
+script: cmake . && make
+branches:
+  only:
+    - master
+    - develop

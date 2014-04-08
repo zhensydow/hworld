@@ -24,7 +24,9 @@ if( CMAKE_BUILD_TYPE MATCHES RELEASE )
 endif( CMAKE_BUILD_TYPE MATCHES RELEASE )
 
 add_subdirectory( soil )
+add_subdirectory( common )
 add_subdirectory( src )
+add_subdirectory( tools )
 add_subdirectory( test )
 
 # documentation

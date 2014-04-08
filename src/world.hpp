@@ -26,7 +26,9 @@
 #define WORLD_HPP_
 
 //------------------------------------------------------------------------------
+#include <memory>
 #include <unordered_map>
+#include "quadnode.hpp"
 #include "chunk.hpp"
 
 //------------------------------------------------------------------------------
@@ -43,6 +45,11 @@ public:
     const std::unordered_map< ChunkID, Chunk> & getTerrain() const;
 
 private:
+    void addChunk( ChunkID cid, Chunk chunk );
+    void linkChunks( ChunkID root, unsigned int tile, ChunkID branch );
+
+    std::unique_ptr<QuadNode> m_quad;
+
     std::unordered_map< ChunkID, Chunk> m_terrain;
 };
 

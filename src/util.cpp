@@ -28,12 +28,15 @@
 #include "debug.hpp"
 
 //------------------------------------------------------------------------------
+using namespace std;
+
+//------------------------------------------------------------------------------
 Chunk createRandomChunk( int min, int max ){
     Chunk chunk;
 
-    std::random_device rd;
-    std::mt19937 gen( rd() );
-    std::uniform_int_distribution<> dis( min, max );
+    random_device rd;
+    mt19937 gen( rd() );
+    uniform_int_distribution<> dis( min, max );
 
     for( int i = 0 ; i < 7 ; ++i ){
         chunk.setHeight( i, dis( gen ) );
@@ -47,6 +50,37 @@ ChunkProp createChunkProp( const Chunk & chunk ){
     ChunkProp cprop( chunk );
 
     return cprop;
+}
+
+//--------------------------------------------------------------------------
+unique_ptr<QuadNode> createWorldQuad( unsigned int levels, glm::vec2 a, glm::vec2 b ){
+    if( levels == 0 ){
+        return nullptr;
+    }
+
+    auto node = unique_ptr<QuadNode>(new QuadNode);
+
+    node->setBound( a, b );
+
+    auto minb = node->minBound();
+    auto maxb = node->maxBound();
+
+    auto center = (maxb + minb) / 2.0f;
+
+    node->setChild( 0, createWorldQuad( levels - 1,
+                                        minb,
+                                        center ) );
+    node->setChild( 1, createWorldQuad( levels - 1,
+                                        glm::vec2( center.x, minb.y),
+                                        glm::vec2( maxb.x, center.y) ) );
+    node->setChild( 2, createWorldQuad( levels - 1,
+                                        center,
+                                        maxb ) );
+    node->setChild( 3, createWorldQuad( levels - 1,
+                                        glm::vec2(minb.x,center.y),
+                                        glm::vec2(center.x, maxb.y) ) );
+
+    return node;
 }
 
 //--------------------------------------------------------------------------
@@ -66,7 +100,7 @@ bool checkLuaReturn( lua_State * const ls, const int ret ){
 }
 
 //------------------------------------------------------------------------------
-bool lua_isUserData( lua_State * const ls, int idx, const std::string & str ){
+bool lua_isUserData( lua_State * const ls, int idx, const string & str ){
     lua_getmetatable( ls, idx );              // +1
     luaL_getmetatable( ls, str.c_str() );     // +2
     auto ret = lua_equal( ls, -1, -2 ) == 1;  // +2

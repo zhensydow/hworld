@@ -24,6 +24,8 @@
 //------------------------------------------------------------------------------
 #include "terrainprop.hpp"
 #include <queue>
+#include "glminc.hpp"
+#include "constants.hpp"
 #include "engine.hpp"
 #include "chunkprop.hpp"
 #include "world.hpp"
@@ -81,13 +83,13 @@ void TerrainProp::setFocus( ChunkID center ){
                 }
             }
 
-            constexpr GLfloat sqrt3 = sqrt( 3 );
-
             for( unsigned int i = 0 ; i < chunk.m_neighbours.size() ; ++i ){
                 auto ns = chunk.m_neighbours[i];
                 if( ns != CHUNK_NULL_IDX and m_world.hasChunk(ns) ){
-                    auto offset = glm::rotateY( glm::vec3( 1.5, 0, -(5./2.)*sqrt3 ),
-                                               60.0f * i );
+                    auto offset = glm::rotateY( glm::vec3( CHUNK_OFFSET_X,
+                                                           0,
+                                                           CHUNK_OFFSET_Y),
+                                                sixthPart * i );
                     auto newPos = pos + offset;
                     queue.emplace( std::make_pair( ns, newPos ) );
                 }
