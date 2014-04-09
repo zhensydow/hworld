@@ -47,24 +47,19 @@ void RangeList<T>::insert( const T val ){
             if( val == (it->first - 1) ){
                 it->first = val;
                 it->second = it->second + 1;
-                std::cout <<  " increase begin " << val << std::endl;
                 return;
             }else{
                 m_items.emplace( it, std::make_pair( val, 1 ) );
-                std::cout <<  " emplace before " << val << std::endl;
                 return;
             }
         }else if( val < (it->first + it->second) ){
-            std::cout <<  " already " << val << std::endl;
             return;
         }else if( val == (it->first + it->second) ){
             it->second = it->second + 1;
-            std::cout <<  " increase end " << val << std::endl;
             return;
         }
     }
-    
-    std::cout <<  " emplace back " << val << std::endl;
+
     m_items.emplace_back( std::make_pair( val, 1 ) );
 }
 
