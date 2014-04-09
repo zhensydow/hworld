@@ -12,7 +12,7 @@
 #include <algorithm>
 
 //------------------------------------------------------------------------------
-template<typename T, 
+template<typename T,
          typename = typename std::enable_if<std::is_integral<T>::value>::type>
 class RangeList; // undefined
 
@@ -22,10 +22,19 @@ class RangeList<T>{
 public:
     using value_type = T;
     using RangeItem = std::pair< value_type, unsigned int>;
+    using RangeItemList = std::list<RangeItem>;
+    using RangeItem_iterator = typename RangeItemList::iterator;
+    using RangeItem_const_iterator = typename RangeItemList::const_iterator;
 
     void insert( const value_type val );
     bool contains( const value_type val ) const;
-    
+
+    RangeItem_iterator beginItem();
+    RangeItem_const_iterator beginItem() const;
+
+    RangeItem_iterator endItem();
+    RangeItem_const_iterator endItem() const;
+
 private:
     std::list<RangeItem> m_items;
 };
@@ -63,16 +72,49 @@ void RangeList<T>::insert( const T val ){
 template<typename T>
 bool RangeList<T>::contains( const T val ) const{
     for( const auto & it: m_items ){
-        std::cout << " ck " << it.first << "," << it.second << " = " << val;
-        std::cout << std::endl;
         auto rmin = it.first <= val;
         auto rmax = (it.first + it.second) > val;
         if( rmin and rmax ){
             return true;
         }
+        if( not rmin ){
+            return false;
+        }
     }
 
     return false;
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+inline
+typename RangeList<T>::RangeItem_iterator
+RangeList<T>::beginItem(){
+    return m_items.begin();
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+inline
+typename RangeList<T>::RangeItem_const_iterator
+RangeList<T>::beginItem() const{
+    return m_items.begin();
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+inline
+typename RangeList<T>::RangeItem_iterator
+RangeList<T>::endItem(){
+    return m_items.end();
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+inline
+typename RangeList<T>::RangeItem_const_iterator
+RangeList<T>::endItem() const{
+    return m_items.end();
 }
 
 //------------------------------------------------------------------------------
