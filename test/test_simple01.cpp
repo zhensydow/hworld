@@ -28,6 +28,7 @@
 //------------------------------------------------------------------------------
 int main(){
     //RangeList<float> rangef;
+    std::cout <<  "Signed " << std::endl;
     RangeList<int> range;
 
     range.insert( 1 );
@@ -39,6 +40,29 @@ int main(){
 
     for( int i = 0 ; i < 10 ; ++i ){
         std::cout << " test " << i << " " << range.contains(i) << std::endl;
+    }
+
+    for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
+        std::cout << " it " << it->first << "-" << it->second << std::endl;
+    }
+
+    std::cout <<  "Unsigned " << std::endl;
+    RangeList<unsigned int> rangeu;
+
+    rangeu.insert( 4 );
+    rangeu.insert( 7 );
+    rangeu.insert( 1 );
+    rangeu.insert( 2 );
+    rangeu.insert( 0 );
+    rangeu.insert( -1 );
+    rangeu.insert( 6 );
+
+    for( int i = 0 ; i < 10 ; ++i ){
+        std::cout << " test " << i << " " << rangeu.contains(i) << std::endl;
+    }
+
+    for( auto it = rangeu.beginItem() ; it != rangeu.endItem() ; ++it ){
+        std::cout << " it " << it->first << "-" << it->second << std::endl;
     }
 
     return 0;
