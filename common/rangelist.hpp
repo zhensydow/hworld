@@ -21,7 +21,7 @@ template<typename T>
 class RangeList<T>{
 public:
     using value_type = T;
-    using RangeItem = std::pair< value_type, unsigned int>;
+    using RangeItem = std::pair< value_type, value_type >;
     using RangeItemList = std::list<RangeItem>;
     using RangeItem_iterator = typename RangeItemList::iterator;
     using RangeItem_const_iterator = typename RangeItemList::const_iterator;
@@ -46,21 +46,19 @@ void RangeList<T>::insert( const T val ){
         if( val < it->first ){
             if( val == (it->first - 1) ){
                 it->first = val;
-                it->second = it->second + 1;
-                return;
             }else{
-                m_items.emplace( it, std::make_pair( val, 1 ) );
-                return;
+                m_items.emplace( it, std::make_pair( val, val ) );
             }
-        }else if( val < (it->first + it->second) ){
             return;
-        }else if( val == (it->first + it->second) ){
-            it->second = it->second + 1;
+        }else if( val <= it->second ){
+            return;
+        }else if( val == (it->second + 1) ){
+            it->second = val;
             return;
         }
     }
 
-    m_items.emplace_back( std::make_pair( val, 1 ) );
+    m_items.emplace_back( std::make_pair( val, val ) );
 }
 
 //------------------------------------------------------------------------------
@@ -68,8 +66,7 @@ template<typename T>
 bool RangeList<T>::contains( const T val ) const{
     for( const auto & it: m_items ){
         auto rmin = it.first <= val;
-        auto rmax = (it.first + it.second) > val;
-        if( rmin and rmax ){
+        if( rmin and (it.second >= val) ){
             return true;
         }
         if( not rmin ){
