@@ -46,6 +46,10 @@ int main(){
         std::cout << " it " << it->first << "-" << it->second << std::endl;
     }
 
+    for( auto v: range ){
+        std::cout << " val " << v << std::endl;
+    }
+
     std::cout <<  "Unsigned " << std::endl;
     RangeList<unsigned int> rangeu;
 
@@ -55,6 +59,7 @@ int main(){
     rangeu.insert( 2 );
     rangeu.insert( 0 );
     rangeu.insert( -1 );
+    rangeu.insert( -2 );
     rangeu.insert( 6 );
 
     for( int i = 0 ; i < 10 ; ++i ){
@@ -63,6 +68,10 @@ int main(){
 
     for( auto it = rangeu.beginItem() ; it != rangeu.endItem() ; ++it ){
         std::cout << " it " << it->first << "-" << it->second << std::endl;
+    }
+
+    for( auto v: rangeu ){
+        std::cout << " val " << v << std::endl;
     }
 
     return 0;

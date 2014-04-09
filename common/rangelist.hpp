@@ -14,6 +14,88 @@
 //------------------------------------------------------------------------------
 template<typename T,
          typename = typename std::enable_if<std::is_integral<T>::value>::type>
+class RangeListIterator; // undefined
+
+//------------------------------------------------------------------------------
+template<typename T>
+class RangeListIterator<T>{
+public:
+    using value_type = T;
+    using RangeItem = std::pair< value_type, value_type >;
+    using RangeItemList = std::list<RangeItem>;
+    using RangeItem_iterator = typename RangeItemList::iterator;
+
+    RangeListIterator( RangeItem_iterator it, value_type val,
+                       RangeItem_iterator itEnd );
+
+    bool operator!=( const RangeListIterator<T> & b ) const;
+
+    RangeListIterator& operator++();
+    RangeListIterator operator++( int );
+
+    const value_type& operator*() const;
+
+private:
+    RangeItem_iterator m_listIt;
+    RangeItem_iterator m_listEnd;
+    value_type m_val;
+};
+
+//------------------------------------------------------------------------------
+template<typename T>
+RangeListIterator<T>::RangeListIterator( RangeItem_iterator it,
+                                         value_type val,
+                                         RangeItem_iterator itEnd)
+    : m_listIt{ it }, m_listEnd{ itEnd }, m_val{ val }
+{
+    // empty
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+bool RangeListIterator<T>::operator!=( const RangeListIterator<T> & b ) const{
+    return (m_listIt != b.m_listIt) or (m_val != b.m_val);
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+RangeListIterator<T>& RangeListIterator<T>::operator++() {
+    if( m_val == std::numeric_limits<T>::max() ){
+        ++m_listIt;
+        m_val = 0;
+    }else{
+        ++m_val;
+        if( m_val > m_listIt->second ){
+            ++m_listIt;
+            if( m_listIt == m_listEnd ){
+                m_val = 0;
+            }else{
+                m_val = m_listIt->first;
+            }
+        }
+    }
+
+    return *this;
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+RangeListIterator<T> RangeListIterator<T>::operator++( int ) {
+    auto temp = *this;
+    ++*this;
+    return temp;
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+const typename RangeListIterator<T>::value_type&
+RangeListIterator<T>::operator*() const{
+    return m_val;
+}
+
+//------------------------------------------------------------------------------
+template<typename T,
+         typename = typename std::enable_if<std::is_integral<T>::value>::type>
 class RangeList; // undefined
 
 //------------------------------------------------------------------------------
@@ -25,6 +107,7 @@ public:
     using RangeItemList = std::list<RangeItem>;
     using RangeItem_iterator = typename RangeItemList::iterator;
     using RangeItem_const_iterator = typename RangeItemList::const_iterator;
+    using iterator = RangeListIterator<T>;
 
     void insert( const value_type val );
     bool contains( const value_type val ) const;
@@ -34,6 +117,9 @@ public:
 
     RangeItem_iterator endItem();
     RangeItem_const_iterator endItem() const;
+
+    iterator begin();
+    iterator end();
 
 private:
     std::list<RangeItem> m_items;
@@ -107,6 +193,22 @@ inline
 typename RangeList<T>::RangeItem_const_iterator
 RangeList<T>::endItem() const{
     return m_items.end();
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+typename RangeList<T>::iterator
+RangeList<T>::begin(){
+    auto listIt = std::begin(m_items);
+    return RangeListIterator<T>( listIt, listIt->first, std::end(m_items) );
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+inline
+typename RangeList<T>::iterator
+RangeList<T>::end(){
+    return RangeListIterator<T>( std::end(m_items), 0, std::end(m_items) );
 }
 
 //------------------------------------------------------------------------------
