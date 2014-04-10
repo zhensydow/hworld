@@ -31,12 +31,9 @@ int main(){
     std::cout <<  "Signed " << std::endl;
     RangeList<int> range;
 
-    range.insert( 1 );
-    range.insert( 2 );
-    range.insert( 4 );
-    range.insert( 7 );
-    range.insert( 8 );
-    range.insert( 6 );
+    for( auto v: {1,2,4,7,8,9} ){
+        range.insert( v );
+    }
 
     for( int i = 0 ; i < 10 ; ++i ){
         std::cout << " test " << i << " " << range.contains(i) << std::endl;
@@ -53,14 +50,9 @@ int main(){
     std::cout <<  "Unsigned " << std::endl;
     RangeList<unsigned int> rangeu;
 
-    rangeu.insert( 4 );
-    rangeu.insert( 7 );
-    rangeu.insert( 1 );
-    rangeu.insert( 2 );
-    rangeu.insert( 0 );
-    rangeu.insert( -1 );
-    rangeu.insert( -2 );
-    rangeu.insert( 6 );
+    for( auto v: {4,7,1,2,0,-1,-2,6} ){
+        rangeu.insert( v );
+    }
 
     for( int i = 0 ; i < 10 ; ++i ){
         std::cout << " test " << i << " " << rangeu.contains(i) << std::endl;
@@ -91,9 +83,9 @@ int main(){
 
     std::cout <<  " Remove " << std::endl;
 
-    range.remove( 1 );
-    range.remove( 7 );
-    range.remove( 4 );
+    for( auto v: {1,7,4} ){
+        range.remove( v );
+    }
 
     for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
         std::cout << " it " << it->first << "-" << it->second << std::endl;
