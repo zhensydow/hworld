@@ -155,7 +155,6 @@ template<typename T>
 void RangeList<T>::remove( const T val ){
     for( auto it = std::begin(m_items) ; it != std::end(m_items) ; ++it ){
         if( val >= it->first and val <= it->second ){
-            std::cout << "remove it " << std::endl;
             if( it->first == it->second ){
                 m_items.erase( it );
                 return;
