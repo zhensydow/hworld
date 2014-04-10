@@ -103,8 +103,9 @@ public:
     using RangeItem_const_iterator = typename RangeItemList::const_iterator;
     using iterator = RangeListIterator<T>;
 
-    void insert( const value_type val );
-    bool contains( const value_type val ) const;
+    void insert( const T val );
+    void remove( const T val );
+    bool contains( const T val ) const;
 
     RangeItem_iterator beginItem();
     RangeItem_const_iterator beginItem() const;
@@ -147,6 +148,34 @@ void RangeList<T>::insert( const T val ){
     }
 
     m_items.emplace_back( std::make_pair( val, val ) );
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+void RangeList<T>::remove( const T val ){
+    for( auto it = std::begin(m_items) ; it != std::end(m_items) ; ++it ){
+        if( val >= it->first and val <= it->second ){
+            std::cout << "remove it " << std::endl;
+            if( it->first == it->second ){
+                m_items.erase( it );
+                return;
+            }
+            if( val == it->first ){
+                it->first = it->first + 1;
+                return;
+            }
+            if( val == it->second ){
+                it->second = it->second - 1;
+                return;
+            }
+            m_items.emplace( it, std::make_pair( it->first, val - 1 ) );
+            it->first = val + 1;
+            return;
+        }
+        if( val < it->first ){
+            return;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------

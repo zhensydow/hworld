@@ -89,6 +89,16 @@ int main(){
         std::cout << " it " << it->first << "-" << it->second << std::endl;
     }
 
+    std::cout <<  " Remove " << std::endl;
+
+    range.remove( 1 );
+    range.remove( 7 );
+    range.remove( 4 );
+
+    for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
+        std::cout << " it " << it->first << "-" << it->second << std::endl;
+    }
+
     return 0;
 }
 
