@@ -74,6 +74,21 @@ int main(){
         std::cout << " val " << v << std::endl;
     }
 
+    std::cout <<  " Stripped " << std::endl;
+    RangeList<int> rangei;
+
+    for( int i = 1 ; i < 15 ; i+=2 ){
+        rangei.insert( i );
+    }
+
+    for( int i = 0 ; i < 15 ; i+=2 ){
+        rangei.insert( i );
+    }
+
+    for( auto it = rangei.beginItem() ; it != rangei.endItem() ; ++it ){
+        std::cout << " it " << it->first << "-" << it->second << std::endl;
+    }
+
     return 0;
 }
 

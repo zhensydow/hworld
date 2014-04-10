@@ -133,6 +133,14 @@ void RangeList<T>::insert( const T val ){
         }else if( val <= it->second ){
             return;
         }else if( val == (it->second + 1) ){
+            auto next = std::next(it);
+            if( next != std::end(m_items) ){
+                if( (val >= next->first - 1) and (val <= next->second) ){
+                    it->second = next->second;
+                    m_items.erase( next );
+                    return;
+                }
+            }
             it->second = val;
             return;
         }
