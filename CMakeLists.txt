@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 set( PROJECT_NAME "hworld" )
 project( ${PROJECT_NAME} )
+enable_testing()
 set( VERSION_MAJOR 0 )
 set( VERSION_MINOR 1 )
 set( VERSION_RELEASE 0 )
