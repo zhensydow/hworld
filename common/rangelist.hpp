@@ -12,14 +12,11 @@
 #include <algorithm>
 
 //------------------------------------------------------------------------------
-template<typename T,
-         typename = typename std::enable_if<std::is_integral<T>::value>::type>
-class RangeListIterator; // undefined
-
-//------------------------------------------------------------------------------
 template<typename T>
-class RangeListIterator<T>{
+class RangeListIterator{
 public:
+    static_assert( std::is_integral<T>::value,
+                   "RangeList works only with integral types" );
     using value_type = T;
     using RangeItem = std::pair< value_type, value_type >;
     using RangeItemList = std::list<RangeItem>;
@@ -94,14 +91,11 @@ RangeListIterator<T>::operator*() const{
 }
 
 //------------------------------------------------------------------------------
-template<typename T,
-         typename = typename std::enable_if<std::is_integral<T>::value>::type>
-class RangeList; // undefined
-
-//------------------------------------------------------------------------------
 template<typename T>
-class RangeList<T>{
+class RangeList{
 public:
+    static_assert( std::is_integral<T>::value,
+                   "RangeList works only with integral types" );
     using value_type = T;
     using RangeItem = std::pair< value_type, value_type >;
     using RangeItemList = std::list<RangeItem>;
