@@ -1,4 +1,5 @@
 include_directories( . )
+include_directories( ${PROJECT_SOURCE_DIR} )
 include_directories( ${PROJECT_SOURCE_DIR}/common )
 
 add_definitions( -Wall -Wextra -std=c++11 )

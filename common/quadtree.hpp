@@ -16,22 +16,42 @@
     You should have received a copy of the GNU General Public License
     along with HexWorld.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-/** @file quadtree.cpp
-    @brief QuadTree Class testing.
+/** @file quadtree.hpp
+    @brief QuadTree
     @author Luis Cabellos
     @date 2014-04-11
 */
 //------------------------------------------------------------------------------
-#include <cstdlib>
-#include "quadtree.hpp"
+#ifndef QUADTREE_HPP_
+#define QUADTREE_HPP_
 
 //------------------------------------------------------------------------------
-int main(){
-    QuadTree qt;
+#include "types.hpp"
 
-    //qt.insert( glm::vec2( 0.0, 0.0 ), 1 );
+//------------------------------------------------------------------------------
+template<typename T>
+class QuadPoint{
+public:
+    glm::vec2 m_pos;
+    T m_val;
+};
 
-    return EXIT_SUCCESS;
-}
+//------------------------------------------------------------------------------
+class QuadAABB{
+public:
+    glm::vec2 m_center;
+    glm::vec2 m_halfd;
+};
+
+//------------------------------------------------------------------------------
+class QuadTree{
+public:
+    
+private:
+    
+};
+
+//------------------------------------------------------------------------------
+#endif//QUADTREE_HPP_
 
 //------------------------------------------------------------------------------
