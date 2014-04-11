@@ -45,7 +45,7 @@ int main(){
     if( not qt.insert( glm::vec2( 0.0, 1.7 ), 5 ) ){
         std::cout << " NOT inserted " << std::endl;
     }
-    if( not qt.insert( glm::vec2( -2.0, 0.7 ), 6 ) ){
+    if( not qt.insert( glm::vec2( 2.0, 0.7 ), 6 ) ){
         std::cout << " NOT inserted " << std::endl;
     }
 

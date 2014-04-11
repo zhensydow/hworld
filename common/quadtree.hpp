@@ -44,7 +44,6 @@ public:
     QuadAABB( const glm::vec2 & minb, const glm::vec2 & maxb );
     bool contains( const glm::vec2 & p ) const;
 
-private:
     glm::vec2 m_center {0.0f, 0.0f};
     glm::vec2 m_halfd {0.0f, 0.0f};
 };
@@ -76,7 +75,9 @@ public:
     bool insert( glm::vec2 p, T val );
 
 private:
-    static constexpr unsigned int MAX_POINTS = 4;
+    static constexpr unsigned int MAX_POINTS = 2;
+
+    void divide();
 
     QuadAABB m_boundary;
     std::array<QuadPoint<T>, MAX_POINTS> m_points;
@@ -110,7 +111,7 @@ bool QuadTree<T>::insert( glm::vec2 p, T val ){
     }
 
     if( not m_quads[0] ){
-    //     subdivide();
+        divide();
     }
 
     for( auto & qt: m_quads ){
@@ -120,6 +121,32 @@ bool QuadTree<T>::insert( glm::vec2 p, T val ){
     }
 
     return false;
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+void QuadTree<T>::divide(){
+    auto minb = m_boundary.m_center - m_boundary.m_halfd;
+    auto maxb = m_boundary.m_center + m_boundary.m_halfd;
+    auto center = m_boundary.m_center;
+    QuadAABB nw { minb, center };
+    QuadAABB ne { {center.x, minb.y}, {maxb.x, center.y} };
+    QuadAABB se { center, maxb };
+    QuadAABB sw { {minb.x, center.y}, {center.x, maxb.y} };
+
+    std::cout << "center = " << nw.m_center.x << ", " << nw.m_center.y << std::endl;
+    std::cout << " half = " << nw.m_halfd.x << ", " << nw.m_halfd.y << std::endl;
+    std::cout << "center = " << ne.m_center.x << ", " << ne.m_center.y << std::endl;
+    std::cout << " half = " << ne.m_halfd.x << ", " << ne.m_halfd.y << std::endl;
+    std::cout << "center = " << se.m_center.x << ", " << se.m_center.y << std::endl;
+    std::cout << " half = " << se.m_halfd.x << ", " << se.m_halfd.y << std::endl;
+    std::cout << "center = " << sw.m_center.x << ", " << sw.m_center.y << std::endl;
+    std::cout << " half = " << sw.m_halfd.x << ", " << sw.m_halfd.y << std::endl;
+
+    m_quads[0] = std::unique_ptr<QuadTree<T>>( new QuadTree<T>( nw ) );
+    m_quads[1] = std::unique_ptr<QuadTree<T>>( new QuadTree<T>( ne ) );
+    m_quads[2] = std::unique_ptr<QuadTree<T>>( new QuadTree<T>( se ) );
+    m_quads[3] = std::unique_ptr<QuadTree<T>>( new QuadTree<T>( sw ) );
 }
 
 //------------------------------------------------------------------------------
