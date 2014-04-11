@@ -28,7 +28,7 @@ add_subdirectory( soil )
 add_subdirectory( common )
 add_subdirectory( src )
 add_subdirectory( tools )
-add_subdirectory( test )
+add_subdirectory( tests )
 
 # documentation
 find_package( Doxygen )
