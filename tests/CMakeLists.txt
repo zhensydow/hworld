@@ -13,5 +13,8 @@ target_link_libraries( test_simple01 libcommon )
 
 add_executable( rangelist rangelist.cpp )
 target_link_libraries( rangelist libcommon )
-
 add_test( NAME RangeListClass COMMAND rangelist )
+
+add_executable( quadtree quadtree.cpp )
+target_link_libraries( quadtree libcommon )
+add_test( NAME QuadTreeClass COMMAND quadtree )
