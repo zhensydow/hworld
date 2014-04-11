@@ -26,72 +26,79 @@
 #include "rangelist.hpp"
 
 //------------------------------------------------------------------------------
-int main(){
-    //RangeList<float> rangef;
-    std::cout <<  "Signed " << std::endl;
+bool testInsert(){
+    constexpr int max = 10;
     RangeList<int> range;
 
-    for( auto v: {1,2,4,7,8,9} ){
-        range.insert( v );
+    for( auto i = 0 ; i < max ; ++i ){
+        range.insert( i );
     }
 
-    for( int i = 0 ; i < 10 ; ++i ){
-        std::cout << " test " << i << " " << range.contains(i) << std::endl;
+    for( auto i = 0 ; i < max ; ++i ){
+        if( not range.contains( i ) ){
+            return false;
+        }
     }
 
-    for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+bool testRemove(){
+    constexpr int max = 10;
+    RangeList<int> range;
+
+    for( auto i = 0 ; i < max ; ++i ){
+        range.insert( i );
     }
 
-    for( auto v: range ){
-        std::cout << " val " << v << std::endl;
+    for( auto i = 0 ; i < max ; ++i ){
+        range.remove( i );
     }
 
-    std::cout <<  "Unsigned " << std::endl;
-    RangeList<unsigned int> rangeu;
-
-    for( auto v: {4,7,1,2,0,-1,-2,6} ){
-        rangeu.insert( v );
+    for( auto i = 0 ; i < max ; ++i ){
+        if( range.contains( i ) ){
+            return false;
+        }
     }
 
-    for( int i = 0 ; i < 10 ; ++i ){
-        std::cout << " test " << i << " " << rangeu.contains(i) << std::endl;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+bool testMerging(){
+    constexpr int max = 15;
+    RangeList<int> range;
+
+    for( int i = 1 ; i < max ; i+=2 ){
+        range.insert( i );
     }
 
-    for( auto it = rangeu.beginItem() ; it != rangeu.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
+    for( int i = 0 ; i < max ; i+=2 ){
+        range.insert( i );
     }
 
-    for( auto v: rangeu ){
-        std::cout << " val " << v << std::endl;
+    return std::distance( range.beginItem(), range.endItem() ) == 1;
+}
+
+//------------------------------------------------------------------------------
+int main(){
+    if( not testInsert() ){
+        std::cout << "failure test Insert " << std::endl;
+        return EXIT_FAILURE;
     }
 
-    std::cout <<  " Stripped " << std::endl;
-    RangeList<int> rangei;
-
-    for( int i = 1 ; i < 15 ; i+=2 ){
-        rangei.insert( i );
+    if( not testRemove() ){
+        std::cout << "failure test Remove " << std::endl;
+        return EXIT_FAILURE;
     }
 
-    for( int i = 0 ; i < 15 ; i+=2 ){
-        rangei.insert( i );
+    if( not testMerging() ){
+        std::cout << "failure test Merging " << std::endl;
+        return EXIT_FAILURE;
     }
 
-    for( auto it = rangei.beginItem() ; it != rangei.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
-    }
-
-    std::cout <<  " Remove " << std::endl;
-
-    for( auto v: {1,7,4} ){
-        range.remove( v );
-    }
-
-    for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
-    }
-
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
