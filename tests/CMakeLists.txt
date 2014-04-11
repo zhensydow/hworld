@@ -11,4 +11,7 @@ target_link_libraries( test_sfml01 ${SFML_LIBRARIES} )
 add_executable( test_simple01 test_simple01.cpp )
 target_link_libraries( test_simple01 libcommon )
 
-add_test( NAME test01 COMMAND test_simple01 )
+add_executable( rangelist rangelist.cpp )
+target_link_libraries( rangelist libcommon )
+
+add_test( NAME RangeListClass COMMAND rangelist )

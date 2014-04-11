@@ -23,73 +23,10 @@
 */
 //------------------------------------------------------------------------------
 #include <iostream>
-#include "rangelist.hpp"
 
 //------------------------------------------------------------------------------
 int main(){
-    //RangeList<float> rangef;
-    std::cout <<  "Signed " << std::endl;
-    RangeList<int> range;
-
-    for( auto v: {1,2,4,7,8,9} ){
-        range.insert( v );
-    }
-
-    for( int i = 0 ; i < 10 ; ++i ){
-        std::cout << " test " << i << " " << range.contains(i) << std::endl;
-    }
-
-    for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
-    }
-
-    for( auto v: range ){
-        std::cout << " val " << v << std::endl;
-    }
-
-    std::cout <<  "Unsigned " << std::endl;
-    RangeList<unsigned int> rangeu;
-
-    for( auto v: {4,7,1,2,0,-1,-2,6} ){
-        rangeu.insert( v );
-    }
-
-    for( int i = 0 ; i < 10 ; ++i ){
-        std::cout << " test " << i << " " << rangeu.contains(i) << std::endl;
-    }
-
-    for( auto it = rangeu.beginItem() ; it != rangeu.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
-    }
-
-    for( auto v: rangeu ){
-        std::cout << " val " << v << std::endl;
-    }
-
-    std::cout <<  " Stripped " << std::endl;
-    RangeList<int> rangei;
-
-    for( int i = 1 ; i < 15 ; i+=2 ){
-        rangei.insert( i );
-    }
-
-    for( int i = 0 ; i < 15 ; i+=2 ){
-        rangei.insert( i );
-    }
-
-    for( auto it = rangei.beginItem() ; it != rangei.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
-    }
-
-    std::cout <<  " Remove " << std::endl;
-
-    for( auto v: {1,7,4} ){
-        range.remove( v );
-    }
-
-    for( auto it = range.beginItem() ; it != range.endItem() ; ++it ){
-        std::cout << " it " << it->first << "-" << it->second << std::endl;
-    }
+    std::cout <<  "tests" << std::endl;
 
     return 0;
 }
