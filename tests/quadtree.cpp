@@ -23,13 +23,31 @@
 */
 //------------------------------------------------------------------------------
 #include <cstdlib>
+#include <iostream>
 #include "quadtree.hpp"
 
 //------------------------------------------------------------------------------
 int main(){
-    QuadTree qt;
+    QuadTree<int> qt { QuadAABB{ {-0.001, -0.001}, {100.f, 100.f} } };
 
-    //qt.insert( glm::vec2( 0.0, 0.0 ), 1 );
+    if( not qt.insert( glm::vec2( 0.0, 0.0 ), 1 ) ){
+        std::cout << " NOT inserted " << std::endl;
+    }
+    if( not qt.insert( glm::vec2( 0.0, 1.0 ), 2 ) ){
+        std::cout << " NOT inserted " << std::endl;
+    }
+    if( not qt.insert( glm::vec2( 0.0, 1.0 ), 3 ) ){
+        std::cout << " NOT inserted " << std::endl;
+    }
+    if( not qt.insert( glm::vec2( 0.0, 1.0 ), 4 ) ){
+        std::cout << " NOT inserted " << std::endl;
+    }
+    if( not qt.insert( glm::vec2( 0.0, 1.7 ), 5 ) ){
+        std::cout << " NOT inserted " << std::endl;
+    }
+    if( not qt.insert( glm::vec2( -2.0, 0.7 ), 6 ) ){
+        std::cout << " NOT inserted " << std::endl;
+    }
 
     return EXIT_SUCCESS;
 }
