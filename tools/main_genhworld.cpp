@@ -156,7 +156,8 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 }
 
 //------------------------------------------------------------------------------
-void saveDebugBMP( const vector<Chunk> & tiles,
+void saveDebugBMP( const vector<WorldArea> & areas,
+                   const vector<Chunk> & tiles,
                    const glm::vec2 & a, const glm::vec2 & b )
 {
     sf::RenderTexture renderTexture;
@@ -193,6 +194,26 @@ void saveDebugBMP( const vector<Chunk> & tiles,
         }
     }
 
+    auto qcolor = sf::Color( 255, 0, 0, 255 );
+    sf::Vertex qlines[] = {
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor )
+    };
+
+    for( auto & a: areas ){
+        auto minb = a.getMinBound();
+        auto maxb = a.getMaxBound();
+
+        qlines[0].position = {minb.x, minb.y};
+        qlines[1].position = {maxb.x, minb.y};
+        qlines[2].position = {maxb.x, maxb.y};
+        qlines[3].position = {minb.x, maxb.y};
+        qlines[4].position = {minb.x, maxb.y};
+        renderTexture.draw( qlines, 5, sf::LinesStrip );
+    }
 
     renderTexture.display();
 
@@ -216,7 +237,7 @@ int main(){
     cout << endl << "Total Tiles : " << tiles.size() << endl;
 
     cout << "Saving Debug BMP" << endl;
-    saveDebugBMP( tiles, bound0, bound1 );
+    saveDebugBMP( areas, tiles, bound0, bound1 );
 
     return 0;
 }
