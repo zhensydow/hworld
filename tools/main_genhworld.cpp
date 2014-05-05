@@ -30,6 +30,7 @@
 #include "glminc.hpp"
 #include "constants.hpp"
 #include "chunk.hpp"
+#include "worldarea.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -53,6 +54,30 @@ ChunkID mirrorNeigh( ChunkID orig ){
 }
 
 //------------------------------------------------------------------------------
+vector<WorldArea> genWorldAreas( const glm::vec2 & a, const glm::vec2 & b,
+                                 unsigned int numw, unsigned int numh )
+{
+    vector<WorldArea> areas;
+
+    auto w = b.x - a.x;
+    auto h = b.y - a.y;
+
+    for( unsigned int j = 0 ; j < numh ; ++j ){
+        auto h0 = a.y + j*(w/numw);
+        auto h1 = a.y + (j+1)*(w/numw);
+        for( unsigned int i = 0 ; i < numw ; ++i ){
+            auto w0 = a.x + i*(h/numh);
+            auto w1 = a.x + (i+1)*(h/numh);
+            cout << "creating area " << i << "  " << j << endl;
+            cout << " from  " << w0 << "," << h0 << endl;
+            cout << " to  " << w1 << "," << h1 << endl;
+        }
+    }
+
+    return areas;
+}
+
+//------------------------------------------------------------------------------
 vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
     using ParentChunk = tuple< ChunkID, unsigned int >;
 
@@ -67,7 +92,8 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 
     auto qwork = queue< pair< ParentChunk, glm::vec2 > >();
 
-    qwork.emplace( make_pair( make_tuple( CHUNK_NULL_IDX, 0 ), a ) );
+    qwork.emplace( make_pair( make_tuple( CHUNK_NULL_IDX, 0 ),
+                              a + glm::vec2( TILE_RADIUS, TILE_RADIUS ) ) );
 
     ParentChunk parent;
     glm::vec2 pos;
@@ -177,13 +203,17 @@ void saveDebugBMP( const vector<Chunk> & tiles,
 
 //------------------------------------------------------------------------------
 int main(){
-    std::cout << "Generating Tile Map" << std::endl;
+    cout << "Generating Tile Map" << endl;
 
     auto bound0 = glm::vec2( 0.0f, 0.0f );
-    auto bound1 = glm::vec2( 1000.0f, 1000.0f );
+    auto bound1 = glm::vec2( 500.0f, 500.0f );
+
+    cout << " * world areas ..." << endl;
+    auto areas = genWorldAreas( bound0, bound1, 10, 10 );
+    cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
 
-    std::cout << std::endl << "Total Tiles : " << tiles.size() << std::endl;
+    cout << endl << "Total Tiles : " << tiles.size() << endl;
 
     cout << "Saving Debug BMP" << endl;
     saveDebugBMP( tiles, bound0, bound1 );
