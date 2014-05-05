@@ -219,7 +219,7 @@ void saveDebugBMP( const vector<WorldArea> & areas,
 
     auto image = renderTexture.getTexture().copyToImage();
 
-    image.saveToFile( "text.png" );
+    image.saveToFile( "gendebug.png" );
 }
 
 //------------------------------------------------------------------------------
