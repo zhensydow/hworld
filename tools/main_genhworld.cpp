@@ -59,6 +59,8 @@ vector<WorldArea> genWorldAreas( const glm::vec2 & a, const glm::vec2 & b,
 {
     vector<WorldArea> areas;
 
+    areas.reserve( numw*numh );
+
     auto w = b.x - a.x;
     auto h = b.y - a.y;
 
@@ -68,9 +70,7 @@ vector<WorldArea> genWorldAreas( const glm::vec2 & a, const glm::vec2 & b,
         for( unsigned int i = 0 ; i < numw ; ++i ){
             auto w0 = a.x + i*(h/numh);
             auto w1 = a.x + (i+1)*(h/numh);
-            cout << "creating area " << i << "  " << j << endl;
-            cout << " from  " << w0 << "," << h0 << endl;
-            cout << " to  " << w1 << "," << h1 << endl;
+            areas.emplace_back( glm::vec2(w0,h0), glm::vec2(w1,h1) );
         }
     }
 
