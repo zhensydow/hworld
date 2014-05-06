@@ -64,6 +64,7 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
     float lastPercent = 0.0f;
 
     cout << estimated << endl;
+    tiles.reserve( (int)estimated );
 
     auto qwork = queue< pair< ParentChunk, glm::vec2 > >();
 
@@ -89,8 +90,10 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
                 auto & cchunk = tiles[ k ];
                 auto clink = mirrorNeigh( plink );
                 cchunk.m_neighbours[ clink ] = pid;
-                auto & pchunk = tiles[ pid ];
-                pchunk.m_neighbours[ plink ] = k;
+                if( pid < tiles.size() ){
+                    auto & pchunk = tiles[ pid ];
+                    pchunk.m_neighbours[ plink ] = k;
+                }
             }else{
                 Chunk chunk;
                 chunk.m_pos = pos;
@@ -100,8 +103,10 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
                 tiles.push_back( chunk );
 
                 auto ownid = tiles.size() - 1;
-                auto & pchunk = tiles[ pid ];
-                pchunk.m_neighbours[ plink ] = ownid;
+                if( pid < tiles.size() ){
+                    auto & pchunk = tiles[ pid ];
+                    pchunk.m_neighbours[ plink ] = ownid;
+                }
 
                 for( unsigned int i = 0 ; i < Chunk::NNEIGHBOURS ; ++i ){
                     if( chunk.m_neighbours[ i ] == CHUNK_NULL_IDX ){
