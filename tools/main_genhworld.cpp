@@ -30,6 +30,7 @@
 #include "glminc.hpp"
 #include "constants.hpp"
 #include "chunk.hpp"
+#include "worldarea.hpp"
 
 //------------------------------------------------------------------------------
 using namespace std;
@@ -53,6 +54,30 @@ ChunkID mirrorNeigh( ChunkID orig ){
 }
 
 //------------------------------------------------------------------------------
+vector<WorldArea> genWorldAreas( const glm::vec2 & a, const glm::vec2 & b,
+                                 unsigned int numw, unsigned int numh )
+{
+    vector<WorldArea> areas;
+
+    areas.reserve( numw*numh );
+
+    auto w = b.x - a.x;
+    auto h = b.y - a.y;
+
+    for( unsigned int j = 0 ; j < numh ; ++j ){
+        auto h0 = a.y + j*(w/numw);
+        auto h1 = a.y + (j+1)*(w/numw);
+        for( unsigned int i = 0 ; i < numw ; ++i ){
+            auto w0 = a.x + i*(h/numh);
+            auto w1 = a.x + (i+1)*(h/numh);
+            areas.emplace_back( glm::vec2(w0,h0), glm::vec2(w1,h1) );
+        }
+    }
+
+    return areas;
+}
+
+//------------------------------------------------------------------------------
 vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
     using ParentChunk = tuple< ChunkID, unsigned int >;
 
@@ -68,7 +93,8 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 
     auto qwork = queue< pair< ParentChunk, glm::vec2 > >();
 
-    qwork.emplace( make_pair( make_tuple( CHUNK_NULL_IDX, 0 ), a ) );
+    qwork.emplace( make_pair( make_tuple( CHUNK_NULL_IDX, 0 ),
+                              a + glm::vec2( TILE_RADIUS, TILE_RADIUS ) ) );
 
     ParentChunk parent;
     glm::vec2 pos;
@@ -135,7 +161,8 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 }
 
 //------------------------------------------------------------------------------
-void saveDebugBMP( const vector<Chunk> & tiles,
+void saveDebugBMP( const vector<WorldArea> & areas,
+                   const vector<Chunk> & tiles,
                    const glm::vec2 & a, const glm::vec2 & b )
 {
     sf::RenderTexture renderTexture;
@@ -172,26 +199,50 @@ void saveDebugBMP( const vector<Chunk> & tiles,
         }
     }
 
+    auto qcolor = sf::Color( 255, 0, 0, 255 );
+    sf::Vertex qlines[] = {
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor )
+    };
+
+    for( auto & a: areas ){
+        auto minb = a.getMinBound();
+        auto maxb = a.getMaxBound();
+
+        qlines[0].position = {minb.x, minb.y};
+        qlines[1].position = {maxb.x, minb.y};
+        qlines[2].position = {maxb.x, maxb.y};
+        qlines[3].position = {minb.x, maxb.y};
+        qlines[4].position = {minb.x, maxb.y};
+        renderTexture.draw( qlines, 5, sf::LinesStrip );
+    }
 
     renderTexture.display();
 
     auto image = renderTexture.getTexture().copyToImage();
 
-    image.saveToFile( "text.png" );
+    image.saveToFile( "gendebug.png" );
 }
 
 //------------------------------------------------------------------------------
 int main(){
-    std::cout << "Generating Tile Map" << std::endl;
+    cout << "Generating Tile Map" << endl;
 
     auto bound0 = glm::vec2( 0.0f, 0.0f );
-    auto bound1 = glm::vec2( 1000.0f, 1000.0f );
+    auto bound1 = glm::vec2( 500.0f, 500.0f );
+
+    cout << " * world areas ..." << endl;
+    auto areas = genWorldAreas( bound0, bound1, 10, 10 );
+    cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
 
-    std::cout << std::endl << "Total Tiles : " << tiles.size() << std::endl;
+    cout << endl << "Total Tiles : " << tiles.size() << endl;
 
     cout << "Saving Debug BMP" << endl;
-    saveDebugBMP( tiles, bound0, bound1 );
+    saveDebugBMP( areas, tiles, bound0, bound1 );
 
     return 0;
 }
