@@ -78,6 +78,23 @@ vector<WorldArea> genWorldAreas( const glm::vec2 & a, const glm::vec2 & b,
 }
 
 //------------------------------------------------------------------------------
+vector<Chunk> genTileDivision( const vector<WorldArea> & areas ){
+    assert( areas.size() > 0 && "no areas" );
+
+    using ParentChunk = tuple< ChunkID, unsigned int >;
+
+    vector<Chunk> tiles;
+
+    // insert first candidate from the first area
+
+    for( auto & area: areas ){
+        cout << "checking area" << endl;
+    }
+
+    return tiles;
+}
+
+//------------------------------------------------------------------------------
 vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
     using ParentChunk = tuple< ChunkID, unsigned int >;
 
@@ -238,6 +255,8 @@ int main(){
     auto areas = genWorldAreas( bound0, bound1, 10, 10 );
     cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
+
+    /*auto tiles = */ genTileDivision( areas );
 
     cout << endl << "Total Tiles : " << tiles.size() << endl;
 
