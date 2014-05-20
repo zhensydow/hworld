@@ -254,21 +254,13 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 }
 
 //------------------------------------------------------------------------------
-void saveDebugBMP( const vector<WorldArea> & areas,
-                   const vector<Chunk> & tiles,
-                   const glm::vec2 & a, const glm::vec2 & b )
+void saveDebugBMP( sf::RenderTexture * texture,
+                   const vector<WorldArea> & areas,
+                   const vector<Chunk> & tiles )
 {
-    sf::RenderTexture renderTexture;
-    if( not renderTexture.create( 1000, 1000 ) ){
-        cout << "ERROR: Can't create debug BMP" << endl;
+    if( not texture ){
         return;
     }
-
-    auto view = sf::View( sf::FloatRect( a.x, a.y, (b.x - a.x), (b.y - a.y) ) );
-
-    renderTexture.setView( view );
-
-    renderTexture.clear();
 
     sf::CircleShape circle( 1 );
     circle.setOrigin( 1, 1 );
@@ -281,13 +273,13 @@ void saveDebugBMP( const vector<WorldArea> & areas,
 
     for( auto & t: tiles ){
         circle.setPosition( t.m_pos.x, t.m_pos.y );
-        renderTexture.draw( circle );
+        texture->draw( circle );
         line[0].position = { t.m_pos.x, t.m_pos.y };
         for( auto & nn: t.m_neighbours ){
             if( nn != CHUNK_NULL_IDX ){
                 auto & pchunk = tiles[ nn ];
                 line[1].position = { pchunk.m_pos.x, pchunk.m_pos.y };
-                renderTexture.draw( line, 2, sf::Lines );
+                texture->draw( line, 2, sf::Lines );
             }
         }
     }
@@ -310,14 +302,8 @@ void saveDebugBMP( const vector<WorldArea> & areas,
         qlines[2].position = {maxb.x, maxb.y};
         qlines[3].position = {minb.x, maxb.y};
         qlines[4].position = {minb.x, maxb.y};
-        renderTexture.draw( qlines, 5, sf::LinesStrip );
+        texture->draw( qlines, 5, sf::LinesStrip );
     }
-
-    renderTexture.display();
-
-    auto image = renderTexture.getTexture().copyToImage();
-
-    image.saveToFile( "gendebug.png" );
 }
 
 //------------------------------------------------------------------------------
@@ -357,15 +343,17 @@ int main(){
     cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
 
-    auto texture = makeDebugTexture( bound0, bound1 );
+    auto texture0 = makeDebugTexture( bound0, bound1 );
 
     genTileDivision( areas, bound0, bound1 );
 
     cout << endl << "Total Tiles : " << tiles.size() << endl;
 
     cout << "Saving Debug BMP" << endl;
-    saveDebugBMP( areas, tiles, bound0, bound1 );
-    saveDebugTexture( texture.get(), "gendebug0.png" );
+    auto texture1 = makeDebugTexture( bound0, bound1 );
+    saveDebugBMP( texture1.get(), areas, tiles );
+    saveDebugTexture( texture0.get(), "gendebug0.png" );
+    saveDebugTexture( texture1.get(), "gendebug1.png" );
 
     return 0;
 }
