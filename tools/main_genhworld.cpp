@@ -36,6 +36,12 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
+bool insideRect( const glm::vec2 & a, const glm::vec2 & b, const glm::vec2 & p )
+{
+    return p.x >= a.x and p.y >= a.y and p.x < b.x and p.y < b.y;
+}
+
+//------------------------------------------------------------------------------
 bool equalCenter( const glm::vec2 & a, const glm::vec2 & b ){
     if( abs( a.x - b.x ) >= 0.01f ){
         return false;
@@ -121,7 +127,7 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
         auto plink = get<1>(parent);
         qwork.pop();
 
-        if( pos.x >= a.x and pos.y >= a.y and pos.x <= b.x and pos.y <= b.y ){
+        if( insideRect( a, b, pos ) ){
             unsigned int k = 0;
             for( k = 0 ; k < tiles.size() ; ++k ){
                 if( equalCenter( tiles[k].m_pos, pos ) ){
