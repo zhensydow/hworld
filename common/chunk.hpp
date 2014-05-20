@@ -30,6 +30,8 @@
 #include <vector>
 #include <tuple>
 #include "types.hpp"
+#include "constants.hpp"
+#include "glminc.hpp"
 
 //------------------------------------------------------------------------------
 class Chunk{
@@ -44,6 +46,8 @@ public:
 
     bool insertEntity( uint8_t tile, EntityID id );
     bool hasEntity( uint8_t tile ) const;
+
+    glm::vec2 neighbourPosition( const ChunkID i ) const;
 
     std::array< int16_t, NTILES > m_heights;
     std::array< int8_t, NTILES > m_tiles;
@@ -60,6 +64,15 @@ void Chunk::setHeight( const unsigned int i, const int16_t val ){
     if( i < NTILES ){
         m_heights[ i ] = val;
     }
+}
+
+//------------------------------------------------------------------------------
+inline
+glm::vec2 Chunk::neighbourPosition( const ChunkID i ) const{
+    auto offset = glm::rotate( glm::vec2( CHUNK_OFFSET_X,
+                                          CHUNK_OFFSET_Y ),
+                               sixthPart * i );
+    return m_pos + offset;
 }
 
 //------------------------------------------------------------------------------

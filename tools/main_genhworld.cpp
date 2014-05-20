@@ -159,11 +159,7 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 
                 for( unsigned int i = 0 ; i < Chunk::NNEIGHBOURS ; ++i ){
                     if( chunk.m_neighbours[ i ] == CHUNK_NULL_IDX ){
-                        auto offset = glm::rotate( glm::vec2( CHUNK_OFFSET_X,
-                                                              CHUNK_OFFSET_Y ),
-                                                   sixthPart * i );
-
-                        auto newPos = chunk.m_pos + offset;
+                        auto newPos = chunk.neighbourPosition( i );
                         qwork.emplace( make_pair( make_tuple( ownid, i ),
                                                   newPos ) );
                     }
