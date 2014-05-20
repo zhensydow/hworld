@@ -25,6 +25,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <unordered_map>
 #include <queue>
 #include <SFML/Graphics.hpp>
 #include "glminc.hpp"
@@ -84,20 +85,92 @@ vector<WorldArea> genWorldAreas( const glm::vec2 & a, const glm::vec2 & b,
 }
 
 //------------------------------------------------------------------------------
-vector<Chunk> genTileDivision( const vector<WorldArea> & areas ){
+unordered_map< ChunkID, Chunk >::iterator
+getChunkInArea( unordered_map< ChunkID, Chunk > & chunks,
+                const WorldArea & area ){
+
+    auto it = find_if( begin(chunks), end(chunks),
+                       [&]( pair< const ChunkID, Chunk > & c ){
+                           return area.inside( c.second.m_pos );
+                       } );
+    return it;
+}
+
+//------------------------------------------------------------------------------
+unordered_map< ChunkID, Chunk >::iterator
+findChunk( unordered_map< ChunkID, Chunk > & chunks,
+           const glm::vec2 & pos ){
+    return find_if( begin(chunks), end(chunks),
+                    [&]( pair< const ChunkID, Chunk > & c ){
+                        return equalCenter( c.second.m_pos, pos );
+                    } );
+}
+
+//------------------------------------------------------------------------------
+void genTileDivision( const vector<WorldArea> & areas,
+                      const glm::vec2 & a, const glm::vec2 & b){
     assert( areas.size() > 0 && "no areas" );
 
-    using ParentChunk = tuple< ChunkID, unsigned int >;
-
-    vector<Chunk> tiles;
+    ChunkID nextID = 0;
+    unordered_map< ChunkID, Chunk > chunks;
 
     // insert first candidate from the first area
+    auto & firstArea = areas[0];
+
+    Chunk root;
+    root.m_pos = firstArea.getMinBound() +
+        glm::vec2( TILE_RADIUS, TILE_RADIUS );
+    chunks[ nextID++ ] = root;
 
     for( auto & area: areas ){
-        cout << "checking area" << endl;
+        auto current = getChunkInArea( chunks, area );
+        while( current != end( chunks ) ){
+            auto chunkid = current->first;
+            auto chunk = current->second;
+            chunks.erase( current );
+
+            cout << "chunk inside area " << chunkid << endl;
+
+            for( unsigned int i = 0 ; i < Chunk::NNEIGHBOURS ; ++i ){
+                if( chunk.m_neighbours[ i ] == CHUNK_NULL_IDX ){
+                    auto childPos = chunk.neighbourPosition( i );
+
+                    if( insideRect( a, b, childPos ) ){
+                        auto childlink = mirrorNeigh( i );
+
+                        cout << "insert child chunk " <<
+                            i << " -> " << childlink << " " <<
+                            childPos.x << ", " << childPos.y << endl;
+
+                        auto it = findChunk( chunks, childPos );
+                        if( it != end(chunks) ){
+                            cout << "already done" << endl;
+                            it->second.m_neighbours[ childlink ] = chunkid;
+                            chunk.m_neighbours[ i ] = it->first;
+                        }else{
+                            cout << "new position" << endl;
+                            Chunk child;
+                            child.m_pos = childPos;
+                            auto childid = nextID++;
+
+                            child.m_neighbours[ childlink ] = chunkid;
+
+                            chunk.m_neighbours[ i ] = childid;
+
+                            chunks[ childid ] = child;
+                        }
+                    }
+                }
+            }
+
+            current = getChunkInArea( chunks, area );
+        }
     }
 
-    return tiles;
+    cout << "Total TILES : " << nextID << endl;
+    if( chunks.size() > 0 ){
+        cout << "Warning: Tiles outside areas : " << chunks.size() << endl;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -258,7 +331,7 @@ int main(){
     cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
 
-    /*auto tiles = */ genTileDivision( areas );
+    genTileDivision( areas, bound0, bound1 );
 
     cout << endl << "Total Tiles : " << tiles.size() << endl;
 
