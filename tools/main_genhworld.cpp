@@ -38,6 +38,9 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
+void drawDebugArea( sf::RenderTexture * texture, const WorldArea & area  );
+
+//------------------------------------------------------------------------------
 bool insideRect( const glm::vec2 & a, const glm::vec2 & b, const glm::vec2 & p )
 {
     return p.x >= a.x and p.y >= a.y and p.x < b.x and p.y < b.y;
@@ -109,7 +112,9 @@ findChunk( unordered_map< ChunkID, Chunk > & chunks,
 
 //------------------------------------------------------------------------------
 void genTileDivision( const vector<WorldArea> & areas,
-                      const glm::vec2 & a, const glm::vec2 & b){
+                      const glm::vec2 & a, const glm::vec2 & b,
+                      sf::RenderTexture * texture )
+{
     assert( areas.size() > 0 && "no areas" );
 
     ChunkID nextID = 0;
@@ -166,6 +171,8 @@ void genTileDivision( const vector<WorldArea> & areas,
 
             current = getChunkInArea( chunks, area );
         }
+
+        drawDebugArea( texture, area );
     }
 
     cout << "Total TILES : " << nextID << endl;
@@ -254,7 +261,35 @@ vector<Chunk> genTileDivision( const glm::vec2 & a, const glm::vec2 & b ){
 }
 
 //------------------------------------------------------------------------------
-void saveDebugBMP( sf::RenderTexture * texture,
+void drawDebugArea( sf::RenderTexture * texture,
+                    const WorldArea & area  )
+{
+    if( not texture ){
+        return;
+    }
+
+    auto qcolor = sf::Color( 255, 0, 0, 255 );
+    sf::Vertex qlines[] = {
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor ),
+        sf::Vertex( sf::Vector2f( 0, 0 ), qcolor )
+    };
+
+    auto minb = area.getMinBound();
+    auto maxb = area.getMaxBound();
+
+    qlines[0].position = {minb.x, minb.y};
+    qlines[1].position = {maxb.x, minb.y};
+    qlines[2].position = {maxb.x, maxb.y};
+    qlines[3].position = {minb.x, maxb.y};
+    qlines[4].position = {minb.x, maxb.y};
+    texture->draw( qlines, 5, sf::LinesStrip );
+}
+
+//------------------------------------------------------------------------------
+void drawDebugBMP( sf::RenderTexture * texture,
                    const vector<WorldArea> & areas,
                    const vector<Chunk> & tiles )
 {
@@ -345,13 +380,13 @@ int main(){
 
     auto texture0 = makeDebugTexture( bound0, bound1 );
 
-    genTileDivision( areas, bound0, bound1 );
+    genTileDivision( areas, bound0, bound1, texture0.get() );
 
     cout << endl << "Total Tiles : " << tiles.size() << endl;
 
     cout << "Saving Debug BMP" << endl;
     auto texture1 = makeDebugTexture( bound0, bound1 );
-    saveDebugBMP( texture1.get(), areas, tiles );
+    drawDebugBMP( texture1.get(), areas, tiles );
     saveDebugTexture( texture0.get(), "gendebug0.png" );
     saveDebugTexture( texture1.get(), "gendebug1.png" );
 
