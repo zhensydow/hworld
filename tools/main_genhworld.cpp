@@ -252,7 +252,7 @@ int main(){
     auto bound1 = glm::vec2( 500.0f, 500.0f );
 
     cout << " * world areas ..." << endl;
-    auto areas = genWorldAreas( bound0, bound1, 10, 10 );
+    auto areas = genWorldAreas( bound0, bound1, 8, 8 );
     cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
 
