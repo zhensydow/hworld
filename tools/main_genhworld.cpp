@@ -23,6 +23,7 @@
 */
 //------------------------------------------------------------------------------
 #include <iostream>
+#include <memory>
 #include <algorithm>
 #include <vector>
 #include <unordered_map>
@@ -320,6 +321,31 @@ void saveDebugBMP( const vector<WorldArea> & areas,
 }
 
 //------------------------------------------------------------------------------
+unique_ptr<sf::RenderTexture> makeDebugTexture( const glm::vec2 & a, const glm::vec2 & b ){
+    auto renderTexture = unique_ptr<sf::RenderTexture>( new sf::RenderTexture );
+    if( not renderTexture->create( 1000, 1000 ) ){
+        cout << "ERROR: Can't create debug BMP" << endl;
+        return nullptr;
+    }
+
+    auto view = sf::View( sf::FloatRect( a.x, a.y, (b.x - a.x), (b.y - a.y) ) );
+
+    renderTexture->setView( view );
+    renderTexture->clear();
+
+    return renderTexture;
+}
+
+//------------------------------------------------------------------------------
+void saveDebugTexture( sf::RenderTexture * texture, const string & name ){
+    if( texture ){
+        texture->display();
+        auto image = texture->getTexture().copyToImage();
+        image.saveToFile( name );
+    }
+}
+
+//------------------------------------------------------------------------------
 int main(){
     cout << "Generating Tile Map" << endl;
 
@@ -331,12 +357,15 @@ int main(){
     cout << " * chunk tiles ..." << endl;
     auto tiles = genTileDivision( bound0, bound1 );
 
+    auto texture = makeDebugTexture( bound0, bound1 );
+
     genTileDivision( areas, bound0, bound1 );
 
     cout << endl << "Total Tiles : " << tiles.size() << endl;
 
     cout << "Saving Debug BMP" << endl;
     saveDebugBMP( areas, tiles, bound0, bound1 );
+    saveDebugTexture( texture.get(), "gendebug0.png" );
 
     return 0;
 }
