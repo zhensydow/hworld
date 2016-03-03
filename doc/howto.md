@@ -72,7 +72,8 @@ valgrind --tool=callgrind src/hworld ../data/config.json
 kcachegrind callgrind.out.*
 ~~~~~~~~~~~~~~~~~~~~~
 
-When you want to profile only a part of the program, then start with profiling off and use CALLGRIND_TOGGLE_COLLECT to start to profile on the source:
+When you want to profile only a part of the program, then start with profiling
+off and use CALLGRIND_TOGGLE_COLLECT to start to profile on the source:
 
 ~~~~~~~~~~~~~~~~~~~~~
 #include <valgrind/callgrind.h>
@@ -115,9 +116,19 @@ qapitrace hworld.tracex
 Static Code Analysis
 --------------------
 
+With cppcheck:
+
 ~~~~~~~~~~~~~~~~~~~~~
 cppcheck commont src src/ent --enable=all -v -DGLM_FORCE_CXX11 | tee cppcheck.log
 ~~~~~~~~~~~~~~~~~~~~~
+
+With clang:
+
+~~~~~~~~~~~~~~~~~~~~~
+cd build
+scan-build make
+~~~~~~~~~~~~~~~~~~~~~
+
 
 Export 3DS from blender
 -----------------------
